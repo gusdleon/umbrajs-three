@@ -1,0 +1,32 @@
+{
+  "name": "umbrajs-three",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/umbrajs-three.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "author": "",
+  "license": "MIT",
+  "homepage": "https://github.com/UmbraSoftware/umbrajs-three#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UmbraSoftware/umbrajs-three"
+  },
+  "dependencies": {
+    "three": "^0.105.2",
+	"umbrajs": "latest"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "rollup": "^1.15.0",
+    "rollup-plugin-execute": "^1.1.0",
+    "rollup-plugin-node-resolve": "^5.0.3",
+    "rollup-plugin-eslint": "^7.0.0"
+  }
+}

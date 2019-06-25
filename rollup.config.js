@@ -1,0 +1,50 @@
+import resolve from "rollup-plugin-node-resolve";
+import execute from "rollup-plugin-execute";
+import { eslint } from "rollup-plugin-eslint";
+import fs from "fs";
+
+const globals = { three: "THREE" };
+
+function copyfiles(files) {
+  return {
+    name: "copy",
+    buildEnd: () => {
+      files.forEach(([from, to]) => {
+        fs.copyFileSync(from, to)
+      });
+    }
+  }
+}
+
+const config = [
+  {
+    input: "src/threesupport.js",
+    output: [
+      {
+        file: `dist/umbrajs-three.js`,
+        format: "umd",
+        name: "UmbraRuntime",
+        globals
+      },
+      {
+        file: `dist/umbrajs-three.amd.js`,
+        format: "amd",
+        name: "UmbraRuntime",
+        globals
+      }
+    ],
+    external: ["three"],
+    plugins: [
+      eslint({
+	    include: "src/*"
+	  }),
+      resolve(),
+	  execute("mkdir dist"),
+      copyfiles([
+        ["node_modules/umbrajs/dist/umbra.wasm", "dist/umbra.wasm"],
+      ])
+    ]
+  }
+];
+
+module.exports = config;

@@ -1,0 +1,151 @@
+<html>
+    <head>
+      <title>Player Example</title>
+        <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+        .hud {
+            color:red;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            display:block;
+        }
+        </style>
+    </head>
+    <body>
+        <script src="js/three-r105.min.js"></script>
+        <script src="js/stats.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+
+let makeDebugBox = (min, max) => {
+    const s = [max[0] - min[0], max[1] - min[1], max[2] - min[2]]
+    const p = [min[0] + s[0]/2, min[1] + s[1]/2, min[2] + s[2]/2]
+
+    const geometry = new THREE.BoxGeometry(s[0], s[1], s[2])
+    const material = new THREE.MeshBasicMaterial({
+        color: 0x00FF00,
+        wireframe: true,
+    })
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.position.x = p[0]
+    mesh.position.y = p[1]
+    mesh.position.z = p[2]
+    return mesh
+}
+
+(async function() {
+    const startTime = performance.now()
+
+    let token = new URL(window.location.href).searchParams.get("key")
+    let projectID = new URL(window.location.href).searchParams.get("project")
+    let modelID = new URL(window.location.href).searchParams.get("model")
+    var renderer = new THREE.WebGLRenderer()
+
+    let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+    let model = await Umbra.createModel({
+        token: token,
+        projectID: projectID,
+        modelID: modelID})
+
+    let width = window.innerWidth
+    let height = window.innerHeight
+
+    var scene = new THREE.Scene()
+    var camera = new THREE.PerspectiveCamera( 75, width/height, 0.1, 1000 )
+
+    scene.background = new THREE.Color( 0x222222 );
+
+    renderer.setSize( window.innerWidth, window.innerHeight )
+    document.body.appendChild( renderer.domElement )
+
+    var stats = new Stats()
+    stats.showPanel( 2 ) // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild( stats.dom )
+
+    var light1 = new THREE.DirectionalLight( 0xffffff, 1.0 )
+    var light2 = new THREE.DirectionalLight( 0x8888ff, 0.5 )
+    light1.position.set( 1, 1, 1 ).normalize()
+    light2.position.set( -1, -1, -1 ).normalize()
+    scene.add(light1)
+    scene.add(light2)
+
+    var geometry = new THREE.BoxGeometry(1, 1, 1)
+    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } )
+
+    var gridHelper = new THREE.GridHelper(10, 10)
+    scene.add(gridHelper)
+
+    // Add Umbra model to the scene
+    scene.add(model)
+
+    let timeToTriangle = 0
+
+    let frame = 0
+    let radius = 1.0
+    let debugBox = undefined
+    let target = new THREE.Vector3( 0, 0, 0 )
+    camera.position.y = 1
+    window.speed = 1.0
+
+    var animate = function () {
+        stats.begin()
+
+        // Rotate the camera around the model
+        camera.lookAt(target)
+        const phi = frame*0.01
+        camera.position.x = target.x + radius * Math.cos(phi)
+        camera.position.z = target.z + radius * Math.sin(phi)
+
+        if (timeToTriangle === 0.0 && renderer.info.render.triangles > 0) {
+            timeToTriangle = performance.now() - startTime
+        }
+
+        // Find visible blocks and update streaming
+        model.updateVisible(scene, camera)
+
+        const info = model.getInfo()
+
+        // Update debug bounds to get a better view for the camera
+        if (info.connected && !debugBox) {
+            const bounds = info.sceneInfo.bounds
+            const x = bounds.max[0] - bounds.min[0]
+            const y = bounds.max[1] - bounds.min[1]
+            const z = bounds.max[2] - bounds.min[2]
+
+            radius = Math.sqrt(x*x + y*y + z*z) / 2
+
+            debugBox = makeDebugBox(bounds.min, bounds.max)
+            scene.add(debugBox)
+            target = debugBox.position
+            camera.position.y = bounds.min[1] + y * 2
+        }
+
+        // visible: the number of visible meshes
+        // assets: the total number of resident assets (includes materials, textures, meshes)
+        // time-to-triangle: how long it took until a first triangle was shown
+        document.getElementById('info').textContent = 'visible: ' + window.visibleObjects.toString() + ', assets: ' + window.assetCount.toString() + ', connected: ' + info.connected + ', time-to-triangle: ' + Math.floor(timeToTriangle) + ' ms'
+
+        renderer.render(scene, camera)
+        if (window.speed > 0) {
+        frame++
+        }
+
+        stats.end()
+        requestAnimationFrame(animate)
+    }
+
+    animate()
+})()
+
+        </script>
+        <div class="hud" id="info"></div>
+        <div class="hud" id="status"></div>
+    </body>
+</html>
+
