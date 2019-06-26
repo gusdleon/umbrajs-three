@@ -246,22 +246,6 @@ ModelObject.prototype.dispose = function () {
   // Runtime must be manually freed by the user with .dispose() of the API object
 }
 
-/*
-export async function initUmbraThreeJS (args, config) {
-  const Umbra = await UmbraLibrary(config)
-
-  let projectID, modelID
-
-  const helper = createThreeJsHelper(Umbra, args.renderer)
-
-  return helper({
-    token: args.token,
-    project: projectID,
-    model: modelID
-  })
-}
-*/
-
 export async function initWithThreeJS (renderer, config) {
   const Umbra = await UmbraLibrary(config)
   const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
