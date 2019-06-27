@@ -246,32 +246,38 @@ ModelObject.prototype.dispose = function () {
   // Runtime must be manually freed by the user with .dispose() of the API object
 }
 
-export async function initWithThreeJS (renderer, config) {
-  const Umbra = await UmbraLibrary(config)
-  const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
-  let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats.flags)
+export function initWithThreeJS (renderer, config) {
+  return UmbraLibrary(config).then((Umbra) => {
+    const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
+    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats.flags)
 
-  let modelFactory = async (cloudArgs) => {
-    const IDs = await Umbra.getIDs(cloudArgs)
+    /**
+     * Creating a model is an asynchronous operation because we might need to query the Project API
+     * to map the given string names into numeric IDs. If the IDs are used then the promise will
+     * resolve immediately.
+     */
+    let modelFactory = (cloudArgs) => {
+      return Umbra.getIDs(cloudArgs).then((IDs) => {
+        const scene = runtime.createScene()
+        scene.connect(cloudArgs.token, IDs.project, IDs.model)
+        const view = runtime.createView()
 
-    const scene = runtime.createScene()
-    scene.connect(cloudArgs.token, IDs.project, IDs.model)
-    const view = runtime.createView()
+        const model = new ModelObject(runtime, scene, view)
 
-    const model = new ModelObject(runtime, scene, view)
+        // If the renderer is not gamma correct then sRGB textures shouldn't be used.
+        model.quirks.nonLinearShading = !renderer.gammaOutput
 
-    // If the renderer is not gamma correct then sRGB textures shouldn't be used.
-    model.quirks.nonLinearShading = !renderer.gammaOutput
+        return model
+      })
+    }
 
-    return model
-  }
-
-  return {
-    createModel: modelFactory,
-    dispose: () => {
-      runtime.destroy()
-      runtime = undefined
-    },
-    lib: Umbra
-  }
+    return {
+      createModel: modelFactory,
+      dispose: () => {
+        runtime.destroy()
+        runtime = undefined
+      },
+      lib: Umbra
+    }
+  })
 }
