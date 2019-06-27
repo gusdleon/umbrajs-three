@@ -17,10 +17,10 @@
   info.textContent = 'Fetching projects...\n'
 
   var renderer = new THREE.WebGLRenderer()
-  let API = await UmbraRuntime.initWithThreeJS(renderer)
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
   try {
-    let projects = await API.Umbra.getProjects(token)
+    let projects = await Umbra.lib.getProjects(token)
 
     info.textContent += `Found ${projects.length} projects:\n`
 

@@ -22,7 +22,7 @@ Then initialize Umbra and and pass in the newly created renderer as an argument:
           modelID: '699980469', },                              // Model ID
         { wasmURL: 'umbra.wasm' })                              // WebAsm source gets downloaded separately
 
-Note that we use `await` in the example so you need to call it inside an async function. See `test.html` for an example.
+Note that we use `await` in the example so you need to call it inside an async function.
 
 ---
 
@@ -45,8 +45,8 @@ This call incrementally downloads and unpacks meshes, and it must be called ever
 
 This will return all projects associated with the given private key:
 
-    let API = await UmbraRuntime.initWithThreeJS(renderer)
-    let projects = await API.Umbra.getProjects(token)
+    let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+    let projects = await Umbra.lib.getProjects(token)
 
 Note that this isn't required if you use the helper above.
 See the example `examples/listprojects.html` for an example.
@@ -72,8 +72,8 @@ In your HTML you then just do the following.
 There are three abstraction layers from top to bottom:
 
 - This three.js integration package.
-- JavaScript wrapper classes in the `umbrajs` module. These make it easier to work with the Emscripten generated code.
-- Native C++ code in `umbra.wasm` exposes a C-style API accessed by Emscripten's `Module` object.
+- JavaScript wrapper classes in the `umbrajs` module. You can access these via the `Umbra.lib` object. These make it easier to work with the Emscripten generated code.
+- Native C++ code in `umbra.wasm` exposes a C-style API accessed by Emscripten's `Module` object. This API is used by `umbrajs`.
 
 ## FAQ
 
@@ -86,13 +86,16 @@ There are three abstraction layers from top to bottom:
 - Why I'm I getting the error `Error: Mismatched anonymous define() module: function (exports, THREE)`?
     - RequireJS fails to load the module. You need to use the `umbrajs-three.amd.js` bundle instead.
 
+- Why am I getting a lot of 403 HTTP errors in the console even though everything seems to work?
+  - Umbra downloads content via signed URLs that get cached, and once the cache goes stale the server will ask the client to resolve new URLs. This causes the errors you are seeing. The errors should disappear after you reload the page.
+
 - Which three.js version should I use?
     - This library has been tested with r105
 
 - How do I integrate it with my custom engine?
-    - Please see `src/threesupport.js` for an example integration. It's still a bit more complex than we'd like.
+    - Please see `src/threesupport.js` for an example integration.
 
-## Rebuilding the lib
+## Rebuilding the library
 
 Install the dependencies and build the modules using Rollup:
 
@@ -103,7 +106,7 @@ Now you can add the script to your web page with
 
      <script src="dist/umbrajs-three.js"></script>
 
-Remember to include three.js beforehand.
+Remember to include three.js beforehand since it's an external dependency and not bundled in the output.
 
 ### Working with `umbrajs` at the same time
 

@@ -48,6 +48,7 @@ let makeDebugBox = (min, max) => {
     var renderer = new THREE.WebGLRenderer()
 
     let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
     let model = await Umbra.createModel({
         token: token,
         projectID: projectID,

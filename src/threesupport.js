@@ -272,6 +272,6 @@ export async function initWithThreeJS (renderer, config) {
       runtime.destroy()
       runtime = undefined
     },
-    Umbra: Umbra
+    lib: Umbra
   }
 }
