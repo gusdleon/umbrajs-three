@@ -200,7 +200,10 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
       const mesh = job.data
 
       // Deallocate Emscripten heap blocks where vertex attributes were stored
-      runtime.deallocateBuffers(mesh.userData.buffers)
+      Object.keys(mesh.userData.buffers).forEach(name => {
+        mesh.userData.buffers[name].destroy()
+      })
+
       // Remove object from scene graph
       this.remove(mesh)
       // Free three.js resources (e.g. VBOs)
