@@ -80,6 +80,9 @@ There are three abstraction layers from top to bottom:
 - Why do we need to pass in the WebAsm path separately?
     - It's downloaded and compiled asynchronously to avoid blocking the main message loop.
 
+- My model is mirrored!
+    - You can flip the model along any axis with `model.scale.set`. For example for the x-axis call `model.scale.set(-1, 1, 1)` before the main loop.
+
 - How can I get a numeric ID of my project and model?
     - Run the `listprojects` example using your private key. For example `examples/listprojects.html?key=myveryprivatekey`. This requires you to run the debug server with `npx http-server`.
 
