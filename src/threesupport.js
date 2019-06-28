@@ -241,7 +241,6 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
   this.stats.numAssets = runtime.assets.size
 
   const batchSize = 200
-  let visibleCount = 0
   let visible = []
 
   do {
@@ -251,7 +250,7 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
       visible[i].mesh.visible = true
     }
     this.stats.numVisible += visible.length
-  } while (visible.length == batchSize)
+  } while (visible.length === batchSize)
 }
 
 ModelObject.prototype.dispose = function () {
