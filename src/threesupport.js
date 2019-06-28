@@ -24,6 +24,12 @@ function ModelObject (runtime, scene, view) {
   this.msPerFrame = 10 // How long can we afford to spend on decompressing assets.
   this.frustumCulled = false // Umbra does its own frustum culling
   this.opaqueMaterial = new THREE.MeshBasicMaterial()
+  this.opaqueMaterial.side = THREE.FrontSide
+
+  // Temporary matrices we don't want to reallocate every frame
+  this.matrixWorldInverse = new THREE.Matrix4()
+  this.projScreenMatrix = new THREE.Matrix4()
+  this.cameraWorldPosition = new THREE.Vector3()
 
   // Add API objects under their own object for clarity
   this.umbra = {
@@ -36,6 +42,12 @@ function ModelObject (runtime, scene, view) {
   this.quirks = {
     nonLinearShading: false
   }
+
+  // Streaming debug info accessible through getInfo()
+  this.stats = {
+    numVisible: 0,
+    numAssets: 0
+  }
 }
 
 ModelObject.prototype = Object.create(THREE.Object3D.prototype)
@@ -46,6 +58,7 @@ ModelObject.prototype.getInfo = function () {
   if (info.connected) {
     info['sceneInfo'] = this.umbra.scene.getInfo()
   }
+  Object.assign(info, this.stats)
   return info
 }
 
@@ -93,8 +106,7 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
 
       /**
        * We need to copy the texture data here since three.js takes ownership
-       * of the contents, and we can't guarantee that the view would be valid
-       * after memory growth anyway.
+       * of the contents.
        */
 
       const mip = {
@@ -102,6 +114,8 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
         height: info.height,
         data: new Uint8Array(buffer.bytes().slice())
       }
+
+      buffer.destroy()
 
       const tex = new THREE.CompressedTexture([mip], info.width, info.height)
       tex.format = glformat.format
@@ -125,7 +139,6 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
       tex.needsUpdate = true
 
       runtime.addAsset(job, tex)
-      buffer.destroy()
     },
     DestroyTexture: (job) => {
       // Free texture data only if it's not a dummy texture
@@ -140,39 +153,32 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
       const uvArray = job.data.buffers['uv']
       const indexArray = job.data.buffers['index']
 
-      // FIXME these buffers may get neutered by memory growth before the GPU upload
+      const indices = Array.from(indexArray.view())
+      indexArray.destroy()
+      delete job.data.buffers['index']
+
       const geometry = new THREE.BufferGeometry()
 
       if (job.data.buffers['normal']) {
         const normalArray = job.data.buffers['normal']
         const normal = new THREE.Float32BufferAttribute(normalArray.floats().slice(), 3)
-
-        normal.onUploadCallback = () => {
-          normalArray.destroy()
-          delete job.data.buffers['normal']
-        }
-
         geometry.addAttribute('normal', normal)
+
+        normalArray.destroy()
+        delete job.data.buffers['normal']
       }
 
       const pos = new THREE.Float32BufferAttribute(posArray.floats().slice(), 3)
       const uv = new THREE.Float32BufferAttribute(uvArray.floats().slice(), 2)
 
-      const indices = Array.from(indexArray.view())
-
-      pos.onUploadCallback = () => {
-        posArray.destroy()
-        delete job.data.buffers['position']
-      }
-
-      uv.onUploadCallback = () => {
-        uvArray.destroy()
-        delete job.data.buffers['uv']
-      }
-
       geometry.addAttribute('position', pos)
       geometry.addAttribute('uv', uv)
       geometry.setIndex(indices)
+
+      posArray.destroy()
+      delete job.data.buffers['position']
+      uvArray.destroy()
+      delete job.data.buffers['uv']
 
       // TODO create a new material for a mesh only if it has a new texture
       const material = this.opaqueMaterial.clone()
@@ -208,6 +214,7 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
       this.remove(mesh)
       // Free three.js resources (e.g. VBOs)
       mesh.geometry.dispose()
+      delete mesh.geometry
       // Tell Umbra's runtime that this asset doesn't exist anymore and finish the job
       runtime.removeAsset(job, mesh)
     }
@@ -217,31 +224,34 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
 
   this.umbra.scene.update(this.matrixWorld.elements)
 
-  const pos = new THREE.Vector3()
-  camera.getWorldPosition(pos)
+  camera.getWorldPosition(this.cameraWorldPosition)
 
-  // TODO don't instantiate these matrices every frame
-  let matrixWorldInverse = new THREE.Matrix4()
-  matrixWorldInverse.getInverse(camera.matrixWorld)
-  let projScreenMatrix = new THREE.Matrix4()
-  projScreenMatrix.multiplyMatrices(camera.projectionMatrix, matrixWorldInverse)
+  this.matrixWorldInverse.getInverse(camera.matrixWorld)
+  this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse)
 
-  this.umbra.view.update(projScreenMatrix.elements, [pos.x, pos.y, pos.z], this.quality)
+  const pos = this.cameraWorldPosition
+  this.umbra.view.update(this.projScreenMatrix.elements, [pos.x, pos.y, pos.z], this.quality)
   runtime.update()
 
   for (let i = 0; i < this.children.length; i++) {
     this.children[i].visible = false
   }
 
-  const visible = this.umbra.view.getVisible(1000)
+  this.stats.numVisible = 0
+  this.stats.numAssets = runtime.assets.size
 
-  // DEBUG MESSAGES
-  window.visibleObjects = visible.length
-  window.assetCount = runtime.assets.size
+  const batchSize = 200
+  let visibleCount = 0
+  let visible = []
 
-  for (let i = 0; i < visible.length; i++) {
-    visible[i].mesh.visible = true
-  }
+  do {
+    visible = this.umbra.view.getVisible(batchSize)
+
+    for (let i = 0; i < visible.length; i++) {
+      visible[i].mesh.visible = true
+    }
+    this.stats.numVisible += visible.length
+  } while (visible.length == batchSize)
 }
 
 ModelObject.prototype.dispose = function () {
