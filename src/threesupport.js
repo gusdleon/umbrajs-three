@@ -212,9 +212,10 @@ ModelObject.prototype.updateVisible = function (scene, camera) {
 
   runtime.handleJobs(handlers, this.msPerFrame)
 
-  this.umbra.scene.update(scene.matrix.elements)
+  this.umbra.scene.update(this.matrixWorld.elements)
 
-  const pos = camera.position
+  const pos = new THREE.Vector3()
+  camera.getWorldPosition(pos)
 
   // TODO don't instantiate these matrices every frame
   let matrixWorldInverse = new THREE.Matrix4()
