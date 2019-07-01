@@ -18,7 +18,7 @@
     <body>
         <pre class="debug" id="info"></pre>
 
-        <script src="js/three-r105.js"></script>
+        <script src="js/three-r105.min.js"></script>
         <script src="js/stats.min.js"></script>
         <script src="js/OrbitControls.js"></script>
         <script src="../dist/umbrajs-three.js"></script>
@@ -121,8 +121,6 @@ let makeDebugBox = (min, max) => {
             let z = bounds.max[2] - bounds.min[2]
 
             radius = Math.sqrt(x*x + y*y + z*z) / 2
-            radius *= 0.5
-            y *= 0.25
 
             debugBox = makeDebugBox(bounds.min, bounds.max)
             scene.add(debugBox)
