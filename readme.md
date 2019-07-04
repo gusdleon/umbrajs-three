@@ -37,11 +37,31 @@ Then you can create a three.js scene and add our model to it:
 
 Finally, inside your animation loop you must update the runtime:
 
-    model.updateVisible(scene, camera)
+    Umbra.update()
 
 This call incrementally downloads and unpacks meshes, and it must be called every frame.
 
 ## Other functionality
+
+### Adjusting quality
+
+You can change the model quality with
+
+    model.quality = 0.75
+
+where the quality ranges from 0 to 1, and is 0.5 by default.
+
+### Shadow maps
+
+Umbra supports `THREE.DirectionalLight` shadow casters. To get enable shadows you need to set the model to use a material that supports shadow mapping:
+
+    model.opaqueMaterial = new THREE.MeshLambertMaterial() // Basic material doesn't receive shadows
+    model.castShadow = true
+    model.receiveShadow = true
+
+Now any directional light with its `castsShadows` set to `true` should work as you'd expect.
+
+### Fetching projects
 
 This will return all projects associated with the given private key:
 
