@@ -14,21 +14,28 @@ const textureFormats = {
   astc_4x4: makeFormat(THREE.RGBA_ASTC_4x4_Format, THREE.UnsignedByte)
 }
 
+/**
+ * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
+ * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
+ * THREE.Material instance using the textures and transparency flag in 'materialDesc'
+ */
+function MeshDescriptor(geometry, materialDesc) {
+  this.geometry = geometry
+  this.materialDesc = materialDesc
+}
+
 function ModelObject (runtime, scene, renderer) {
   THREE.Object3D.call(this)
 
   // User editable config
   this.quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
-
-  // Can be used to enable workarounds
-  this.quirks = {
-    nonLinearShading: false
-  }
+  this.opaqueMaterial = new THREE.MeshBasicMaterial()
 
   // Streaming debug info accessible through getInfo()
   this.stats = {
     numVisible: 0,
-    numAssets: 0
+    numShadowCasters: 0,
+    numAssets: 0,
   }
 
   // We need to present ourselves as a LOD object to get the update() call
@@ -51,7 +58,6 @@ function ModelObject (runtime, scene, renderer) {
 
   this.tempVector = new THREE.Vector3()
   this.dirVector = new THREE.Vector3()
-
 }
 
 ModelObject.prototype = Object.create(THREE.Object3D.prototype)
@@ -68,7 +74,7 @@ ModelObject.prototype.getInfo = function () {
 
 function findLights (scene) {
   const lights = []
-  scene.traverseVisible((obj) => {
+  scene.traverseVisible(obj => {
     if (obj.isDirectionalLight && obj.castShadow) {
       lights.push(obj)
     }
@@ -80,13 +86,11 @@ function findLights (scene) {
 ModelObject.prototype.update = function (camera) {
   let scene
 
-  this.traverseAncestors((obj) => {
+  this.traverseAncestors(obj => {
     if (obj.isScene) {
       scene = obj
     }
   })
-
-  // TODO cache this reference and compare to the new one
 
   if (!scene && !scene.isScene) {
     console.log('No parent scene found')
@@ -104,6 +108,7 @@ ModelObject.prototype.update = function (camera) {
   if (!view) {
     view = this.umbra.runtime.createView()
     this.cameraToView.set(camera, view)
+    // TODO remove old views
   }
 
 
@@ -116,7 +121,7 @@ ModelObject.prototype.update = function (camera) {
   let dir = this.dirVector
   let vector3 = this.tempVector
 
-  const lightDirections = lights.map((light) => {
+  const lightDirections = lights.map(light => {
     dir.setFromMatrixPosition(light.target.matrixWorld)
     vector3.setFromMatrixPosition(light.matrixWorld)
     dir.sub(vector3)
@@ -169,34 +174,53 @@ ModelObject.prototype.update = function (camera) {
    */
 
   const batchSize = 200
-  let visible = []
   this.children.length = 0
   let shadowCasters = []
 
-  // TODO make this an Object3D
-  let postCollectProxy = {
-    visible: true,
-    isLOD: true,
-    autoUpdate: true,
-    layers: {test: () => true},
-    updateMatrixWorld: () => {},
-    update: (cam) => {
-      // Remove the proxy
-      this.children.pop()
+  let proxy = new THREE.Object3D()
+  proxy.isLOD = true
+  proxy.autoUpdate = true
+  proxy.update = cam => {
+    // Remove the proxy itself
+    this.children.pop()
 
-      for (let i = 0; i < shadowCasters.length; i++) {
-        this.children.push(shadowCasters[i])
-      }
-    },
-    children: []
+    // Add the shadow casters
+    for (let i = 0; i < shadowCasters.length; i++) {
+      this.children.push(shadowCasters[i])
+    }
   }
+
+  let visible = []
 
   do {
     visible = view.getVisible(batchSize)
 
     for (let i = 0; i < visible.length; i++) {
-      const mesh = visible[i].mesh
+      const meshDesc = visible[i].mesh
+
+      // TODO create a new material only per new texture?
+      const material = this.opaqueMaterial.clone()
+
+      const DIFFUSE_INDEX = 0
+      const diffuseMap = meshDesc.materialDesc.textures[DIFFUSE_INDEX]
+
+      if (diffuseMap && diffuseMap.isTexture) {
+        material.map = diffuseMap
+      }
+
+      /**
+       * We instatiate new Mesh objects each frame but the constructor is very cheap
+       * and the references should live for a very short time since 'this.children'
+       * gets cleared every frame. However if this still causes too much allocations
+       * an object pool could help.
+       */
+      const mesh = new THREE.Mesh(meshDesc.geometry, material)
+      mesh.name = "umbramesh"
       mesh.matrixWorld.copy(this.matrixWorld)
+      mesh.castShadow = this.castShadow
+      mesh.receiveShadow = this.receiveShadow
+      this.children.push(mesh)
+
       if ((visible[i].mask & 0x01) === 0) {
         shadowCasters.push(mesh)
         mesh.frustumCulled = true
@@ -209,8 +233,10 @@ ModelObject.prototype.update = function (camera) {
     this.stats.numVisible += visible.length
   } while (visible.length === batchSize)
 
+  this.stats.numShadowCasters = shadowCasters.length
+
   if (shadowCasters.length > 0) {
-    this.children.push(postCollectProxy)
+    this.children.push(proxy)
   }
 }
 
@@ -230,13 +256,10 @@ function makeBoundingSphere(aabb) {
 }
 
 export function initWithThreeJS (renderer, config) {
-  return UmbraLibrary(config).then((Umbra) => {
+  return UmbraLibrary(config).then(Umbra => {
     // User visible configuration of the 'Umbra' object
     const config = {
       nonLinearShading: true,
-      opaqueMaterial: new THREE.MeshBasicMaterial(),
-      castShadow: true,
-      receiveShadow: true
     }
 
     const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
@@ -247,7 +270,7 @@ export function initWithThreeJS (renderer, config) {
      * to map the given string names into numeric IDs. If the IDs are used then the promise will
      * resolve immediately.
      */
-    let modelFactory = (cloudArgs) => {
+    let modelFactory = cloudArgs => {
       return Umbra.getIDs(cloudArgs).then((IDs) => {
         const scene = runtime.createScene()
         scene.connect(cloudArgs.token, IDs.project, IDs.model)
@@ -267,13 +290,13 @@ export function initWithThreeJS (renderer, config) {
      */
     let update = function (timeBudget = 10) {
       const handlers = {
-        CreateMaterial: (job) => {
+        CreateMaterial: job => {
           runtime.addAsset(job, job.data)
         },
-        DestroyMaterial: (job) => {
+        DestroyMaterial: job => {
           runtime.removeAsset(job, job.data)
         },
-        CreateTexture: (job) => {
+        CreateTexture: job => {
           const info = job.data.info
           const buffer = job.data.buffer
 
@@ -333,14 +356,14 @@ export function initWithThreeJS (renderer, config) {
 
           runtime.addAsset(job, tex)
         },
-        DestroyTexture: (job) => {
+        DestroyTexture: job => {
           // Free texture data only if it's not a dummy texture
           if (job.data.isTexture) {
             job.data.dispose()
           }
           runtime.removeAsset(job, job.data)
         },
-        CreateMesh: (job) => {
+        CreateMesh: job => {
           // The mesh creation job gives us all the vertex data in job.data.buffers
           const posArray = job.data.buffers['position']
           const uvArray = job.data.buffers['uv']
@@ -351,15 +374,6 @@ export function initWithThreeJS (renderer, config) {
           delete job.data.buffers['index']
 
           const geometry = new THREE.BufferGeometry()
-
-          if (job.data.buffers['normal']) {
-            const normalArray = job.data.buffers['normal']
-            const normal = new THREE.Float32BufferAttribute(normalArray.floats().slice(), 3)
-            geometry.addAttribute('normal', normal)
-
-            normalArray.destroy()
-            delete job.data.buffers['normal']
-          }
 
           const pos = new THREE.Float32BufferAttribute(posArray.floats().slice(), 3)
           const uv = new THREE.Float32BufferAttribute(uvArray.floats().slice(), 2)
@@ -375,48 +389,24 @@ export function initWithThreeJS (renderer, config) {
           uvArray.destroy()
           delete job.data.buffers['uv']
 
-          // TODO create a new material for a mesh only if it has a new texture
-          const material = config.opaqueMaterial.clone()
+          if (job.data.buffers['normal']) {
+            const normalArray = job.data.buffers['normal']
+            const normal = new THREE.Float32BufferAttribute(normalArray.floats().slice(), 3)
+            geometry.addAttribute('normal', normal)
 
-          // TODO replace these with an object from the library side?
-          const DIFFUSE_INDEX = 0
-          const diffuseMap = job.data.material.textures[DIFFUSE_INDEX]
-
-          if (diffuseMap && diffuseMap.isTexture) {
-            material.map = diffuseMap
+            normalArray.destroy()
+            delete job.data.buffers['normal']
           }
 
-          // Create a new three.js mesh object per Umbra mesh
-          const mesh = new THREE.Mesh(geometry, material)
-          mesh.name = "umbramesh"
-          mesh.frustumCulled = false
-          mesh.visible = true
-
-          // TODO these should be per-model, not global
-          mesh.castShadow = config.castShadow
-          mesh.receiveShadow = config.receiveShadow
-
-          // We need a reference to the vertex buffers so we can free them when necessary
-          mesh.userData.buffers = job.data.buffers
-
-          // Register the asset with Umbra's runtime so it can referenced later when rendering
-          runtime.addAsset(job, mesh)
+          const meshDescriptor = new MeshDescriptor(geometry, job.data.material)
+          runtime.addAsset(job, meshDescriptor)
         },
-        DestroyMesh: (job) => {
-          const mesh = job.data
-
-          // Deallocate Emscripten heap blocks where vertex attributes were stored
-          Object.keys(mesh.userData.buffers).forEach(name => {
-            mesh.userData.buffers[name].destroy()
-          })
-
-          // Remove object from scene graph
-          //this.remove(mesh)
-          // Free three.js resources (e.g. VBOs)
-          mesh.geometry.dispose()
-          delete mesh.geometry
+        DestroyMesh: job => {
+          const meshDesc = job.data
           // Tell Umbra's runtime that this asset doesn't exist anymore and finish the job
-          runtime.removeAsset(job, mesh)
+          runtime.removeAsset(job, meshDesc)
+          // Release three.js's resources
+          meshDesc.geometry.dispose()
         }
       }
 
