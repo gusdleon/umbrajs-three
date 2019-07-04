@@ -77,7 +77,7 @@ You need to ship three things:
 
 - `dist/umbrajs-three.js`
 - `dist/umbra.wasm`
-- three.js (you provide it, or use the one in `examples/js/three-r105.min.js`)
+- three.js (you provide it, or use the one in `examples/js/three-r106.min.js`)
 
 
 The path to `umbra.wasm` is set by the `wasmURL` parameter of `initUmbraThreeJS`.
@@ -113,7 +113,7 @@ There are three abstraction layers from top to bottom:
   - Umbra downloads content via signed URLs that get cached, and once the cache goes stale the server will ask the client to resolve new URLs. This causes the errors you are seeing. The errors should disappear after you reload the page.
 
 - Which three.js version should I use?
-    - This library has been tested with r105
+    - This library has been tested with **r106**
 
 - How do I integrate it with my custom engine?
     - Please see `src/threesupport.js` for an example integration.
