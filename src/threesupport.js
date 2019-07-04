@@ -138,7 +138,6 @@ ModelObject.prototype.update = function (camera) {
   this.pruneOldViews(frame)
 
   this.umbra.scene.update(this.matrixWorld.elements)
-  camera.getWorldPosition(this.cameraWorldPosition)
 
   this.matrixWorldInverse.getInverse(camera.matrixWorld)
   this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse)
@@ -152,6 +151,13 @@ ModelObject.prototype.update = function (camera) {
     dir.sub(vector3)
     return [dir.x, dir.y, dir.z]
   }, lights)
+
+  // By default we stream in meshes around the camera, but the user can override it too.
+  if (camera.umbraStreamingPosition) {
+    this.cameraWorldPosition.copy(camera.umbraStreamingPosition)
+  } else {
+    camera.getWorldPosition(this.cameraWorldPosition)
+  }
 
   const pos = this.cameraWorldPosition
   view.update(this.projScreenMatrix.elements, [pos.x, pos.y, pos.z], this.quality, lightDirections)
