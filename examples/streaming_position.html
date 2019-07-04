@@ -1,0 +1,106 @@
+<html>
+    <head>
+      <title>Streaming Position Example</title>
+        <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+        .debug {
+            position: absolute;
+            right: 5px;
+            top: 0px;
+            padding: 3px;
+            background-color: rgba(0,0,0,0.5);
+            color: #fff;
+            z-index: 100;
+        }
+        .switch {
+          position: absolute;
+          left: 0.5em;
+          top: 0.5em;
+        }
+        </style>
+    </head>
+    <body>
+        <button class="switch" id="wireframeToggle">Toggle wireframe</button>
+
+        <script src="js/three-r106.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+(async function() {
+    const startTime = performance.now()
+
+    let params = new URL(window.location.href).searchParams
+    let token = 'pubk-72475579-2ca4-49da-9ff5-6e4fbf0ba170'
+    let projectID = '1005906'
+    let modelID = '321704672'
+    let renderer = new THREE.WebGLRenderer()
+
+    // Initialize the library and create a three.js object that contains our model
+
+    let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+    let model = await Umbra.createModel({
+        token: token,
+        projectID: projectID,
+        modelID: modelID})
+
+    let scene = new THREE.Scene()
+    let camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 1000)
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+    scene.background = new THREE.Color(0x222222)
+
+    document.body.appendChild(renderer.domElement)
+    renderer.setSize(window.innerWidth, window.innerHeight)
+
+    let geometry = new THREE.BoxGeometry(1, 1, 1)
+    let material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+
+    let axesHelper = new THREE.AxesHelper( 1 );
+    scene.add( axesHelper );
+
+    model.scale.set(1, 1, -1)
+    model.position.set(-5, -30, 0)
+    model.quality = 0.1
+    model.opaqueMaterial.wireframe = true
+
+    // Add Umbra model to the scene
+    scene.add(model)
+
+    let frame = 0
+    let target = new THREE.Vector3(-2, 6, 3)
+    camera.position.set(10, 10, -15)
+    controls.target.set(-2, 4, -3)
+
+    controls.update()
+
+    document.getElementById('wireframeToggle').addEventListener('click', event => {
+      model.opaqueMaterial.wireframe = !model.opaqueMaterial.wireframe
+    })
+
+    let animate = function () {
+        // Find visible blocks and update streaming
+        Umbra.update()
+
+        target.z = Math.cos(frame*0.01) * 10.0
+
+        // Visualize the streaming position
+        axesHelper.position.copy(target)
+        // Override the position
+        camera.umbraStreamingPosition = target.clone()
+
+        controls.update()
+        renderer.render(scene, camera)
+        frame++
+
+        requestAnimationFrame(animate)
+    }
+
+    animate()
+})()
+        </script>
+    </body>
+</html>
+
