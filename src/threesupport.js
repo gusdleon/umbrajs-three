@@ -43,6 +43,7 @@ function ModelObject (runtime, scene, renderer) {
   this.autoUpdate = true
   this.renderer = renderer
   this.cameraToView = new Map()
+  this.viewLastUsed = new Map()
   this.name = 'UmbraModel'
 
   // Add API objects under their own object for clarity
@@ -83,6 +84,26 @@ function findLights (scene) {
   return lights
 }
 
+ModelObject.prototype.pruneOldViews = function (frame) {
+  /**
+   * We get no notification when cameras are removed from the scene graph
+   * so we'll go and remove old views.
+   */
+  for (let [view, lastUsed] of this.viewLastUsed) {
+    if (frame - lastUsed > 1000) {
+      for (let [cam, view2] of this.cameraToView) {
+        if (view2 === view) {
+          this.cameraToView.delete(cam)
+          break
+        }
+      }
+      this.umbra.runtime.destroyView(view)
+      this.viewLastUsed.delete(view)
+    }
+  }
+}
+
+
 ModelObject.prototype.update = function (camera) {
   let scene
 
@@ -111,6 +132,10 @@ ModelObject.prototype.update = function (camera) {
     // TODO remove old views
   }
 
+  const frame = this.renderer.info.render.frame
+  this.viewLastUsed.set(view, frame)
+
+  this.pruneOldViews(frame)
 
   this.umbra.scene.update(this.matrixWorld.elements)
   camera.getWorldPosition(this.cameraWorldPosition)
@@ -238,6 +263,7 @@ ModelObject.prototype.update = function (camera) {
   if (shadowCasters.length > 0) {
     this.children.push(proxy)
   }
+
 }
 
 
