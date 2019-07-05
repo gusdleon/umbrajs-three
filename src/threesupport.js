@@ -19,7 +19,7 @@ const textureFormats = {
  * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
  * THREE.Material instance using the textures and transparency flag in 'materialDesc'
  */
-function MeshDescriptor(geometry, materialDesc) {
+function MeshDescriptor (geometry, materialDesc) {
   this.geometry = geometry
   this.materialDesc = materialDesc
 }
@@ -35,7 +35,7 @@ function ModelObject (runtime, scene, renderer) {
   this.stats = {
     numVisible: 0,
     numShadowCasters: 0,
-    numAssets: 0,
+    numAssets: 0
   }
 
   // We need to present ourselves as a LOD object to get the update() call
@@ -49,7 +49,7 @@ function ModelObject (runtime, scene, renderer) {
   // Add API objects under their own object for clarity
   this.umbra = {
     runtime: runtime,
-    scene: scene,
+    scene: scene
   }
 
   // Temporary values we don't want to reallocate every frame
@@ -102,7 +102,6 @@ ModelObject.prototype.pruneOldViews = function (frame) {
     }
   }
 }
-
 
 ModelObject.prototype.update = function (camera) {
   let scene
@@ -246,7 +245,7 @@ ModelObject.prototype.update = function (camera) {
        * an object pool could help.
        */
       const mesh = new THREE.Mesh(meshDesc.geometry, material)
-      mesh.name = "umbramesh"
+      mesh.name = 'umbramesh'
       mesh.matrixWorld.copy(this.matrixWorld)
       mesh.castShadow = this.castShadow
       mesh.receiveShadow = this.receiveShadow
@@ -269,9 +268,7 @@ ModelObject.prototype.update = function (camera) {
   if (shadowCasters.length > 0) {
     this.children.push(proxy)
   }
-
 }
-
 
 ModelObject.prototype.dispose = function () {
   this.umbra.runtime.destroyView(this.umbra.view)
@@ -279,7 +276,7 @@ ModelObject.prototype.dispose = function () {
   // Runtime must be manually freed by the user with .dispose() of the API object
 }
 
-function makeBoundingSphere(aabb) {
+function makeBoundingSphere (aabb) {
   const min = aabb[0]
   const max = aabb[1]
   const size = new THREE.Vector3(max[0] - min[0], max[1] - min[1], max[2] - min[2])
@@ -292,7 +289,7 @@ export function initWithThreeJS (renderer, userConfig) {
 
   return UmbraLibrary(config).then(Umbra => {
     const api = {
-      nonLinearShading: true,
+      nonLinearShading: true
     }
 
     const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
