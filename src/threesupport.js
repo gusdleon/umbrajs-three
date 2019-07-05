@@ -204,7 +204,17 @@ ModelObject.prototype.update = function (camera) {
    */
 
   const batchSize = 200
-  this.children.length = 0
+
+  // First filter away last frame's meshes
+  let newChildren = []
+  for (let i = 0; i < this.children.length; i++) {
+    if (!this.children[i].isUmbraMesh) {
+      newChildren.push(this.children[i])
+    }
+  }
+
+  this.children = newChildren
+
   let shadowCasters = []
 
   let proxy = new THREE.Object3D()
@@ -245,7 +255,7 @@ ModelObject.prototype.update = function (camera) {
        * an object pool could help.
        */
       const mesh = new THREE.Mesh(meshDesc.geometry, material)
-      mesh.name = 'umbramesh'
+      mesh.isUmbraMesh = true
       mesh.matrixWorld.copy(this.matrixWorld)
       mesh.castShadow = this.castShadow
       mesh.receiveShadow = this.receiveShadow
