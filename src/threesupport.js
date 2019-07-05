@@ -287,15 +287,16 @@ function makeBoundingSphere(aabb) {
   return new THREE.Sphere(pos, size.length())
 }
 
-export function initWithThreeJS (renderer, config) {
+export function initWithThreeJS (renderer, userConfig) {
+  const config = Object.assign({ resourcePipelineBytes: 50 * 1024 * 1024 }, userConfig)
+
   return UmbraLibrary(config).then(Umbra => {
-    // User visible configuration of the 'Umbra' object
-    const config = {
+    const api = {
       nonLinearShading: true,
     }
 
     const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
-    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats.flags)
+    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats.flags, config.resourcePipelineBytes)
 
     /**
      * Creating a model is an asynchronous operation because we might need to query the Project API
@@ -310,7 +311,7 @@ export function initWithThreeJS (renderer, config) {
         const model = new ModelObject(runtime, scene, renderer)
 
         // If the renderer is not gamma correct then sRGB textures shouldn't be used.
-        config.nonLinearShading = !renderer.gammaOutput
+        api.nonLinearShading = !renderer.gammaOutput
 
         return model
       })
@@ -378,7 +379,7 @@ export function initWithThreeJS (renderer, config) {
            *
            * NOTE: This should be done only when using the unlit BasicMaterial shader.
            */
-          if (info.colorSpace === 'linear' || config.nonLinearShading) {
+          if (info.colorSpace === 'linear' || api.nonLinearShading) {
             tex.encoding = THREE.LinearEncoding
           } else {
             tex.encoding = THREE.sRGBEncoding
@@ -446,7 +447,7 @@ export function initWithThreeJS (renderer, config) {
       runtime.update()
     }
 
-    return Object.assign(config, {
+    return Object.assign(api, {
       createModel: modelFactory,
       update: update,
       dispose: () => {
