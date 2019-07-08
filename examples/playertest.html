@@ -6,8 +6,8 @@
         canvas { width: 100%; height: 100% }
         .debug {
             position: absolute;
-            right: 5px;
-            top: 0px;
+            left: 5px;
+            top: 40px;
             padding: 3px;
             background-color: rgba(0,0,0,0.5);
             color: #fff;
@@ -18,7 +18,7 @@
     <body>
         <pre class="debug" id="info"></pre>
 
-        <script src="js/three-r105.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/106/three.min.js"></script>
         <script src="js/stats.min.js"></script>
         <script src="js/OrbitControls.js"></script>
         <script src="../dist/umbrajs-three.js"></script>
@@ -48,6 +48,7 @@ let makeDebugBox = (min, max) => {
     let token = params.get('key')
     let projectID = params.get('project')
     let modelID = params.get('model')
+    let quality = params.get('quality')
     let renderer = new THREE.WebGLRenderer()
 
     // Initialize the library and create a three.js object that contains our model
@@ -59,8 +60,13 @@ let makeDebugBox = (min, max) => {
         projectID: projectID,
         modelID: modelID})
 
+    if (quality) {
+        model.quality = parseFloat(quality)
+    }
+
     let scene = new THREE.Scene()
     let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
 
     scene.background = new THREE.Color(0x222222)
 
@@ -90,26 +96,21 @@ let makeDebugBox = (min, max) => {
     let timeToTriangle = 0
 
     let frame = 0
-    let radius = 1.0
     let debugBox = undefined
     let target = new THREE.Vector3(0, 0, 0)
     camera.position.y = 1
 
+    controls.update()
+
     let animate = function () {
         stats.begin()
 
-        // Rotate the camera around the model
-        camera.lookAt(target)
-        const phi = frame*0.01
-        camera.position.x = target.x + radius * Math.cos(phi)
-        camera.position.z = target.z + radius * Math.sin(phi)
+        // Find visible blocks and update streaming
+        Umbra.update()
 
         if (timeToTriangle === 0.0 && renderer.info.render.triangles > 0) {
             timeToTriangle = performance.now() - startTime
         }
-
-        // Find visible blocks and update streaming
-        model.updateVisible(scene, camera)
 
         const info = model.getInfo()
 
@@ -120,19 +121,24 @@ let makeDebugBox = (min, max) => {
             let y = bounds.max[1] - bounds.min[1]
             let z = bounds.max[2] - bounds.min[2]
 
-            radius = Math.sqrt(x*x + y*y + z*z) / 2
+            let diagonal = Math.sqrt(x*x + y*y + z*z)
+            camera.far = diagonal * 2
+            camera.updateProjectionMatrix()
 
             debugBox = makeDebugBox(bounds.min, bounds.max)
             scene.add(debugBox)
-            target = debugBox.position
-            camera.position.y = bounds.min[1] + y * 2
+            controls.target = debugBox.position.clone()
+            controls.object.position.y = bounds.min[1] + y * 2
         }
 
         // Visible:          the number of visible meshes
         // Assets:           the total number of resident assets (includes materials, textures, meshes)
         // Time-to-triangle: how long it took until a first triangle was shown
-        document.getElementById('info').textContent = `Connected: ${info.connected}\nVisible: ${info.numVisible}\nTime-to-triangle: ${Math.floor(timeToTriangle)} ms`
+        debugString = `Connected: ${info.connected}\nVisible: ${info.numVisible}\nTime-to-triangle: ${Math.floor(timeToTriangle)} ms\n`
+        debugString += Umbra.runtime.getDebugInfo()
+        document.getElementById('info').textContent = debugString
 
+        controls.update()
         renderer.render(scene, camera)
         frame++
 
