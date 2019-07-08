@@ -295,15 +295,13 @@ function makeBoundingSphere (aabb) {
 }
 
 export function initWithThreeJS (renderer, userConfig) {
-  const config = Object.assign({ resourcePipelineBytes: 50 * 1024 * 1024 }, userConfig)
-
-  return UmbraLibrary(config).then(Umbra => {
+  return UmbraLibrary(userConfig).then(Umbra => {
     const api = {
       nonLinearShading: true
     }
 
     const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
-    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats.flags, config.resourcePipelineBytes)
+    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats.flags)
 
     /**
      * Creating a model is an asynchronous operation because we might need to query the Project API
