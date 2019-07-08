@@ -1,0 +1,146 @@
+<html>
+    <head>
+      <title>Shadow Caster Example</title>
+        <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+        .debug {
+            position: absolute;
+            right: 5px;
+            top: 0px;
+            padding: 3px;
+            background-color: rgba(0,0,0,0.5);
+            color: #fff;
+            z-index: 100;
+        }
+        </style>
+    </head>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/106/three.min.js"></script>
+        <script src="js/stats.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+
+(async function() {
+    const startTime = performance.now()
+
+    let renderer = new THREE.WebGLRenderer({antialias: true})
+
+    let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+    let model = await Umbra.createModel({
+        token: 'pubk-a33b4cb8-6643-46a7-a3ff-c768c812b3b6',
+        projectID: '1005906',
+        modelID: '699980469'})
+
+    let scene = new THREE.Scene()
+    let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
+    let controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+    scene.background = new THREE.Color(0x222222)
+
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.body.appendChild(renderer.domElement)
+
+    let stats = new Stats()
+    stats.showPanel(2) // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(stats.dom)
+
+    let light1 = new THREE.DirectionalLight(0xffffff, 3.0)
+    light1.position.set(-1, 1, 1).normalize()
+    scene.add(light1)
+    var hemi = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.1)
+    scene.add(hemi)
+
+    // Helpers to create geometry for demonstration
+
+    function makePlane(size) {
+        var geometry = new THREE.PlaneGeometry(size, size, 32)
+        var material = new THREE.MeshStandardMaterial( {color: 0x223344, side: THREE.DoubleSide, roughness: 0.8, dithering: true} );
+        var mesh = new THREE.Mesh(geometry, material)
+        mesh.rotation.x = Math.PI / 2
+        return mesh
+    }
+
+    function makeCube() {
+        var geometry = new THREE.BoxGeometry( 1, 1, 1 )
+        var material = new THREE.MeshStandardMaterial( {color: 0xffffff} )
+        var cube = new THREE.Mesh( geometry, material )
+        return cube
+    }
+
+    let plane = makePlane(3)
+    plane.position.x = -0.4
+    plane.position.z = 0.2
+    plane.receiveShadow = true
+    scene.add(plane)
+
+    // We must set some options to make the Umbrafied model receive and cast shadows
+
+    model.opaqueMaterial = new THREE.MeshLambertMaterial() // THREE.BasicMaterial doesn't receive shadows
+    model.castShadow = true
+    model.receiveShadow = true
+
+    renderer.gammaOutput = true
+    renderer.shadowMap.enabled = true
+
+    light1.castShadow = true
+    light1.shadow.camera.zoom = 7
+    light1.shadow.camera.updateProjectionMatrix()
+
+    let cube = makeCube()
+    cube.scale.set(0.2, 0.2, 0.2)
+    cube.position.x = 0
+    cube.position.y = 0.5
+    cube.position.z = 0.4
+    cube.castShadow = true
+    cube.receiveShadow = false
+    scene.add(cube)
+
+    // Make light smaller for visualization
+    light1.scale.set(0.5, 0.5, 0.5)
+
+    const helper = new THREE.DirectionalLightHelper(light1)
+    scene.add(helper)
+
+    // Add the Umbra model to the scene
+    scene.add(model)
+
+    model.scale.set(1.0, 1.0, -1.0)
+    model.updateMatrix()
+
+    let frame = 0
+    let target = new THREE.Vector3(-0.55, 0, -0.1)
+    camera.position.set(-0.3878, 0.99, -1.033)
+    controls.update()
+
+    let animate = function () {
+        stats.begin()
+
+        // Find visible blocks and update streaming
+        Umbra.update()
+
+        let angle = frame * 0.01
+        // Rotate the camera around the model
+        cube.rotation.x = angle
+        cube.rotation.z = angle * 2
+
+        controls.update()
+
+        renderer.render(scene, camera)
+
+        frame++
+
+        stats.end()
+        requestAnimationFrame(animate)
+    }
+
+    animate()
+})()
+        </script>
+    </body>
+</html>
+
+
