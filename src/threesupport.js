@@ -341,7 +341,6 @@ export function initWithThreeJS (renderer, userConfig) {
           // We only support diffuse textures for now
           if (info.textureType !== 'diffuse') {
             runtime.addAsset(job, { dummy: true })
-            buffer.destroy()
             return
           }
 
@@ -353,7 +352,6 @@ export function initWithThreeJS (renderer, userConfig) {
 
           if (!glformat) {
             console.log('Unknown texture format', info.format)
-            buffer.destroy()
             job.fail()
             return
           }
@@ -366,10 +364,8 @@ export function initWithThreeJS (renderer, userConfig) {
           const mip = {
             width: info.width,
             height: info.height,
-            data: new Uint8Array(buffer.bytes().slice())
+            data: new Uint8Array(buffer.getArray().slice())
           }
-
-          buffer.destroy()
 
           const tex = new THREE.CompressedTexture([mip], info.width, info.height)
           tex.format = glformat.format
@@ -402,19 +398,22 @@ export function initWithThreeJS (renderer, userConfig) {
           runtime.removeAsset(job, job.data)
         },
         CreateMesh: job => {
-          // The mesh creation job gives us all the vertex data in job.data.buffers
-          const posArray = job.data.buffers['position']
-          const uvArray = job.data.buffers['uv']
-          const indexArray = job.data.buffers['index']
+          /**
+           * The mesh creation job gives us all the vertex data in job.data.buffers.
+           * The buffers are only valid during this handler, and the memory will be
+           * reused for other meshes later. Therefore we make copies of the arrays
+           * for three.js which is something we would have to do anyway.
+           */
+          const posArray = job.data.buffers['position'].getArray()
+          const uvArray = job.data.buffers['uv'].getArray()
+          const indexArray = job.data.buffers['index'].getArray()
 
-          const indices = Array.from(indexArray.view())
-          indexArray.destroy()
-          delete job.data.buffers['index']
+          const indices = Array.from(indexArray)
 
           const geometry = new THREE.BufferGeometry()
 
-          const pos = new THREE.Float32BufferAttribute(posArray.floats().slice(), 3)
-          const uv = new THREE.Float32BufferAttribute(uvArray.floats().slice(), 2)
+          const pos = new THREE.Float32BufferAttribute(posArray.slice(), 3)
+          const uv = new THREE.Float32BufferAttribute(uvArray.slice(), 2)
 
           geometry.addAttribute('position', pos)
           geometry.addAttribute('uv', uv)
@@ -422,18 +421,10 @@ export function initWithThreeJS (renderer, userConfig) {
 
           geometry.boundingSphere = makeBoundingSphere(job.data.bounds)
 
-          posArray.destroy()
-          delete job.data.buffers['position']
-          uvArray.destroy()
-          delete job.data.buffers['uv']
-
           if (job.data.buffers['normal']) {
-            const normalArray = job.data.buffers['normal']
-            const normal = new THREE.Float32BufferAttribute(normalArray.floats().slice(), 3)
+            const normalArray = job.data.buffers['normal'].getArray()
+            const normal = new THREE.Float32BufferAttribute(normalArray.slice(), 3)
             geometry.addAttribute('normal', normal)
-
-            normalArray.destroy()
-            delete job.data.buffers['normal']
           }
 
           const meshDescriptor = new MeshDescriptor(geometry, job.data.material)
