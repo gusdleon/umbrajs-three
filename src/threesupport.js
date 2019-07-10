@@ -1,17 +1,35 @@
 import * as THREE from 'three'
-import UmbraLibrary from 'umbrajs'
+import { UmbraLibrary, UmbraFormats } from 'umbrajs'
+import { createShaderPatcher } from './ShaderPatcher.js'
+import { textureFormats } from './textureformats.js'
 
-function makeFormat (format, type) {
-  return { format: format, type: type }
-}
+class ObjectPool {
+  constructor () {
+    this.usedList = []
+    this.freeList = []
+  }
 
-const textureFormats = {
-  rgb24: makeFormat(THREE.RGBFormat, THREE.UnsignedByte),
-  rgba32: makeFormat(THREE.RGBAFormat, THREE.UnsignedByte),
-  bc1: makeFormat(THREE.RGBA_S3TC_DXT1_Format, THREE.UnsignedByte),
-  bc3: makeFormat(THREE.RGBA_S3TC_DXT5_Format, THREE.UnsignedByte),
-  etc1_rgb: makeFormat(THREE.RGB_ETC1_Format, THREE.UnsignedByte),
-  astc_4x4: makeFormat(THREE.RGBA_ASTC_4x4_Format, THREE.UnsignedByte)
+  allocate (makeFunc) {
+    let obj
+    if (this.freeList.length > 0) {
+      obj = this.freeList.pop()
+    } else {
+      obj = makeFunc()
+    }
+
+    this.usedList.push(obj)
+    return obj
+  }
+
+  freeAll (clearFunc) {
+    for (let i = 0; i < this.usedList.length; i++) {
+      if (clearFunc) {
+        clearFunc(this.usedList[i])
+      }
+      this.freeList.push(this.usedList[i])
+    }
+    this.usedList.length = 0
+  }
 }
 
 /**
@@ -24,19 +42,21 @@ function MeshDescriptor (geometry, materialDesc) {
   this.materialDesc = materialDesc
 }
 
-function ModelObject (runtime, scene, renderer) {
+function ModelObject (runtime, scene, renderer, platform) {
   THREE.Object3D.call(this)
 
   // User editable config
   this.quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
-  this.opaqueMaterial = new THREE.MeshBasicMaterial()
 
   // Streaming debug info accessible through getInfo()
   this.stats = {
     numVisible: 0,
     numShadowCasters: 0,
+    numCachedMaterials: 0,
     numAssets: 0
   }
+
+  this.opaqueMaterial = new THREE.MeshBasicMaterial()
 
   // We need to present ourselves as a LOD object to get the update() call
   this.isLOD = true
@@ -44,6 +64,8 @@ function ModelObject (runtime, scene, renderer) {
   this.renderer = renderer
   this.cameraToView = new Map()
   this.viewLastUsed = new Map()
+  this.materialPool = new ObjectPool()
+  this.shaderPatcher = createShaderPatcher(platform.supportedFormats)
   this.name = 'UmbraModel'
 
   // Add API objects under their own object for clarity
@@ -230,22 +252,57 @@ ModelObject.prototype.update = function (camera) {
     }
   }
 
+  this.materialPool.freeAll(mat => {
+    // Remove references to textures so GC can release the three.js objects
+    delete mat.map
+    delete mat.normalMap
+    delete mat.metalnessMap
+    delete mat.roughnessMap
+  })
+
   let visible = []
 
   do {
     visible = view.getVisible(batchSize)
 
     for (let i = 0; i < visible.length; i++) {
-      const meshDesc = visible[i].mesh
+      const { materialDesc, geometry } = visible[i].mesh
 
-      // TODO create a new material only per new texture?
-      const material = this.opaqueMaterial.clone()
+      // Fetch a new material from the pool if we already have free ones. This avoids
+      // extra allocations and more importantly 'onBeforeCompile' calls.
+      const material = this.materialPool.allocate(() => this.opaqueMaterial.clone())
+      material.onBeforeCompile = (shader, renderer) => {
+        /**
+         * If the original material already had a custom preprocessor callback we need to call
+         * that first. We need to use 'apply' in case the callback uses 'this' reference to
+         * access some material properties.
+         */
+        if (this.opaqueMaterial.onBeforeCompile) {
+          this.opaqueMaterial.onBeforeCompile.apply(material, [shader, renderer])
+        }
 
-      const DIFFUSE_INDEX = 0
-      const diffuseMap = meshDesc.materialDesc.textures[DIFFUSE_INDEX]
+        this.shaderPatcher(shader, renderer)
+      }
+
+      const diffuseMap = materialDesc.textures[UmbraFormats.DIFFUSE_INDEX]
+      const normalMap = materialDesc.textures[UmbraFormats.NORMAL_INDEX]
+      const metalglossMap = materialDesc.textures[UmbraFormats.METALGLOSS_INDEX]
 
       if (diffuseMap && diffuseMap.isTexture) {
         material.map = diffuseMap
+      }
+
+      if (normalMap && normalMap.isTexture) {
+        material.normalMap = normalMap
+        material.vertexTangents = true
+        material.normalMapType = THREE.TangentSpaceNormalMap
+      }
+
+      if (metalglossMap && metalglossMap.isTexture) {
+        material.metalnessMap = metalglossMap
+        material.metalness = 1.0
+        material.roughnessMap = metalglossMap
+        material.roughness = 1.0
       }
 
       /**
@@ -254,11 +311,12 @@ ModelObject.prototype.update = function (camera) {
        * gets cleared every frame. However if this still causes too much allocations
        * an object pool could help.
        */
-      const mesh = new THREE.Mesh(meshDesc.geometry, material)
+      const mesh = new THREE.Mesh(geometry, material)
       mesh.isUmbraMesh = true
       mesh.matrixWorld.copy(this.matrixWorld)
       mesh.castShadow = this.castShadow
       mesh.receiveShadow = this.receiveShadow
+      mesh.visible = true
       this.children.push(mesh)
 
       if ((visible[i].mask & 0x01) === 0) {
@@ -274,6 +332,7 @@ ModelObject.prototype.update = function (camera) {
   } while (visible.length === batchSize)
 
   this.stats.numShadowCasters = shadowCasters.length
+  this.stats.numCachedMaterials = this.materialPool.usedList.length + this.materialPool.freeList.length
 
   if (shadowCasters.length > 0) {
     this.children.push(proxy)
@@ -313,7 +372,9 @@ export function initWithThreeJS (renderer, userConfig) {
         const scene = runtime.createScene()
         scene.connect(cloudArgs.token, IDs.project, IDs.model)
 
-        const model = new ModelObject(runtime, scene, renderer)
+        const model = new ModelObject(runtime, scene, renderer, {
+          supportedFormats: supportedFormats
+        })
 
         // If the renderer is not gamma correct then sRGB textures shouldn't be used.
         api.nonLinearShading = !renderer.gammaOutput
@@ -338,12 +399,6 @@ export function initWithThreeJS (renderer, userConfig) {
           const info = job.data.info
           const buffer = job.data.buffer
 
-          // We only support diffuse textures for now
-          if (info.textureType !== 'diffuse') {
-            runtime.addAsset(job, { dummy: true })
-            return
-          }
-
           let glformat
 
           if (textureFormats.hasOwnProperty(info.format)) {
@@ -355,11 +410,6 @@ export function initWithThreeJS (renderer, userConfig) {
             job.fail()
             return
           }
-
-          /**
-           * We need to copy the texture data here since three.js takes ownership
-           * of the contents.
-           */
 
           const mip = {
             width: info.width,
@@ -378,12 +428,16 @@ export function initWithThreeJS (renderer, userConfig) {
            * If gamma correction is not applied to the framebuffer (a three.js default)
            * then we need to keep diffuse textures as 'linear' to avoid darkening them.
            *
-           * NOTE: This should be done only when using the unlit BasicMaterial shader.
+           * FIXME: This should be done only when using the unlit BasicMaterial shader.
            */
-          if (info.colorSpace === 'linear' || api.nonLinearShading) {
-            tex.encoding = THREE.LinearEncoding
+          if (info.textureType === 'diffuse') {
+            if (info.colorSpace === 'linear' || api.nonLinearShading) {
+              tex.encoding = THREE.LinearEncoding
+            } else {
+              tex.encoding = THREE.sRGBEncoding
+            }
           } else {
-            tex.encoding = THREE.sRGBEncoding
+            tex.encoding = info.colorSpace === 'linear' ? THREE.LinearEncoding : THREE.sRGBEncoding
           }
 
           tex.needsUpdate = true
@@ -404,28 +458,29 @@ export function initWithThreeJS (renderer, userConfig) {
            * reused for other meshes later. Therefore we make copies of the arrays
            * for three.js which is something we would have to do anyway.
            */
-          const posArray = job.data.buffers['position'].getArray()
-          const uvArray = job.data.buffers['uv'].getArray()
-          const indexArray = job.data.buffers['index'].getArray()
-
-          const indices = Array.from(indexArray)
 
           const geometry = new THREE.BufferGeometry()
-
-          const pos = new THREE.Float32BufferAttribute(posArray.slice(), 3)
-          const uv = new THREE.Float32BufferAttribute(uvArray.slice(), 2)
-
-          geometry.addAttribute('position', pos)
-          geometry.addAttribute('uv', uv)
+          const indexArray = job.data.buffers['index'].getArray()
+          const indices = Array.from(indexArray)
           geometry.setIndex(indices)
-
           geometry.boundingSphere = makeBoundingSphere(job.data.bounds)
 
-          if (job.data.buffers['normal']) {
-            const normalArray = job.data.buffers['normal'].getArray()
-            const normal = new THREE.Float32BufferAttribute(normalArray.slice(), 3)
-            geometry.addAttribute('normal', normal)
+          const attribs = {
+            position: { components: 3 },
+            normal: { components: 3 },
+            uv: { components: 2 },
+            tangent: { components: 3 }
           }
+
+          Object.keys(attribs).forEach(name => {
+            const buffer = job.data.buffers[name]
+
+            if (buffer) {
+              const array = buffer.getArray()
+              const attrib = new THREE.Float32BufferAttribute(array.slice(), attribs[name].components)
+              geometry.addAttribute(name, attrib)
+            }
+          })
 
           const meshDescriptor = new MeshDescriptor(geometry, job.data.material)
           runtime.addAsset(job, meshDescriptor)
