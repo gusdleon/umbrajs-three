@@ -47,6 +47,7 @@ function ModelObject (runtime, scene, renderer, platform) {
 
   // User editable config
   this.quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
+  this.opaqueMaterial = new THREE.MeshBasicMaterial()
 
   // Streaming debug info accessible through getInfo()
   this.stats = {
@@ -55,8 +56,6 @@ function ModelObject (runtime, scene, renderer, platform) {
     numCachedMaterials: 0,
     numAssets: 0
   }
-
-  this.opaqueMaterial = new THREE.MeshBasicMaterial()
 
   // We need to present ourselves as a LOD object to get the update() call
   this.isLOD = true
@@ -150,7 +149,6 @@ ModelObject.prototype.update = function (camera) {
   if (!view) {
     view = this.umbra.runtime.createView()
     this.cameraToView.set(camera, view)
-    // TODO remove old views
   }
 
   const frame = this.renderer.info.render.frame
@@ -284,9 +282,9 @@ ModelObject.prototype.update = function (camera) {
         this.shaderPatcher(shader, renderer)
       }
 
-      const diffuseMap = materialDesc.textures[UmbraFormats.DIFFUSE_INDEX]
-      const normalMap = materialDesc.textures[UmbraFormats.NORMAL_INDEX]
-      const metalglossMap = materialDesc.textures[UmbraFormats.METALGLOSS_INDEX]
+      const diffuseMap = materialDesc.textures[UmbraFormats.TextureType.DIFFUSE]
+      const normalMap = materialDesc.textures[UmbraFormats.TextureType.NORMAL]
+      const metalglossMap = materialDesc.textures[UmbraFormats.TextureType.METALGLOSS]
 
       if (diffuseMap && diffuseMap.isTexture) {
         material.map = diffuseMap
@@ -360,7 +358,7 @@ export function initWithThreeJS (renderer, userConfig) {
     }
 
     const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
-    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats.flags)
+    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats)
 
     /**
      * Creating a model is an asynchronous operation because we might need to query the Project API
@@ -414,7 +412,8 @@ export function initWithThreeJS (renderer, userConfig) {
           const mip = {
             width: info.width,
             height: info.height,
-            data: new Uint8Array(buffer.getArray().slice())
+            // eslint-disable-next-line new-cap
+            data: new buffer.type(buffer.getArray().slice())
           }
 
           const tex = new THREE.CompressedTexture([mip], info.width, info.height)
@@ -431,7 +430,7 @@ export function initWithThreeJS (renderer, userConfig) {
            * FIXME: This should be done only when using the unlit BasicMaterial shader.
            */
           if (info.textureType === 'diffuse') {
-            if (info.colorSpace === 'linear' || api.nonLinearShading) {
+            if (api.nonLinearShading || info.colorSpace === 'linear') {
               tex.encoding = THREE.LinearEncoding
             } else {
               tex.encoding = THREE.sRGBEncoding
