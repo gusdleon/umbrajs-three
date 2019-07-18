@@ -48,6 +48,7 @@ function ModelObject (runtime, scene, renderer, platform) {
   // User editable config
   this.quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
   this.opaqueMaterial = new THREE.MeshBasicMaterial()
+  this.wireframe = false
 
   // Streaming debug info accessible through getInfo()
   this.stats = {
@@ -268,6 +269,8 @@ ModelObject.prototype.update = function (camera) {
       // Fetch a new material from the pool if we already have free ones. This avoids
       // extra allocations and more importantly 'onBeforeCompile' calls.
       const material = this.materialPool.allocate(() => this.opaqueMaterial.clone())
+      material.wireframe = this.wireframe
+
       material.onBeforeCompile = (shader, renderer) => {
         /**
          * If the original material already had a custom preprocessor callback we need to call
