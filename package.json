@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "three": "0.106.2",
-    "umbrajs": "1.6.20-preview1"
+    "@umbra3d/umbrajs": "1.6.20-preview1"
   },
   "devDependencies": {
     "add": "^2.0.6",
