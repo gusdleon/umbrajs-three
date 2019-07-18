@@ -1,6 +1,6 @@
 {
-  "name": "umbrajs-three",
-  "version": "0.1.1",
+  "name": "@umbra3d/umbrajs-three",
+  "version": "0.1.2",
   "description": "",
   "main": "dist/umbrajs-three.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "url": "git+https://github.com/UmbraSoftware/umbrajs-three"
   },
   "dependencies": {
-    "three": "^0.106.2",
-    "umbrajs": "1.6.19"
+    "three": "0.106.2",
+    "umbrajs": "1.6.20-preview1"
   },
   "devDependencies": {
     "add": "^2.0.6",
