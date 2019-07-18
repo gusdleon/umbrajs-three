@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { UmbraLibrary, Formats } from 'umbrajs'
+import { UmbraLibrary, Formats } from '@umbra3d/umbrajs'
 import { createShaderPatcher } from './ShaderPatcher.js'
 import { ThreeFormats } from './ThreeFormats.js'
 

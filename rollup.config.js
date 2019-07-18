@@ -1,5 +1,4 @@
 import resolve from "rollup-plugin-node-resolve";
-import execute from "rollup-plugin-execute";
 import { eslint } from "rollup-plugin-eslint";
 import { terser } from "rollup-plugin-terser";
 import fs from "fs";
@@ -23,9 +22,8 @@ const commonPlugins = () => [
     include: "src/*"
   }),
   resolve(),
-  execute("mkdir dist"),
   copyfiles([
-    ["node_modules/umbrajs/dist/umbra.wasm", "dist/umbra.wasm"]
+    ["node_modules/@umbra3d/umbrajs/dist/umbra.wasm", "dist/umbra.wasm"]
   ])
 ];
 
