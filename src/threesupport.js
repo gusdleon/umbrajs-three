@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import { UmbraLibrary, UmbraFormats } from 'umbrajs'
+import { UmbraLibrary, Formats } from 'umbrajs'
 import { createShaderPatcher } from './ShaderPatcher.js'
-import { textureFormats } from './textureformats.js'
+import { ThreeFormats } from './ThreeFormats.js'
 
 class ObjectPool {
   constructor () {
@@ -223,8 +223,6 @@ ModelObject.prototype.update = function (camera) {
    * scene graph traversal so that different object list ends up to the shadow pass render code.
    */
 
-  const batchSize = 200
-
   // First filter away last frame's meshes
   let newChildren = []
   for (let i = 0; i < this.children.length; i++) {
@@ -258,6 +256,7 @@ ModelObject.prototype.update = function (camera) {
     delete mat.roughnessMap
   })
 
+  const batchSize = 200
   let visible = []
 
   do {
@@ -282,9 +281,9 @@ ModelObject.prototype.update = function (camera) {
         this.shaderPatcher(shader, renderer)
       }
 
-      const diffuseMap = materialDesc.textures[UmbraFormats.TextureType.DIFFUSE]
-      const normalMap = materialDesc.textures[UmbraFormats.TextureType.NORMAL]
-      const metalglossMap = materialDesc.textures[UmbraFormats.TextureType.METALGLOSS]
+      const diffuseMap = materialDesc.textures[Formats.TextureType.DIFFUSE]
+      const normalMap = materialDesc.textures[Formats.TextureType.NORMAL]
+      const metalglossMap = materialDesc.textures[Formats.TextureType.SPECULAR]
 
       if (diffuseMap && diffuseMap.isTexture) {
         material.map = diffuseMap
@@ -353,11 +352,11 @@ function makeBoundingSphere (aabb) {
 
 export function initWithThreeJS (renderer, userConfig) {
   return UmbraLibrary(userConfig).then(Umbra => {
-    const api = {
-      nonLinearShading: true
-    }
-
     const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
+
+    // Three.js does not support BC5 compressed formats so we manually disable them.
+    supportedFormats.flags &= ~Formats.TextureCapability.BC5
+
     let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats)
 
     /**
@@ -373,9 +372,6 @@ export function initWithThreeJS (renderer, userConfig) {
         const model = new ModelObject(runtime, scene, renderer, {
           supportedFormats: supportedFormats
         })
-
-        // If the renderer is not gamma correct then sRGB textures shouldn't be used.
-        api.nonLinearShading = !renderer.gammaOutput
 
         return model
       })
@@ -399,8 +395,8 @@ export function initWithThreeJS (renderer, userConfig) {
 
           let glformat
 
-          if (textureFormats.hasOwnProperty(info.format)) {
-            glformat = textureFormats[info.format]
+          if (ThreeFormats.hasOwnProperty(info.format)) {
+            glformat = ThreeFormats[info.format]
           }
 
           if (!glformat) {
@@ -409,14 +405,21 @@ export function initWithThreeJS (renderer, userConfig) {
             return
           }
 
-          const mip = {
-            width: info.width,
-            height: info.height,
-            // eslint-disable-next-line new-cap
-            data: new buffer.type(buffer.getArray().slice())
+          // eslint-disable-next-line new-cap
+          const pixelData = new buffer.type(buffer.getArray().slice())
+
+          let tex
+          if (glformat.compressed) {
+            const mip = {
+              width: info.width,
+              height: info.height,
+              data: pixelData
+            }
+            tex = new THREE.CompressedTexture([mip], info.width, info.height)
+          } else {
+            tex = new THREE.DataTexture(pixelData, info.width, info.height)
           }
 
-          const tex = new THREE.CompressedTexture([mip], info.width, info.height)
           tex.format = glformat.format
           tex.type = glformat.type
           tex.magFilter = THREE.LinearFilter
@@ -424,17 +427,13 @@ export function initWithThreeJS (renderer, userConfig) {
           tex.anisotropy = 0
 
           /**
-           * If gamma correction is not applied to the framebuffer (a three.js default)
-           * then we need to keep diffuse textures as 'linear' to avoid darkening them.
-           *
-           * FIXME: This should be done only when using the unlit BasicMaterial shader.
+           * A workaround for the case where we directly output colors in gamma space.
+           * We make all textures linear to avoid gamma expansion at texture fetch time.
+           * This is slightly wrong because texture filtering and shading will be done
+           * in gamma space, but this behavior is what people usually expect.
            */
-          if (info.textureType === 'diffuse') {
-            if (api.nonLinearShading || info.colorSpace === 'linear') {
-              tex.encoding = THREE.LinearEncoding
-            } else {
-              tex.encoding = THREE.sRGBEncoding
-            }
+          if (info.textureType === 'diffuse' && !renderer.gammaOutput) {
+            tex.encoding = THREE.LinearEncoding
           } else {
             tex.encoding = info.colorSpace === 'linear' ? THREE.LinearEncoding : THREE.sRGBEncoding
           }
@@ -497,7 +496,7 @@ export function initWithThreeJS (renderer, userConfig) {
       runtime.update()
     }
 
-    return Object.assign(api, {
+    return {
       createModel: modelFactory,
       update: update,
       dispose: () => {
@@ -506,6 +505,6 @@ export function initWithThreeJS (renderer, userConfig) {
       },
       lib: Umbra,
       runtime: runtime
-    })
+    }
   })
 }

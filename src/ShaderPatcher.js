@@ -4,7 +4,8 @@
  * custom shaders allows the application to use its own materials with Umbrafied models.
  */
 
-const normalmapShaderChunk = `
+const normalmapChunk = `
+
 #ifdef USE_NORMALMAP
 #ifdef USE_TANGENT
 
@@ -12,7 +13,7 @@ vec3 tangentToWorld2 = normal;
 vec3 tangentToWorld0 = normalize(tangent - tangentToWorld2 * dot(tangentToWorld2, tangent));
 vec3 tangentToWorld1 = normalize(cross(tangentToWorld2, tangentToWorld0));
 
-#if defined(TEXTURE_SUPPORT_BC5)
+#if defined(UMBRA_TEXTURE_SUPPORT_BC5) || defined(UMBRA_TEXTURE_SUPPORT_ASTC)
 normal.xy = texture2D(normalMap, vUv).xy * 2.0 - 1.0;
 normal.z = sqrt(1.0 - clamp(dot(normal.xy, normal.xy), 0.0, 1.0));
 #elif defined(UMBRA_TEXTURE_SUPPORT_BC3)
@@ -29,9 +30,10 @@ normal = tangentToWorld0 * normal.x + tangentToWorld1 * normal.y + tangentToWorl
 normal = normalize(normal);
 #endif
 #endif
+
 `
 
-const metalnessMapShaderChunk = `
+const metalnessMapChunk = `
 float metalnessFactor = metalness;
 #ifdef USE_METALNESSMAP
 vec4 texelMetalness = texture2D( metalnessMap, vUv );
@@ -40,7 +42,7 @@ metalnessFactor *= texelMetalness.r;
 `
 
 // The BSDF function (see 'bsdfs.glsl') squares the roughness so we don't need to do it here.
-const roughnessMapShaderChunk = `
+const roughnessMapChunk = `
 float roughnessFactor = roughness;
 #ifdef USE_ROUGHNESSMAP
 vec4 texelRoughness = texture2D( roughnessMap, vUv );
@@ -49,9 +51,7 @@ roughnessFactor *= roughness;
 #endif
 `
 
-function createShaderPatcher (formats, {
-  showNormals = false, showRoughness = false
-} = {}) {
+function createShaderPatcher (formats) {
   let defines = ''
 
   if (formats.formats.indexOf('bc3') > -1) {
@@ -60,19 +60,16 @@ function createShaderPatcher (formats, {
   if (formats.formats.indexOf('bc5') > -1) {
     defines += '#define UMBRA_TEXTURE_SUPPORT_BC5\n'
   }
+  if (formats.formats.indexOf('astc_4x4') > -1) {
+    defines += '#define UMBRA_TEXTURE_SUPPORT_ASTC\n'
+  }
 
   return function (shader, renderer) {
     let frag = shader.fragmentShader
     frag = defines + frag
-    frag = frag.replace('#include <normal_fragment_maps>', normalmapShaderChunk)
-    frag = frag.replace('#include <metalnessmap_fragment>', metalnessMapShaderChunk)
-    frag = frag.replace('#include <roughnessmap_fragment>', roughnessMapShaderChunk)
-    if (showNormals) {
-      frag = frag.replace('gl_FragColor = vec4( outgoingLight, diffuseColor.a );', 'gl_FragColor = vec4( 0.5 * (vec3(1.0) + normal), diffuseColor.a );')
-    }
-    if (showRoughness) {
-      frag = frag.replace('gl_FragColor = vec4( outgoingLight, diffuseColor.a );', 'gl_FragColor = vec4( vec3(roughnessFactor) , diffuseColor.a );')
-    }
+    frag = frag.replace('#include <normal_fragment_maps>', normalmapChunk)
+    frag = frag.replace('#include <metalnessmap_fragment>', metalnessMapChunk)
+    frag = frag.replace('#include <roughnessmap_fragment>', roughnessMapChunk)
     shader.fragmentShader = frag
   }
 }
