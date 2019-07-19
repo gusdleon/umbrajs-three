@@ -1,6 +1,6 @@
 {
   "name": "@umbra3d/umbrajs-three",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "dist/umbrajs-three.js",
   "scripts": {
@@ -15,12 +15,13 @@
   },
   "dependencies": {
     "three": "0.106.2",
-    "@umbra3d/umbrajs": "1.6.20-preview1"
+    "@umbra3d/umbrajs": "1.6.20-preview3"
   },
   "devDependencies": {
     "add": "^2.0.6",
     "eslint": "^6.0.1",
     "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-html": "^6.0.0",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.1.1",
