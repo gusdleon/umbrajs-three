@@ -1,0 +1,146 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Player Example</title>
+        <link rel="stylesheet" type="text/css" href="samples.css">
+    </head>
+    <body>
+        <pre class="debug" id="info"></pre>
+        <canvas id="c"></canvas>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/106/three.js"></script>
+        <script src="js/stats.min.js"></script>
+        <script src="js/dat.gui.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+'use strict';
+
+(async function () {
+  const startTime = performance.now()
+
+  let params = new URL(window.location.href).searchParams
+  let token = params.get('key')
+  let projectID = params.get('project')
+  let modelID = params.get('model')
+  let quality = params.get('quality')
+  let leftHanded = params.get('leftHanded')
+
+  const canvas = document.querySelector('#c')
+  let renderer = new THREE.WebGLRenderer({ canvas })
+
+  // Initialize the library and create a three.js object that contains our model
+
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+  let model = await Umbra.createModel({
+    token: token,
+    projectID: projectID,
+    modelID: modelID })
+
+  if (quality) {
+    model.quality = parseFloat(quality)
+  }
+
+  let scene = new THREE.Scene()
+  let camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.01, 1000)
+  let controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+  scene.background = new THREE.Color(0x222222)
+  setResizeListener(renderer, camera)
+
+  let stats = new Stats()
+  stats.showPanel(0) // Show FPS by default
+  document.body.appendChild(stats.dom)
+
+  let debug = {
+    visible: false
+  }
+
+  var gui = new dat.GUI()
+  gui.add(model, 'quality', 0, 1).name('Model quality')
+  gui.add(model, 'wireframe').name('Wireframe')
+  gui.add(debug, 'visible').name('Streaming info')
+
+  let light1 = new THREE.DirectionalLight(0xffffff, 1.0)
+  let light2 = new THREE.DirectionalLight(0x8888ff, 0.5)
+  light1.position.set(1, 1, 1).normalize()
+  light2.position.set(-1, -1, -1).normalize()
+  scene.add(light1)
+  scene.add(light2)
+
+  let gridHelper = new THREE.GridHelper(10, 10)
+  scene.add(gridHelper)
+
+  // Add Umbra model to the scene
+  scene.add(model)
+
+  if (leftHanded) {
+    model.scale.set(1.0, 1.0, -1.0)
+    model.updateMatrix()
+  }
+
+  let timeToTriangle = 0
+
+  let boundingBox
+  camera.position.y = 1
+
+  controls.update()
+
+  let animate = function () {
+    stats.begin()
+
+    // Find visible blocks and update streaming
+    Umbra.update()
+
+    if (timeToTriangle === 0.0 && renderer.info.render.triangles > 0) {
+      timeToTriangle = performance.now() - startTime
+    }
+
+    const info = model.getInfo()
+
+    // Once connected create a bounding box visualization and getter view for the camera
+    if (info.connected && !boundingBox) {
+      const bounds = model.getBounds()
+      let x = bounds.max.x - bounds.min.x
+      let y = bounds.max.y - bounds.min.y
+      let z = bounds.max.z - bounds.min.z
+
+      let diagonal = Math.sqrt(x * x + y * y + z * z)
+      camera.far = Math.max(100, diagonal * 4)
+      camera.updateProjectionMatrix()
+
+      boundingBox = makeBoundingBoxMesh(bounds)
+      boundingBox.visible = false
+      model.add(boundingBox)
+      controls.target = model.getCenter()
+      controls.object.position.y = bounds.min.y + y * 2
+      gui.add(boundingBox, 'visible').name('Show bounds')
+    }
+
+    // Visible:          the number of visible meshes
+    // Assets:           the total number of resident assets (includes materials, textures, meshes)
+    // Time-to-triangle: how long it took until a first triangle was shown
+    if (debug.visible) {
+      let debugString = `Connected: ${info.connected}\nVisible meshes: ${info.numVisible}\nTime-to-triangle: ${Math.floor(timeToTriangle)} ms\n`
+      debugString += Umbra.runtime.getDebugInfo()
+      document.getElementById('info').textContent = debugString
+    } else {
+      document.getElementById('info').textContent = ''
+    }
+
+    controls.update()
+    renderer.render(scene, camera)
+
+    stats.end()
+    requestAnimationFrame(animate)
+  }
+
+  animate()
+})()
+        </script>
+    </body>
+</html>
+

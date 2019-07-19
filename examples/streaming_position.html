@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Streaming Position Example</title>
+        <link rel="stylesheet" type="text/css" href="samples.css">
+    </head>
+    <body>
+        <span class="message">
+            <br>
+            The streaming position can also be moved manually.<br>
+            Made with <a href="https://github.com/UmbraSoftware/umbrajs-three">umbrajs-three</a>.
+        </span>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/106/three.min.js"></script>
+        <script src="js/dat.gui.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+'use strict';
+(async function () {
+  let token = 'pubk-72475579-2ca4-49da-9ff5-6e4fbf0ba170'
+  let projectID = '1005906'
+  let modelID = '321704672'
+  let renderer = new THREE.WebGLRenderer()
+
+  // Initialize the library and create a three.js object that contains our model
+
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+  let model = await Umbra.createModel({
+    token: token,
+    projectID: projectID,
+    modelID: modelID })
+
+  let scene = new THREE.Scene()
+  let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
+  let controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+  scene.background = new THREE.Color(0x222222)
+  setResizeListener(renderer, camera)
+
+  document.body.appendChild(renderer.domElement)
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+  var gui = new dat.GUI()
+  gui.add(model, 'wireframe').name('Wireframe')
+
+  let helper = makeSphere(0.3, 0xffcccc)
+  scene.add(helper)
+
+  model.scale.set(1, 1, -1)
+  model.position.set(-5, -30, 0)
+  model.quality = 0.1
+  model.opaqueMaterial.wireframe = true
+
+  // Add Umbra model to the scene
+  scene.add(model)
+
+  let frame = 0
+  let target = new THREE.Vector3(-1, 6, 3)
+  camera.position.set(10, 10, -15)
+  controls.target.set(-2, 4, -3)
+
+  controls.update()
+
+  let animate = function () {
+    // Find visible blocks and update streaming
+    Umbra.update()
+
+    target.z = Math.cos(frame * 0.01) * 7.0
+
+    // Visualize the streaming position
+    helper.position.copy(target)
+    // Override the position
+    camera.umbraStreamingPosition = target.clone()
+
+    controls.update()
+    renderer.render(scene, camera)
+    frame++
+
+    requestAnimationFrame(animate)
+  }
+
+  animate()
+})()
+        </script>
+    </body>
+</html>
+

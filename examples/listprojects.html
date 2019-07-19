@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Project API example</title>
+  </head>
+  <body>
+    <pre id="info"></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/106/three.min.js"></script>
+    <script src="../dist/umbrajs-three.js"></script>
+
+    <script>
+'use strict';
+
+(async function () {
+  let token = new URL(window.location.href).searchParams.get('key')
+
+  let info = document.getElementById('info')
+  info.textContent = 'Fetching projects...\n'
+
+  var renderer = new THREE.WebGLRenderer()
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+  try {
+    // Call the low-level umbrajs lib directly
+    let projects = await Umbra.lib.getProjects(token)
+
+    info.textContent += `Found ${projects.length} projects:\n`
+
+    // Print out project infos
+    for (let i = 0; i < projects.length; i++) {
+      const p = projects[i]
+      info.textContent += `${p.name} (${p.id}) (${p.organizationName})\n`
+      console.log(projects[i])
+      for (let j = 0; j < p.models.length; j++) {
+        const m = p.models[j]
+        const isPublic = m.publicShare ? 'public' : 'private'
+        info.textContent += `    ${m.name} ${m.id} ${isPublic}\n`
+      }
+    }
+  } catch (e) {
+    info.textContent += `Failed: ${e}`
+  }
+})()
+    </script>
+  </body>
+</html>
+
+

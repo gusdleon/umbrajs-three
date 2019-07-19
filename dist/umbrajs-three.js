@@ -1,0 +1,1794 @@
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('three')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'three'], factory) :
+  (global = global || self, factory(global.UmbraRuntime = {}, global.THREE));
+}(this, function (exports, THREE) { 'use strict';
+
+  var UmbraNativeAPI = (function() {
+    var _scriptDir = typeof document !== 'undefined' && document.currentScript ? document.currentScript.src : undefined;
+    return (
+  function(UmbraNativeAPI) {
+    UmbraNativeAPI = UmbraNativeAPI || {};
+
+  var e;e||(e=typeof UmbraNativeAPI !== 'undefined' ? UmbraNativeAPI : {});var aa={},m;for(m in e)e.hasOwnProperty(m)&&(aa[m]=e[m]);e.arguments=[];e.thisProgram="./this.program";e.quit=function(a,b){throw b;};e.preRun=[];e.postRun=[];var r="";document.currentScript&&(r=document.currentScript.src);_scriptDir&&(r=_scriptDir);0!==r.indexOf("blob:")?r=r.substr(0,r.lastIndexOf("/")+1):r="";e.read=function(a){var b=new XMLHttpRequest;b.open("GET",a,!1);b.send(null);return b.responseText};
+  e.readAsync=function(a,b,c){var d=new XMLHttpRequest;d.open("GET",a,!0);d.responseType="arraybuffer";d.onload=function(){200==d.status||0==d.status&&d.response?b(d.response):c();};d.onerror=c;d.send(null);};e.setWindowTitle=function(a){document.title=a;};var ba=e.print||("undefined"!==typeof console?console.log.bind(console):"undefined"!==typeof print?print:null),u=e.printErr||("undefined"!==typeof printErr?printErr:"undefined"!==typeof console&&console.warn.bind(console)||ba);
+  for(m in aa)aa.hasOwnProperty(m)&&(e[m]=aa[m]);aa=void 0;function da(a){var b=v[ea>>2];a=b+a+15&-16;a>fa()&&w();v[ea>>2]=a;return b}function ha(a){ia||(ia={});ia[a]||(ia[a]=1,u(a));}var ia,ja={"f64-rem":function(a,b){return a%b},"debugger":function(){debugger}};"object"!==typeof WebAssembly&&u("no native wasm support detected");var ka,y=!1;function la(a,b){a||w("Assertion failed: "+b);}
+  function ma(a){if("number"===typeof a){var b=!0;var c=a;}else b=!1,c=a.length;var d=z(Math.max(c,1));if(b){a=d;la(0==(d&3));for(b=d+(c&-4);a<b;a+=4)v[a>>2]=0;for(b=d+c;a<b;)A[a++>>0]=0;return d}a.subarray||a.slice?B.set(a,d):B.set(new Uint8Array(a),d);return d}var na="undefined"!==typeof TextDecoder?new TextDecoder("utf8"):void 0;
+  function oa(a,b,c){var d=b+c;for(c=b;a[c]&&!(c>=d);)++c;if(16<c-b&&a.subarray&&na)return na.decode(a.subarray(b,c));for(d="";b<c;){var f=a[b++];if(f&128){var g=a[b++]&63;if(192==(f&224))d+=String.fromCharCode((f&31)<<6|g);else{var k=a[b++]&63;f=224==(f&240)?(f&15)<<12|g<<6|k:(f&7)<<18|g<<12|k<<6|a[b++]&63;65536>f?d+=String.fromCharCode(f):(f-=65536,d+=String.fromCharCode(55296|f>>10,56320|f&1023));}}else d+=String.fromCharCode(f);}return d}function C(a){return a?oa(B,a,void 0):""}
+  function pa(a,b,c,d){if(0<d){d=c+d-1;for(var f=0;f<a.length;++f){var g=a.charCodeAt(f);if(55296<=g&&57343>=g){var k=a.charCodeAt(++f);g=65536+((g&1023)<<10)|k&1023;}if(127>=g){if(c>=d)break;b[c++]=g;}else{if(2047>=g){if(c+1>=d)break;b[c++]=192|g>>6;}else{if(65535>=g){if(c+2>=d)break;b[c++]=224|g>>12;}else{if(c+3>=d)break;b[c++]=240|g>>18;b[c++]=128|g>>12&63;}b[c++]=128|g>>6&63;}b[c++]=128|g&63;}}b[c]=0;}}
+  function qa(a){for(var b=0,c=0;c<a.length;++c){var d=a.charCodeAt(c);55296<=d&&57343>=d&&(d=65536+((d&1023)<<10)|a.charCodeAt(++c)&1023);127>=d?++b:b=2047>=d?b+2:65535>=d?b+3:b+4;}return b}"undefined"!==typeof TextDecoder&&new TextDecoder("utf-16le");function ra(a){0<a%65536&&(a+=65536-a%65536);return a}var D,A,B,sa,ta,v,E,ua,va;
+  function wa(){e.HEAP8=A=new Int8Array(D);e.HEAP16=sa=new Int16Array(D);e.HEAP32=v=new Int32Array(D);e.HEAPU8=B=new Uint8Array(D);e.HEAPU16=ta=new Uint16Array(D);e.HEAPU32=E=new Uint32Array(D);e.HEAPF32=ua=new Float32Array(D);e.HEAPF64=va=new Float64Array(D);}var ea=16800,xa=e.TOTAL_MEMORY||134217728;5242880>xa&&u("TOTAL_MEMORY should be larger than TOTAL_STACK, was "+xa+"! (TOTAL_STACK=5242880)");
+  e.buffer?D=e.buffer:"object"===typeof WebAssembly&&"function"===typeof WebAssembly.Memory?(ka=new WebAssembly.Memory({initial:xa/65536}),D=ka.buffer):D=new ArrayBuffer(xa);wa();v[ea>>2]=5259712;function ya(a){for(;0<a.length;){var b=a.shift();if("function"==typeof b)b();else{var c=b.lb;"number"===typeof c?void 0===b.ab?e.dynCall_v(c):e.dynCall_vi(c,b.ab):c(void 0===b.ab?null:b.ab);}}}var za=[],Aa=[],Ba=[],Ca=[],Da=!1;function Ea(){var a=e.preRun.shift();za.unshift(a);}var F=0,Fa=null,Ga=null;
+  e.preloadedImages={};e.preloadedAudios={};function Ha(){var a=G;return String.prototype.startsWith?a.startsWith("data:application/octet-stream;base64,"):0===a.indexOf("data:application/octet-stream;base64,")}var G="umbra.wasm";if(!Ha()){var Ia=G;G=e.locateFile?e.locateFile(Ia,r):r+Ia;}function Ja(){try{if(e.wasmBinary)return new Uint8Array(e.wasmBinary);if(e.readBinary)return e.readBinary(G);throw"both async and sync fetching of the wasm failed";}catch(a){w(a);}}
+  function Ka(){return e.wasmBinary||"function"!==typeof fetch?new Promise(function(a){a(Ja());}):fetch(G,{credentials:"same-origin"}).then(function(a){if(!a.ok)throw"failed to load wasm binary file at '"+G+"'";return a.arrayBuffer()}).catch(function(){return Ja()})}
+  function La(a){function b(a){e.asm=a.exports;F--;e.monitorRunDependencies&&e.monitorRunDependencies(F);0==F&&(null!==Fa&&(clearInterval(Fa),Fa=null),Ga&&(a=Ga,Ga=null,a()));}function c(a){b(a.instance);}function d(a){return Ka().then(function(a){return WebAssembly.instantiate(a,f)}).then(a,function(a){u("failed to asynchronously prepare wasm: "+a);w(a);})}var f={env:a,global:{NaN:NaN,Infinity:Infinity},"global.Math":Math,asm2wasm:ja};F++;e.monitorRunDependencies&&e.monitorRunDependencies(F);if(e.instantiateWasm)try{return e.instantiateWasm(f,
+  b)}catch(g){return u("Module.instantiateWasm callback failed with error: "+g),!1}(function(){if(e.wasmBinary||"function"!==typeof WebAssembly.instantiateStreaming||Ha()||"function"!==typeof fetch)return d(c);fetch(G,{credentials:"same-origin"}).then(function(a){return WebAssembly.instantiateStreaming(a,f).then(c,function(a){u("wasm streaming compile failed: "+a);u("falling back to ArrayBuffer instantiation");d(c);})});})();return {}}
+  e.asm=function(a,b){b.memory=ka;b.table=new WebAssembly.Table({initial:533,maximum:533,element:"anyfunc"});b.__memory_base=1024;b.__table_base=0;return La(b)};var Na=[function(){alert("Invalid http method.");},function(a,b,c,d,f,g,k,h,l,n,q){return Ma(a,b,c,d,f,g,k,h,l,n,q)},function(){alert("Uploads are not supported.");}];Aa.push({lb:function(){Oa();}});var H={};
+  function Pa(a){if(Pa.qb){var b=v[a>>2];var c=v[b>>2];}else Pa.qb=!0,H.USER=H.LOGNAME="web_user",H.PATH="/",H.PWD="/",H.HOME="/home/web_user",H.LANG="C.UTF-8",H._=e.thisProgram,c=Da?z(1024):da(1024),b=Da?z(256):da(256),v[b>>2]=c,v[a>>2]=b;a=[];var d=0,f;for(f in H)if("string"===typeof H[f]){var g=f+"="+H[f];a.push(g);d+=g.length;}if(1024<d)throw Error("Environment size exceeded TOTAL_ENV_SIZE!");for(f=0;f<a.length;f++){d=g=a[f];for(var k=c,h=0;h<d.length;++h)A[k++>>0]=d.charCodeAt(h);A[k>>0]=0;v[b+4*
+  f>>2]=c;c+=g.length+1;}v[b+4*a.length>>2]=0;}var Qa=[null,[],[]],I=0;function J(){I+=4;return v[I-4>>2]}var Ra={},Sa={};function Ua(a){for(;a.length;){var b=a.pop();a.pop()(b);}}function Va(a){return this.fromWireType(E[a>>2])}var K={},L={},Wa={};function Xa(a){if(void 0===a)return "_unknown";a=a.replace(/[^a-zA-Z0-9_]/g,"$");var b=a.charCodeAt(0);return 48<=b&&57>=b?"_"+a:a}
+  function Ya(a,b){a=Xa(a);return (new Function("body","return function "+a+'() {\n    "use strict";    return body.apply(this, arguments);\n};\n'))(b)}function Za(a){var b=Error,c=Ya(a,function(b){this.name=a;this.message=b;b=Error(b).stack;void 0!==b&&(this.stack=this.toString()+"\n"+b.replace(/^Error(:[^\n]*)?\n/,""));});c.prototype=Object.create(b.prototype);c.prototype.constructor=c;c.prototype.toString=function(){return void 0===this.message?this.name:this.name+": "+this.message};return c}
+  var $a=void 0;function ab(a){throw new $a(a);}function bb(a,b,c){function d(b){b=c(b);b.length!==a.length&&ab("Mismatched type converter count");for(var d=0;d<a.length;++d)M(a[d],b[d]);}a.forEach(function(a){Wa[a]=b;});var f=Array(b.length),g=[],k=0;b.forEach(function(a,b){L.hasOwnProperty(a)?f[b]=L[a]:(g.push(a),K.hasOwnProperty(a)||(K[a]=[]),K[a].push(function(){f[b]=L[a];++k;k===g.length&&d(f);}));});0===g.length&&d(f);}
+  function cb(a){switch(a){case 1:return 0;case 2:return 1;case 4:return 2;case 8:return 3;default:throw new TypeError("Unknown type size: "+a);}}var db=void 0;function N(a){for(var b="";B[a];)b+=db[B[a++]];return b}var eb=void 0;function P(a){throw new eb(a);}
+  function M(a,b,c){c=c||{};if(!("argPackAdvance"in b))throw new TypeError("registerType registeredInstance requires argPackAdvance");var d=b.name;a||P('type "'+d+'" must have a positive integer typeid pointer');if(L.hasOwnProperty(a)){if(c.Ab)return;P("Cannot register type '"+d+"' twice");}L[a]=b;delete Wa[a];K.hasOwnProperty(a)&&(b=K[a],delete K[a],b.forEach(function(a){a();}));}function fb(a){return {count:a.count,Wa:a.Wa,Za:a.Za,Na:a.Na,Pa:a.Pa,Qa:a.Qa,Sa:a.Sa}}
+  function gb(a){P(a.Ma.Pa.Oa.name+" instance already deleted");}var hb=!1;function ib(){}function jb(a){--a.count.value;0===a.count.value&&(a.Qa?a.Sa.Va(a.Qa):a.Pa.Oa.Va(a.Na));}
+  function kb(a){if("undefined"===typeof FinalizationGroup)return kb=function(a){return a},a;hb=new FinalizationGroup(function(a){for(var b=a.next();!b.done;b=a.next())b=b.value,b.Na?jb(b):console.warn("object already deleted: "+b.Na);});kb=function(a){hb.register(a,a.Ma,a.Ma);return a};ib=function(a){hb.unregister(a.Ma);};return kb(a)}var lb=void 0,mb=[];function nb(){for(;mb.length;){var a=mb.pop();a.Ma.Wa=!1;a["delete"]();}}function Q(){}var ob={};
+  function pb(a,b){var c=e;if(void 0===c[a].Ua){var d=c[a];c[a]=function(){c[a].Ua.hasOwnProperty(arguments.length)||P("Function '"+b+"' called with an invalid number of arguments ("+arguments.length+") - expects one of ("+c[a].Ua+")!");return c[a].Ua[arguments.length].apply(this,arguments)};c[a].Ua=[];c[a].Ua[d.pb]=d;}}
+  function qb(a,b,c){e.hasOwnProperty(a)?((void 0===c||void 0!==e[a].Ua&&void 0!==e[a].Ua[c])&&P("Cannot register public name '"+a+"' twice"),pb(a,a),e.hasOwnProperty(c)&&P("Cannot register multiple overloads of a function with the same number of arguments ("+c+")!"),e[a].Ua[c]=b):(e[a]=b,void 0!==c&&(e[a].Ub=c));}function rb(a,b,c,d,f,g,k,h){this.name=a;this.constructor=b;this.Ya=c;this.Va=d;this.Ta=f;this.ub=g;this.$a=k;this.sb=h;}
+  function sb(a,b,c){for(;b!==c;)b.$a||P("Expected null or instance of "+c.name+", got an instance of "+b.name),a=b.$a(a),b=b.Ta;return a}function tb(a,b){if(null===b)return this.fb&&P("null is not a valid "+this.name),0;b.Ma||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ma.Na||P("Cannot pass deleted object as a pointer of type "+this.name);return sb(b.Ma.Na,b.Ma.Pa.Oa,this.Oa)}
+  function ub(a,b){if(null===b){this.fb&&P("null is not a valid "+this.name);if(this.cb){var c=this.gb();null!==a&&a.push(this.Va,c);return c}return 0}b.Ma||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ma.Na||P("Cannot pass deleted object as a pointer of type "+this.name);!this.bb&&b.Ma.Pa.bb&&P("Cannot convert argument of type "+(b.Ma.Sa?b.Ma.Sa.name:b.Ma.Pa.name)+" to parameter type "+this.name);c=sb(b.Ma.Na,b.Ma.Pa.Oa,this.Oa);if(this.cb)switch(void 0===b.Ma.Qa&&P("Passing raw pointer to smart pointer is illegal"),
+  this.Ib){case 0:b.Ma.Sa===this?c=b.Ma.Qa:P("Cannot convert argument of type "+(b.Ma.Sa?b.Ma.Sa.name:b.Ma.Pa.name)+" to parameter type "+this.name);break;case 1:c=b.Ma.Qa;break;case 2:if(b.Ma.Sa===this)c=b.Ma.Qa;else{var d=b.clone();c=this.Eb(c,S(function(){d["delete"]();}));null!==a&&a.push(this.Va,c);}break;default:P("Unsupporting sharing policy");}return c}
+  function vb(a,b){if(null===b)return this.fb&&P("null is not a valid "+this.name),0;b.Ma||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ma.Na||P("Cannot pass deleted object as a pointer of type "+this.name);b.Ma.Pa.bb&&P("Cannot convert argument of type "+b.Ma.Pa.name+" to parameter type "+this.name);return sb(b.Ma.Na,b.Ma.Pa.Oa,this.Oa)}function wb(a,b,c){if(b===c)return a;if(void 0===c.Ta)return null;a=wb(a,b,c.Ta);return null===a?null:c.sb(a)}var xb={};
+  function yb(a,b){for(void 0===b&&P("ptr should not be undefined");a.Ta;)b=a.$a(b),a=a.Ta;return xb[b]}function zb(a,b){b.Pa&&b.Na||ab("makeClassHandle requires ptr and ptrType");!!b.Sa!==!!b.Qa&&ab("Both smartPtrType and smartPtr must be specified");b.count={value:1};return kb(Object.create(a,{Ma:{value:b}}))}
+  function T(a,b,c,d){this.name=a;this.Oa=b;this.fb=c;this.bb=d;this.cb=!1;this.Va=this.Eb=this.gb=this.ob=this.Ib=this.Cb=void 0;void 0!==b.Ta?this.toWireType=ub:(this.toWireType=d?tb:vb,this.Ra=null);}function Ab(a,b,c){e.hasOwnProperty(a)||ab("Replacing nonexistant public symbol");void 0!==e[a].Ua&&void 0!==c?e[a].Ua[c]=b:(e[a]=b,e[a].pb=c);}
+  function V(a,b){a=N(a);if(void 0!==e["FUNCTION_TABLE_"+a])var c=e["FUNCTION_TABLE_"+a][b];else if("undefined"!==typeof FUNCTION_TABLE)c=FUNCTION_TABLE[b];else{c=e["dynCall_"+a];void 0===c&&(c=e["dynCall_"+a.replace(/f/g,"d")],void 0===c&&P("No dynCall invoker for signature: "+a));for(var d=[],f=1;f<a.length;++f)d.push("a"+f);f="return function "+("dynCall_"+a+"_"+b)+"("+d.join(", ")+") {\n";f+="    return dynCall(rawFunction"+(d.length?", ":"")+d.join(", ")+");\n";c=(new Function("dynCall","rawFunction",
+  f+"};\n"))(c,b);}"function"!==typeof c&&P("unknown function pointer with signature "+a+": "+b);return c}var Bb=void 0;function Cb(a){a=Db(a);var b=N(a);W(a);return b}function Eb(a,b){function c(a){f[a]||L[a]||(Wa[a]?Wa[a].forEach(c):(d.push(a),f[a]=!0));}var d=[],f={};b.forEach(c);throw new Bb(a+": "+d.map(Cb).join([", "]));}var Fb=[],X=[{},{value:void 0},{value:null},{value:!0},{value:!1}];function Gb(a){4<a&&0===--X[a].hb&&(X[a]=void 0,Fb.push(a));}
+  function S(a){switch(a){case void 0:return 1;case null:return 2;case !0:return 3;case !1:return 4;default:var b=Fb.length?Fb.pop():X.length;X[b]={hb:1,value:a};return b}}function Hb(a,b,c){switch(b){case 0:return function(a){return this.fromWireType((c?A:B)[a])};case 1:return function(a){return this.fromWireType((c?sa:ta)[a>>1])};case 2:return function(a){return this.fromWireType((c?v:E)[a>>2])};default:throw new TypeError("Unknown integer type: "+a);}}
+  function Ib(a,b){var c=L[a];void 0===c&&P(b+" has unknown type "+Cb(a));return c}function R(a){if(null===a)return "null";var b=typeof a;return "object"===b||"array"===b||"function"===b?a.toString():""+a}function Jb(a,b){switch(b){case 2:return function(a){return this.fromWireType(ua[a>>2])};case 3:return function(a){return this.fromWireType(va[a>>3])};default:throw new TypeError("Unknown float type: "+a);}}
+  function Kb(a){var b=Function;if(!(b instanceof Function))throw new TypeError("new_ called with constructor type "+typeof b+" which is not a function");var c=Ya(b.name||"unknownFunctionName",function(){});c.prototype=b.prototype;c=new c;a=b.apply(c,a);return a instanceof Object?a:c}function Lb(a,b){for(var c=[],d=0;d<a;d++)c.push(v[(b>>2)+d]);return c}
+  function Mb(a,b,c){switch(b){case 0:return c?function(a){return A[a]}:function(a){return B[a]};case 1:return c?function(a){return sa[a>>1]}:function(a){return ta[a>>1]};case 2:return c?function(a){return v[a>>2]}:function(a){return E[a>>2]};default:throw new TypeError("Unknown integer type: "+a);}}var Nb={};function Ob(a){var b=Nb[a];return void 0===b?N(a):b}var Pb=[];function Qb(a){a||P("Cannot use deleted val. handle = "+a);return X[a].value}function Rb(a){var b=Pb.length;Pb.push(a);return b}
+  function Sb(a,b){for(var c=Array(a),d=0;d<a;++d)c[d]=Ib(v[(b>>2)+d],"parameter "+d);return c}
+  function Tb(a,b){Ub=a;Vb=b;if(Wb)if(0==a)Y=function(){var a=Math.max(0,Xb+b-Z())|0;setTimeout(Yb,a);},Zb="timeout";else if(1==a)Y=function(){$b(Yb);},Zb="rAF";else if(2==a){if("undefined"===typeof setImmediate){var c=[];addEventListener("message",function(a){if("setimmediate"===a.data||"setimmediate"===a.data.target)a.stopPropagation(),c.shift()();},!0);setImmediate=function(a){c.push(a);postMessage("setimmediate","*");};}Y=function(){setImmediate(Yb);};Zb="immediate";}}function Z(){w();}
+  function ac(a){var b=bc;e.noExitRuntime=!0;la(!Wb,"emscripten_set_main_loop: there can only be one main loop function at once: call emscripten_cancel_main_loop to cancel the previous one before setting a new one with different parameters.");Wb=a;bc=b;var c="undefined"!==typeof b?function(){e.dynCall_vi(a,b);}:function(){e.dynCall_v(a);};var d=cc;Yb=function(){if(!y)if(0<dc.length){var a=Date.now(),b=dc.shift();b.lb(b.ab);if(ec){var k=ec,h=0==k%1?k-1:Math.floor(k);ec=b.Lb?h:(8*k+(h+.5))/9;}console.log('main loop blocker "'+
+  b.name+'" took '+(Date.now()-a)+" ms");e.setStatus&&(a=e.statusMessage||"Please wait...",b=ec,k=fc.Pb,b?b<k?e.setStatus(a+" ("+(k-b)+"/"+k+")"):e.setStatus(a):e.setStatus(""));d<cc||setTimeout(Yb,0);}else if(!(d<cc))if(gc=gc+1|0,1==Ub&&1<Vb&&0!=gc%Vb)Y();else{0==Ub&&(Xb=Z());"timeout"===Zb&&e.eb&&(u("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!"),
+  Zb="");a:if(!(y||e.preMainLoop&&!1===e.preMainLoop())){try{c();}catch(l){if(l instanceof hc)break a;l&&"object"===typeof l&&l.stack&&u("exception thrown: "+[l,l.stack]);throw l;}e.postMainLoop&&e.postMainLoop();}d<cc||("object"===typeof SDL&&SDL.audio&&SDL.audio.Db&&SDL.audio.Db(),Y());}};}var Y=null,Zb="",cc=0,Wb=null,bc=0,Ub=0,Vb=0,gc=0,dc=[],fc={},Xb,Yb,ec,jc=!1,kc=!1,lc=[];
+  function mc(){function a(){kc=document.pointerLockElement===e.canvas||document.mozPointerLockElement===e.canvas||document.webkitPointerLockElement===e.canvas||document.msPointerLockElement===e.canvas;}e.preloadPlugins||(e.preloadPlugins=[]);if(!nc){nc=!0;try{oc=!0;}catch(c){oc=!1,console.log("warning: no blob constructor, cannot create blobs with mimetypes");}pc="undefined"!=typeof MozBlobBuilder?MozBlobBuilder:"undefined"!=typeof WebKitBlobBuilder?WebKitBlobBuilder:oc?null:console.log("warning: no BlobBuilder");
+  qc="undefined"!=typeof window?window.URL?window.URL:window.webkitURL:void 0;e.nb||"undefined"!==typeof qc||(console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available."),e.nb=!0);e.preloadPlugins.push({canHandle:function(a){return !e.nb&&/\.(jpg|jpeg|png|bmp)$/i.test(a)},handle:function(a,b,f,g){var c=null;if(oc)try{c=new Blob([a],{type:rc(b)}),c.size!==a.length&&(c=new Blob([(new Uint8Array(a)).buffer],{type:rc(b)}));}catch(n){ha("Blob constructor present but fails: "+
+  n+"; falling back to blob builder");}c||(c=new pc,c.append((new Uint8Array(a)).buffer),c=c.getBlob());var d=qc.createObjectURL(c),l=new Image;l.onload=function(){la(l.complete,"Image "+b+" could not be decoded");var c=document.createElement("canvas");c.width=l.width;c.height=l.height;c.getContext("2d").drawImage(l,0,0);e.preloadedImages[b]=c;qc.revokeObjectURL(d);f&&f(a);};l.onerror=function(){console.log("Image "+d+" could not be decoded");g&&g();};l.src=d;}});e.preloadPlugins.push({canHandle:function(a){return !e.Tb&&
+  a.substr(-4)in{".ogg":1,".wav":1,".mp3":1}},handle:function(a,b,f,g){function c(c){l||(l=!0,e.preloadedAudios[b]=c,f&&f(a));}function d(){l||(l=!0,e.preloadedAudios[b]=new Audio,g&&g());}var l=!1;if(oc){try{var n=new Blob([a],{type:rc(b)});}catch(p){return d()}n=qc.createObjectURL(n);var q=new Audio;q.addEventListener("canplaythrough",function(){c(q);},!1);q.onerror=function(){if(!l){console.log("warning: browser could not fully decode audio "+b+", trying slower base64 approach");for(var d="",f=0,g=0,
+  h=0;h<a.length;h++)for(f=f<<8|a[h],g+=8;6<=g;){var k=f>>g-6&63;g-=6;d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[k];}2==g?(d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[(f&3)<<4],d+="=="):4==g&&(d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[(f&15)<<2],d+="=");q.src="data:audio/x-"+b.substr(-3)+";base64,"+d;c(q);}};q.src=n;sc(function(){c(q);});}else return d()}});var b=e.canvas;b&&(b.requestPointerLock=b.requestPointerLock||b.mozRequestPointerLock||
+  b.webkitRequestPointerLock||b.msRequestPointerLock||function(){},b.exitPointerLock=document.exitPointerLock||document.mozExitPointerLock||document.webkitExitPointerLock||document.msExitPointerLock||function(){},b.exitPointerLock=b.exitPointerLock.bind(document),document.addEventListener("pointerlockchange",a,!1),document.addEventListener("mozpointerlockchange",a,!1),document.addEventListener("webkitpointerlockchange",a,!1),document.addEventListener("mspointerlockchange",a,!1),e.elementPointerLock&&
+  b.addEventListener("click",function(a){!kc&&e.canvas.requestPointerLock&&(e.canvas.requestPointerLock(),a.preventDefault());},!1));}}
+  function tc(a,b,c,d){if(b&&e.eb&&a==e.canvas)return e.eb;var f;if(b){var g={antialias:!1,alpha:!1,Rb:1};if(d)for(var k in d)g[k]=d[k];if("undefined"!==typeof GL&&(f=GL.Mb(a,g)))var h=GL.getContext(f).Kb;}else h=a.getContext("2d");if(!h)return null;c&&(b||la("undefined"===typeof GLctx,"cannot set in module if GLctx is used, but we are a non-GL context that would replace it"),e.eb=h,b&&GL.Sb(f),e.Vb=b,lc.forEach(function(a){a();}),mc());return h}var uc=!1,vc=void 0,wc=void 0;
+  function xc(a,b,c){function d(){jc=!1;var a=f.parentNode;(document.fullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||document.webkitFullscreenElement||document.webkitCurrentFullScreenElement)===a?(f.exitFullscreen=yc,vc&&f.requestPointerLock(),jc=!0,wc?("undefined"!=typeof SDL&&(v[SDL.screen>>2]=E[SDL.screen>>2]|8388608),zc(e.canvas),Ac()):zc(f)):(a.parentNode.insertBefore(f,a),a.parentNode.removeChild(a),wc?("undefined"!=typeof SDL&&(v[SDL.screen>>2]=E[SDL.screen>>2]&
+  -8388609),zc(e.canvas),Ac()):zc(f));if(e.onFullScreen)e.onFullScreen(jc);if(e.onFullscreen)e.onFullscreen(jc);}vc=a;wc=b;"undefined"===typeof vc&&(vc=!0);"undefined"===typeof wc&&(wc=!1);var f=e.canvas;uc||(uc=!0,document.addEventListener("fullscreenchange",d,!1),document.addEventListener("mozfullscreenchange",d,!1),document.addEventListener("webkitfullscreenchange",d,!1),document.addEventListener("MSFullscreenChange",d,!1));var g=document.createElement("div");
+  f.parentNode.insertBefore(g,f);g.appendChild(f);g.requestFullscreen=g.requestFullscreen||g.mozRequestFullScreen||g.msRequestFullscreen||(g.webkitRequestFullscreen?function(){g.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);}:null)||(g.webkitRequestFullScreen?function(){g.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);}:null);c?g.requestFullscreen({Wb:c}):g.requestFullscreen();}
+  function Cc(a,b,c){u("Browser.requestFullScreen() is deprecated. Please call Browser.requestFullscreen instead.");Cc=function(a,b,c){xc(a,b,c);};xc(a,b,c);}function yc(){if(!jc)return !1;(document.exitFullscreen||document.cancelFullScreen||document.mozCancelFullScreen||document.msExitFullscreen||document.webkitCancelFullScreen||function(){}).apply(document,[]);return !0}var Dc=0;
+  function $b(a){if("function"===typeof requestAnimationFrame)requestAnimationFrame(a);else{var b=Date.now();if(0===Dc)Dc=b+1E3/60;else for(;b+2>=Dc;)Dc+=1E3/60;setTimeout(a,Math.max(Dc-b,0));}}function sc(a){e.noExitRuntime=!0;setTimeout(function(){y||a();},1E4);}function rc(a){return {jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",bmp:"image/bmp",ogg:"audio/ogg",wav:"audio/wav",mp3:"audio/mpeg"}[a.substr(a.lastIndexOf(".")+1)]}var Ec=[];
+  function Ac(){var a=e.canvas;Ec.forEach(function(b){b(a.width,a.height);});}
+  function zc(a,b,c){b&&c?(a.Jb=b,a.zb=c):(b=a.Jb,c=a.zb);var d=b,f=c;e.forcedAspectRatio&&0<e.forcedAspectRatio&&(d/f<e.forcedAspectRatio?d=Math.round(f*e.forcedAspectRatio):f=Math.round(d/e.forcedAspectRatio));if((document.fullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||document.webkitFullscreenElement||document.webkitCurrentFullScreenElement)===a.parentNode&&"undefined"!=typeof screen){var g=Math.min(screen.width/d,screen.height/f);d=Math.round(d*g);f=Math.round(f*
+  g);}wc?(a.width!=d&&(a.width=d),a.height!=f&&(a.height=f),"undefined"!=typeof a.style&&(a.style.removeProperty("width"),a.style.removeProperty("height"))):(a.width!=b&&(a.width=b),a.height!=c&&(a.height=c),"undefined"!=typeof a.style&&(d!=b||f!=c?(a.style.setProperty("width",d+"px","important"),a.style.setProperty("height",f+"px","important")):(a.style.removeProperty("width"),a.style.removeProperty("height"))));}var Fc={},Gc=0;function Hc(){var a=Gc;Gc++;return a}var nc,oc,pc,qc;
+  function fa(){return A.length}function Ic(){if("undefined"!==typeof indexedDB)return indexedDB;var a=null;"object"===typeof window&&(a=window.indexedDB||window.mozIndexedDB||window.webkitIndexedDB||window.msIndexedDB);la(a,"IDBStore used, but indexedDB not supported");return a}var Jc={};
+  function Kc(a,b){var c=Jc[a];if(c)b(null,c);else{try{var d=Ic().open(a,22);}catch(f){b(f);return}d.onupgradeneeded=function(a){var b=a.target.result;a=a.target.transaction;b.objectStoreNames.contains("FILE_DATA")?a.objectStore("FILE_DATA"):b.createObjectStore("FILE_DATA");};d.onsuccess=function(){c=d.result;Jc[a]=c;b(null,c);};d.onerror=function(a){b(this.error);a.preventDefault();};}}
+  function Lc(a,b,c){Kc(a,function(a,f){if(a)return c(a);a=f.transaction(["FILE_DATA"],b);a.onerror=function(a){c(this.error||"unknown error");a.preventDefault();};a=a.objectStore("FILE_DATA");c(null,a);});}function Mc(a,b,c){Lc(a,"readonly",function(a,f){if(a)return c(a);a=f.get(b);a.onsuccess=function(a){return (a=a.target.result)?c(null,a):c("file "+b+" not found")};a.onerror=function(a){c(a);};});}
+  function Nc(a,b,c,d){Lc(a,"readwrite",function(a,g){if(a)return d(a);a=g.put(c,b);a.onsuccess=function(){d();};a.onerror=function(a){d(a);};});}pa("GMT",B,16704,4);
+  function Oc(){function a(a){return (a=a.toTimeString().match(/\(([A-Za-z ]+)\)$/))?a[1]:"GMT"}if(!Pc){Pc=!0;v[Qc()>>2]=60*(new Date).getTimezoneOffset();var b=new Date(2E3,0,1),c=new Date(2E3,6,1);v[Rc()>>2]=Number(b.getTimezoneOffset()!=c.getTimezoneOffset());var d=a(b),f=a(c);d=ma(Sc(d));f=ma(Sc(f));c.getTimezoneOffset()<b.getTimezoneOffset()?(v[Tc()>>2]=d,v[Tc()+4>>2]=f):(v[Tc()>>2]=f,v[Tc()+4>>2]=d);}}var Pc;
+  function Uc(a){a=ra(a);var b=D.byteLength;try{return -1!==ka.grow((a-b)/65536)?(D=ka.buffer,!0):!1}catch(c){return !1}}$a=e.InternalError=Za("InternalError");for(var Vc=Array(256),Wc=0;256>Wc;++Wc)Vc[Wc]=String.fromCharCode(Wc);db=Vc;eb=e.BindingError=Za("BindingError");Q.prototype.isAliasOf=function(a){if(!(this instanceof Q&&a instanceof Q))return !1;var b=this.Ma.Pa.Oa,c=this.Ma.Na,d=a.Ma.Pa.Oa;for(a=a.Ma.Na;b.Ta;)c=b.$a(c),b=b.Ta;for(;d.Ta;)a=d.$a(a),d=d.Ta;return b===d&&c===a};
+  Q.prototype.clone=function(){this.Ma.Na||gb(this);if(this.Ma.Za)return this.Ma.count.value+=1,this;var a=kb(Object.create(Object.getPrototypeOf(this),{Ma:{value:fb(this.Ma)}}));a.Ma.count.value+=1;a.Ma.Wa=!1;return a};Q.prototype["delete"]=function(){this.Ma.Na||gb(this);this.Ma.Wa&&!this.Ma.Za&&P("Object already scheduled for deletion");ib(this);jb(this.Ma);this.Ma.Za||(this.Ma.Qa=void 0,this.Ma.Na=void 0);};Q.prototype.isDeleted=function(){return !this.Ma.Na};
+  Q.prototype.deleteLater=function(){this.Ma.Na||gb(this);this.Ma.Wa&&!this.Ma.Za&&P("Object already scheduled for deletion");mb.push(this);1===mb.length&&lb&&lb(nb);this.Ma.Wa=!0;return this};T.prototype.vb=function(a){this.ob&&(a=this.ob(a));return a};T.prototype.jb=function(a){this.Va&&this.Va(a);};T.prototype.argPackAdvance=8;T.prototype.readValueFromPointer=Va;T.prototype.deleteObject=function(a){if(null!==a)a["delete"]();};
+  T.prototype.fromWireType=function(a){function b(){return this.cb?zb(this.Oa.Ya,{Pa:this.Cb,Na:c,Sa:this,Qa:a}):zb(this.Oa.Ya,{Pa:this,Na:a})}var c=this.vb(a);if(!c)return this.jb(a),null;var d=yb(this.Oa,c);if(void 0!==d){if(0===d.Ma.count.value)return d.Ma.Na=c,d.Ma.Qa=a,d.clone();d=d.clone();this.jb(a);return d}d=this.Oa.ub(c);d=ob[d];if(!d)return b.call(this);d=this.bb?d.rb:d.pointerType;var f=wb(c,this.Oa,d.Oa);return null===f?b.call(this):this.cb?zb(d.Oa.Ya,{Pa:d,Na:f,Sa:this,Qa:a}):zb(d.Oa.Ya,
+  {Pa:d,Na:f})};e.getInheritedInstanceCount=function(){return Object.keys(xb).length};e.getLiveInheritedInstances=function(){var a=[],b;for(b in xb)xb.hasOwnProperty(b)&&a.push(xb[b]);return a};e.flushPendingDeletes=nb;e.setDelayFunction=function(a){lb=a;mb.length&&lb&&lb(nb);};Bb=e.UnboundTypeError=Za("UnboundTypeError");e.count_emval_handles=function(){for(var a=0,b=5;b<X.length;++b)void 0!==X[b]&&++a;return a};e.get_first_emval=function(){for(var a=5;a<X.length;++a)if(void 0!==X[a])return X[a];return null};
+  e.requestFullScreen=function(a,b,c){u("Module.requestFullScreen is deprecated. Please call Module.requestFullscreen instead.");e.requestFullScreen=e.requestFullscreen;Cc(a,b,c);};e.requestFullscreen=function(a,b,c){xc(a,b,c);};e.requestAnimationFrame=function(a){$b(a);};e.setCanvasSize=function(a,b,c){zc(e.canvas,a,b);c||Ac();};e.pauseMainLoop=function(){Y=null;cc++;};e.resumeMainLoop=function(){cc++;var a=Ub,b=Vb,c=Wb;Wb=null;ac(c);Tb(a,b);Y();};
+  e.getUserMedia=function(){window.getUserMedia||(window.getUserMedia=navigator.getUserMedia||navigator.mozGetUserMedia);window.getUserMedia(void 0);};e.createContext=function(a,b,c,d){return tc(a,b,c,d)};"undefined"!==typeof dateNow?Z=dateNow:"object"===typeof performance&&performance&&"function"===typeof performance.now?Z=function(){return performance.now()}:Z=Date.now;function Sc(a){var b=Array(qa(a)+1);pa(a,b,0,b.length);return b}
+  var Zc=e.asm({},{h:w,B:function(){},ea:function(){u("missing function: _ZN5Umbra18createDirRecursiveEPKc");w(-1);},r:function(a,b,c,d){w("Assertion failed: "+C(a)+", at: "+[b?C(b):"unknown filename",c,d?C(d):"unknown function"]);},Y:Pa,u:function(){u("missing function: __cxa_allocate_exception");w(-1);},S:function(){y=!0;throw"Pure virtual function called!";},t:function(){u("missing function: __cxa_throw");w(-1);},y:function(){},A:function(a){e.___errno_location&&(v[e.___errno_location()>>2]=a);return a},
+  da:function(a,b){I=b;try{return Ra.mb(),J(),J(),J(),J(),0}catch(c){return w(c),-c.Xa}},ca:function(a,b){I=b;try{var c=Ra.mb(),d=J(),f=J();return Ra.Nb(c,d,f)}catch(g){return w(g),-g.Xa}},L:function(a,b){I=b;try{var c=J(),d=J(),f=J();for(b=a=0;b<f;b++){for(var g=v[d+8*b>>2],k=v[d+(8*b+4)>>2],h=0;h<k;h++){var l=B[g+h],n=Qa[c];0===l||10===l?((1===c?ba:u)(oa(n,0)),n.length=0):n.push(l);}a+=k;}return a}catch(q){return w(q),-q.Xa}},ba:function(a,b){I=b;try{var c=C(J()),d=J();return Ra.Ob((void 0).stat,c,
+  d)}catch(f){return w(f),-f.Xa}},x:function(a,b){I=b;return 0},aa:function(a,b){I=b;try{var c=C(J()),d=J(),f=J();return (void 0).open(c,d,f).Qb}catch(g){return w(g),-g.Xa}},K:function(a,b){I=b;return 0},J:function(a,b){I=b;try{return Ra.mb(),0}catch(c){return w(c),-c.Xa}},z:function(){},w:function(a){var b=Sa[a];delete Sa[a];var c=b.gb,d=b.Va,f=b.kb,g=f.map(function(a){return a.yb}).concat(f.map(function(a){return a.Gb}));bb([a],g,function(a){var g={};f.forEach(function(b,c){var d=a[c],h=b.wb,k=b.xb,
+  l=a[c+f.length],n=b.Fb,Ta=b.Hb;g[b.tb]={read:function(a){return d.fromWireType(h(k,a))},write:function(a,b){var c=[];n(Ta,a,l.toWireType(c,b));Ua(c);}};});return [{name:b.name,fromWireType:function(a){var b={},c;for(c in g)b[c]=g[c].read(a);d(a);return b},toWireType:function(a,b){for(var f in g)if(!(f in b))throw new TypeError("Missing field");var h=c();for(f in g)g[f].write(h,b[f]);null!==a&&a.push(d,h);return h},argPackAdvance:8,readValueFromPointer:Va,Ra:d}]});},$:function(a,b,c,d,f){var g=cb(c);b=
+  N(b);M(a,{name:b,fromWireType:function(a){return !!a},toWireType:function(a,b){return b?d:f},argPackAdvance:8,readValueFromPointer:function(a){if(1===c)var d=A;else if(2===c)d=sa;else if(4===c)d=v;else throw new TypeError("Unknown boolean type size: "+b);return this.fromWireType(d[a>>g])},Ra:null});},I:function(a,b,c,d,f,g,k,h,l,n,q,p,x){q=N(q);g=V(f,g);h&&(h=V(k,h));n&&(n=V(l,n));x=V(p,x);var O=Xa(q);qb(O,function(){Eb("Cannot construct "+q+" due to unbound types",[d]);});bb([a,b,c],d?[d]:[],function(b){b=
+  b[0];if(d){var c=b.Oa;var f=c.Ya;}else f=Q.prototype;b=Ya(O,function(){if(Object.getPrototypeOf(this)!==k)throw new eb("Use 'new' to construct "+q);if(void 0===l.ib)throw new eb(q+" has no accessible constructor");var a=l.ib[arguments.length];if(void 0===a)throw new eb("Tried to invoke ctor of "+q+" with invalid number of parameters ("+arguments.length+") - expected ("+Object.keys(l.ib).toString()+") parameters instead!");return a.apply(this,arguments)});var k=Object.create(f,{constructor:{value:b}});
+  b.prototype=k;var l=new rb(q,b,k,x,c,g,h,n);c=new T(q,l,!0,!1);f=new T(q+"*",l,!1,!1);var p=new T(q+" const*",l,!1,!0);ob[a]={pointerType:f,rb:p};Ab(O,b);return [c,f,p]});},_:function(a,b,c){a=N(a);bb([],[b],function(b){b=b[0];e[a]=b.fromWireType(c);return []});},Z:function(a,b){b=N(b);M(a,{name:b,fromWireType:function(a){var b=X[a].value;Gb(a);return b},toWireType:function(a,b){return S(b)},argPackAdvance:8,readValueFromPointer:Va,Ra:null});},s:function(a,b,c,d){function f(){}c=cb(c);b=N(b);f.values=
+  {};M(a,{name:b,constructor:f,fromWireType:function(a){return this.constructor.values[a]},toWireType:function(a,b){return b.value},argPackAdvance:8,readValueFromPointer:Hb(b,c,d),Ra:null});qb(b,f);},g:function(a,b,c){var d=Ib(a,"enum");b=N(b);a=d.constructor;d=Object.create(d.constructor.prototype,{value:{value:c},constructor:{value:Ya(d.name+"_"+b,function(){})}});a.values[c]=d;a[b]=d;},H:function(a,b,c){c=cb(c);b=N(b);M(a,{name:b,fromWireType:function(a){return a},toWireType:function(a,b){if("number"!==
+  typeof b&&"boolean"!==typeof b)throw new TypeError('Cannot convert "'+R(b)+'" to '+this.name);return b},argPackAdvance:8,readValueFromPointer:Jb(b,c),Ra:null});},d:function(a,b,c,d,f,g){var k=Lb(b,c);a=N(a);f=V(d,f);qb(a,function(){Eb("Cannot call "+a+" due to unbound types",k);},b-1);bb([],k,function(c){var d=a,h=a;c=[c[0],null].concat(c.slice(1));var k=f,p=c.length;2>p&&P("argTypes array size mismatch! Must at least get return value and 'this' types!");for(var x=null!==c[1]&&!1,O=!1,t=1;t<c.length;++t)if(null!==
+  c[t]&&void 0===c[t].Ra){O=!0;break}var Ta="void"!==c[0].name,U="",ca="";for(t=0;t<p-2;++t)U+=(0!==t?", ":"")+"arg"+t,ca+=(0!==t?", ":"")+"arg"+t+"Wired";h="return function "+Xa(h)+"("+U+") {\nif (arguments.length !== "+(p-2)+") {\nthrowBindingError('function "+h+" called with ' + arguments.length + ' arguments, expected "+(p-2)+" args!');\n}\n";O&&(h+="var destructors = [];\n");var ic=O?"destructors":"null";U="throwBindingError invoker fn runDestructors retType classParam".split(" ");k=[P,k,g,Ua,
+  c[0],c[1]];x&&(h+="var thisWired = classParam.toWireType("+ic+", this);\n");for(t=0;t<p-2;++t)h+="var arg"+t+"Wired = argType"+t+".toWireType("+ic+", arg"+t+"); // "+c[t+2].name+"\n",U.push("argType"+t),k.push(c[t+2]);x&&(ca="thisWired"+(0<ca.length?", ":"")+ca);h+=(Ta?"var rv = ":"")+"invoker(fn"+(0<ca.length?", ":"")+ca+");\n";if(O)h+="runDestructors(destructors);\n";else for(t=x?1:2;t<c.length;++t)p=1===t?"thisWired":"arg"+(t-2)+"Wired",null!==c[t].Ra&&(h+=p+"_dtor("+p+"); // "+c[t].name+"\n",
+  U.push(p+"_dtor"),k.push(c[t].Ra));Ta&&(h+="var ret = retType.fromWireType(rv);\nreturn ret;\n");U.push(h+"}\n");c=Kb(U).apply(null,k);Ab(d,c,b-1);return []});},n:function(a,b,c,d,f){function g(a){return a}b=N(b);-1===f&&(f=4294967295);var k=cb(c);if(0===d){var h=32-8*c;g=function(a){return a<<h>>>h};}var l=-1!=b.indexOf("unsigned");M(a,{name:b,fromWireType:g,toWireType:function(a,c){if("number"!==typeof c&&"boolean"!==typeof c)throw new TypeError('Cannot convert "'+R(c)+'" to '+this.name);if(c<d||c>
+  f)throw new TypeError('Passing a number "'+R(c)+'" from JS side to C/C++ side to an argument of type "'+b+'", which is outside the valid range ['+d+", "+f+"]!");return l?c>>>0:c|0},argPackAdvance:8,readValueFromPointer:Mb(b,k,0!==d),Ra:null});},j:function(a,b,c){function d(a){a>>=2;var b=E;return new f(b.buffer,b[a+1],b[a])}var f=[Int8Array,Uint8Array,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array,Float64Array][b];c=N(c);M(a,{name:c,fromWireType:d,argPackAdvance:8,readValueFromPointer:d},
+  {Ab:!0});},G:function(a,b){b=N(b);var c="std::string"===b;M(a,{name:b,fromWireType:function(a){var b=E[a>>2];if(c){var d=B[a+4+b],k=0;0!=d&&(k=d,B[a+4+b]=0);var h=a+4;for(d=0;d<=b;++d){var l=a+4+d;if(0==B[l]){h=C(h);if(void 0===n)var n=h;else n+=String.fromCharCode(0),n+=h;h=l+1;}}0!=k&&(B[a+4+b]=k);}else{n=Array(b);for(d=0;d<b;++d)n[d]=String.fromCharCode(B[a+4+d]);n=n.join("");}W(a);return n},toWireType:function(a,b){b instanceof ArrayBuffer&&(b=new Uint8Array(b));var d="string"===typeof b;d||b instanceof
+  Uint8Array||b instanceof Uint8ClampedArray||b instanceof Int8Array||P("Cannot pass non-string to std::string");var f=(c&&d?function(){return qa(b)}:function(){return b.length})(),h=z(4+f+1);E[h>>2]=f;if(c&&d)pa(b,B,h+4,f+1);else if(d)for(d=0;d<f;++d){var l=b.charCodeAt(d);255<l&&(W(h),P("String has UTF-16 code units that do not fit in 8 bits"));B[h+4+d]=l;}else for(d=0;d<f;++d)B[h+4+d]=b[d];null!==a&&a.push(W,h);return h},argPackAdvance:8,readValueFromPointer:Va,Ra:function(a){W(a);}});},X:function(a,
+  b,c){c=N(c);if(2===b){var d=function(){return ta};var f=1;}else 4===b&&(d=function(){return E},f=2);M(a,{name:c,fromWireType:function(a){for(var b=d(),c=E[a>>2],g=Array(c),n=a+4>>f,q=0;q<c;++q)g[q]=String.fromCharCode(b[n+q]);W(a);return g.join("")},toWireType:function(a,c){var g=d(),k=c.length,n=z(4+k*b);E[n>>2]=k;for(var q=n+4>>f,p=0;p<k;++p)g[q+p]=c.charCodeAt(p);null!==a&&a.push(W,n);return n},argPackAdvance:8,readValueFromPointer:Va,Ra:function(a){W(a);}});},v:function(a,b,c,d,f,g){Sa[a]={name:N(b),
+  gb:V(c,d),Va:V(f,g),kb:[]};},i:function(a,b,c,d,f,g,k,h,l,n){Sa[a].kb.push({tb:N(b),yb:c,wb:V(d,f),xb:g,Gb:k,Fb:V(h,l),Hb:n});},W:function(a,b){b=N(b);M(a,{Bb:!0,name:b,argPackAdvance:0,fromWireType:function(){},toWireType:function(){}});},p:function(a,b,c,d){a=Pb[a];b=Qb(b);c=Ob(c);a(b,c,null,d);},b:Gb,o:function(a,b){b=Sb(a,b);for(var c=b[0],d=c.name+"_$"+b.slice(1).map(function(a){return a.name}).join("_")+"$",f=["retType"],g=[c],k="",h=0;h<a-1;++h)k+=(0!==h?", ":"")+"arg"+h,f.push("argType"+h),g.push(b[1+
+  h]);d="return function "+Xa("methodCaller_"+d)+"(handle, name, destructors, args) {\n";var l=0;for(h=0;h<a-1;++h)d+="    var arg"+h+" = argType"+h+".readValueFromPointer(args"+(l?"+"+l:"")+");\n",l+=b[h+1].argPackAdvance;d+="    var rv = handle[name]("+k+");\n";for(h=0;h<a-1;++h)b[h+1].deleteObject&&(d+="    argType"+h+".deleteObject(arg"+h+");\n");c.Bb||(d+="    return retType.toWireType(destructors, rv);\n");f.push(d+"};\n");a=Kb(f).apply(null,g);return Rb(a)},F:function(a){4<a&&(X[a].hb+=1);},q:function(){return S([])},
+  f:function(a){return S(Ob(a))},l:function(){return S({})},c:function(a,b,c){a=Qb(a);b=Qb(b);c=Qb(c);a[b]=c;},e:function(a,b){a=Ib(a,"_emval_take_value");a=a.readValueFromPointer(b);return S(a)},m:function(){e.abort();},E:function(a){return Na[a]()},V:function(a,b,c,d,f,g,k,h,l,n,q,p){return Na[a](b,c,d,f,g,k,h,l,n,q,p)},U:function(a){(a=Fc[a])&&a.abort();},T:fa,k:Z,D:function(a,b,c,d,f){Mc(C(a),C(b),function(a,b){a?f&&Xc(f,c):(a=z(b.length),B.set(b,a),Yc(d,c,a,b.length),W(a));});},R:function(a,b,c,d,f,
+  g,k){Nc(C(a),C(b),new Uint8Array(B.subarray(c,c+d)),function(a){a?k&&Xc(k,f):g&&Xc(g,f);});},Q:function(a,b,c){B.set(B.subarray(b,b+c),a);},P:function(a){if(2147418112<a)return !1;for(var b=Math.max(fa(),16777216);b<a;)536870912>=b?b=ra(2*b):b=Math.min(ra((3*b+2147483648)/4),2147418112);if(!Uc(b))return !1;wa();return !0},C:function(){w("trap!");},O:function(a){Oc();a=new Date(1E3*v[a>>2]);v[4164]=a.getSeconds();v[4165]=a.getMinutes();v[4166]=a.getHours();v[4167]=a.getDate();v[4168]=a.getMonth();v[4169]=
+  a.getFullYear()-1900;v[4170]=a.getDay();var b=new Date(a.getFullYear(),0,1);v[4171]=(a.getTime()-b.getTime())/864E5|0;v[4173]=-(60*a.getTimezoneOffset());var c=(new Date(2E3,6,1)).getTimezoneOffset();b=b.getTimezoneOffset();a=(c!=b&&a.getTimezoneOffset()==Math.min(b,c))|0;v[4172]=a;a=v[Tc()+(a?4:0)>>2];v[4174]=a;return 16656},N:function(a){var b=Date.now()/1E3|0;a&&(v[a>>2]=b);return b},M:function(){w("OOM");},a:ea},D);e.asm=Zc;
+  e.___embind_register_native_and_builtin_types=function(){return e.asm.fa.apply(null,arguments)};
+  var Db=e.___getTypeName=function(){return e.asm.ga.apply(null,arguments)},Rc=e.__get_daylight=function(){return e.asm.ha.apply(null,arguments)},Qc=e.__get_timezone=function(){return e.asm.ia.apply(null,arguments)},Tc=e.__get_tzname=function(){return e.asm.ja.apply(null,arguments)},W=e._free=function(){return e.asm.ka.apply(null,arguments)},z=e._malloc=function(){return e.asm.la.apply(null,arguments)},Oa=e.globalCtors=function(){return e.asm.Ka.apply(null,arguments)};
+  e.stackAlloc=function(){return e.asm.La.apply(null,arguments)};e.dynCall_i=function(){return e.asm.ma.apply(null,arguments)};e.dynCall_ii=function(){return e.asm.na.apply(null,arguments)};e.dynCall_iii=function(){return e.asm.oa.apply(null,arguments)};e.dynCall_iiii=function(){return e.asm.pa.apply(null,arguments)};e.dynCall_iiiii=function(){return e.asm.qa.apply(null,arguments)};e.dynCall_iiiiii=function(){return e.asm.ra.apply(null,arguments)};
+  e.dynCall_iiiiiifi=function(){return e.asm.sa.apply(null,arguments)};e.dynCall_iiiiiiiiii=function(){return e.asm.ta.apply(null,arguments)};e.dynCall_iiiji=function(){return e.asm.ua.apply(null,arguments)};e.dynCall_ji=function(){return e.asm.va.apply(null,arguments)};e.dynCall_jiji=function(){return e.asm.wa.apply(null,arguments)};e.dynCall_v=function(){return e.asm.xa.apply(null,arguments)};var Xc=e.dynCall_vi=function(){return e.asm.ya.apply(null,arguments)};
+  e.dynCall_vii=function(){return e.asm.za.apply(null,arguments)};e.dynCall_viifiii=function(){return e.asm.Aa.apply(null,arguments)};var Yc=e.dynCall_viii=function(){return e.asm.Ba.apply(null,arguments)};e.dynCall_viiif=function(){return e.asm.Ca.apply(null,arguments)};e.dynCall_viiifi=function(){return e.asm.Da.apply(null,arguments)};e.dynCall_viiifiii=function(){return e.asm.Ea.apply(null,arguments)};e.dynCall_viiii=function(){return e.asm.Fa.apply(null,arguments)};
+  e.dynCall_viiiii=function(){return e.asm.Ga.apply(null,arguments)};e.dynCall_viiiiii=function(){return e.asm.Ha.apply(null,arguments)};e.dynCall_viiiiiiiii=function(){return e.asm.Ia.apply(null,arguments)};e.dynCall_viij=function(){return e.asm.Ja.apply(null,arguments)};e.asm=Zc;e.then=function(a){if(e.calledRun)a(e);else{var b=e.onRuntimeInitialized;e.onRuntimeInitialized=function(){b&&b();a(e);};}return e};
+  function hc(a){this.name="ExitStatus";this.message="Program terminated with exit("+a+")";this.status=a;}hc.prototype=Error();hc.prototype.constructor=hc;Ga=function $c(){e.calledRun||ad();e.calledRun||(Ga=$c);};
+  function ad(){function a(){if(!e.calledRun&&(e.calledRun=!0,!y)){Da||(Da=!0,ya(Aa));ya(Ba);if(e.onRuntimeInitialized)e.onRuntimeInitialized();if(e.postRun)for("function"==typeof e.postRun&&(e.postRun=[e.postRun]);e.postRun.length;){var a=e.postRun.shift();Ca.unshift(a);}ya(Ca);}}if(!(0<F)){if(e.preRun)for("function"==typeof e.preRun&&(e.preRun=[e.preRun]);e.preRun.length;)Ea();ya(za);0<F||e.calledRun||(e.setStatus?(e.setStatus("Running..."),setTimeout(function(){setTimeout(function(){e.setStatus("");},
+  1);a();},1)):a());}}e.run=ad;function w(a){if(e.onAbort)e.onAbort(a);void 0!==a?(ba(a),u(a),a='"'+a+'"'):a="";y=!0;throw"abort("+a+"). Build with -s ASSERTIONS=1 for more info.";}e.abort=w;if(e.preInit)for("function"==typeof e.preInit&&(e.preInit=[e.preInit]);0<e.preInit.length;)e.preInit.pop()();e.noExitRuntime=!0;ad();e.bytesDownloaded=0;
+  function Ma(a,b,c,d,f,g,k,h,l,n,q){a=C(a);b=C(b);g=C(g);var p=new XMLHttpRequest;p.open(b,a,!0);if("GET"!=b||0!=g.length)p.withCredentials=!0;p.responseType="arraybuffer";var x=Hc();p.onload=function(){if(200==p.status){var a=new Uint8Array(p.response);e.bytesDownloaded+=p.response.byteLength;if(n)a.length!=q?e.dynCall_viii(f,x,c,0):(B.set(a,n),e.dynCall_viiii(d,x,c,null,0));else{var b=z(a.length);B.set(a,b);e.dynCall_viiii(d,x,c,b,a.length);W(b);}}else e.dynCall_viii(f,x,c,p.status);delete Fc[x];};
+  p.onerror=function(){e.dynCall_viii(f,x,c,p.status);delete Fc[x];};p.onabort=function(){delete Fc[x];};0!=g.length&&p.setRequestHeader("Authorization","Basic "+btoa(g+":"));l=C(l).split("\n");if(2<=l.length)for(g=0;g<l.length;g+=2)p.setRequestHeader(l[g],l[g+1]);"POST"==b?p.send(A.slice(k,k+h)):p.send(null);Fc[x]=p;return x}
+
+    return UmbraNativeAPI
+  }
+  );
+  })();
+  if (typeof exports === 'object' && typeof module === 'object')
+        module.exports = UmbraNativeAPI;
+      else if (typeof define === 'function' && define['amd'])
+        define([], function() { return UmbraNativeAPI; });
+      else if (typeof exports === 'object')
+        exports["UmbraNativeAPI"] = UmbraNativeAPI;
+
+  const TextureFormat = {
+    RGBA32: 0,
+    RGB24: 1,
+    BC1: 2,
+    BC3: 3,
+    BC4: 4,
+    BC5: 5,
+    ETC1_RGB: 6,
+    RGBA_FLOAT32: 7,
+    UNC1: 8,
+    JPEG: 9,
+    PNG: 10,
+    BMP: 11,
+    PSD: 12,
+    TGA: 13,
+    GIF: 14,
+    HDR: 15,
+    PIC: 16,
+    PNM: 17,
+    ASTC_4X4: 18,
+    ASTC_5X4: 19,
+    ASTC_5X5: 20,
+    ASTC_6X5: 21,
+    ASTC_6X6: 22,
+    ASTC_8X5: 23,
+    ASTC_8X6: 24,
+    ASTC_10X5: 25,
+    ASTC_10X6: 26,
+    ASTC_8X8: 27,
+    ASTC_10X8: 28,
+    ASTC_10X10: 29,
+    ASTC_12X10: 30,
+    ASTC_12X12: 31,
+    ARGB32: 32,
+    R8: 33,
+    PVRTC1_RGB4: 34,
+    PVRTC1_RGBA4: 35,
+    UINT8: 36,
+    UINT16: 37,
+    UINT32: 38,
+    RGB565: 39,
+    RG8: 40,
+    RG16F: 41,
+    COUNT: 42
+  };
+
+  const TextureFormatNames = [
+    'rgba32',
+    'rgb24',
+    'bc1', // Also known as DXT1
+    'bc3', // Also known as DXT5
+    'bc4',
+    'bc5',
+    'etc1_rgb',
+    'rgba_float32',
+    'unc1', // Deprecated internal format, for backwards compatibility
+    'jpeg',
+    'png',
+    'bmp',
+    'psd',
+    'tga',
+    'gif',
+    'hdr',
+    'pic',
+    'pnm',
+    'astc_4x4', // 8.00 bpp
+    'astc_5x4', // 6.40 bpp
+    'astc_5x5', // 5.12 bpp
+    'astc_6x5', // 4.27 bpp
+    'astc_6x6', // 3.56 bpp
+    'astc_8x5', // 3.20 bpp
+    'astc_8x6', // 2.67 bpp
+    'astc_10x5', // 2.56 bpp
+    'astc_10x6', // 2.13 bpp
+    'astc_8x8', // 2.00 bpp
+    'astc_10x8', // 1.60 bpp
+    'astc_10x10', // 1.28 bpp
+    'astc_12x10', // 1.07 bpp
+    'astc_12x12', // 0.89 bpp
+    'argb32',
+    'r8',
+    'pvrtc1_rgb4',
+    'pvrtc1_rgba4',
+    'uint8',
+    'uint16',
+    'uint32',
+    'rgb565',
+    'rg8',
+    'rg16f',
+    'count'
+  ];
+
+  const ColorSpaceNames = [
+    'linear',
+    'srgb'
+  ];
+
+  const TextureType = {
+    DIFFUSE: 0,
+    NORMAL: 1,
+    LEGACY_UNUSED: 2,
+    SPECULAR: 3,
+    META_INDEX: 4,
+    COUNT: 5
+  };
+
+  const TextureTypeNames = [
+    'diffuse',
+    'normal',
+    'legacy_unused',
+    'specular',
+    'meta_index'
+  ];
+
+  const TextureCapability = {
+    None: 0 | 0,
+    BC1: 1 << 0,
+    BC2: 1 << 1,
+    BC3: 1 << 2,
+    BC4: 1 << 3,
+    BC5: 1 << 4,
+    BC6H: 1 << 5,
+    BC7: 1 << 6,
+    ASTC: 1 << 7,
+    ETC1: 1 << 8,
+    ETC2: 1 << 9,
+    EAC_R: 1 << 10,
+    EAC_RG: 1 << 11,
+    PVRTC1: 1 << 12,
+    PVRTC2: 1 << 13,
+    ATC: 1 << 14,
+    HalfFloat: 1 << 15,
+    All: 0xffffffff | 0
+  };
+
+  const TextureCapability$1 = TextureCapability;
+
+  const MAX_LIGHTS = 32;
+
+  function assertInteger (x) {
+    if (!Number.isInteger(x)) {
+      throw new Error('Value was not integer: ' + x.toString())
+    }
+  }
+
+  /**
+   * We need to use a factory here since the native API classes depend on the Emscripten generated wasm code
+   * that can't be loaded as a regular ES6 module. The "Module" object allows access to C++ functions and the
+   * Emscripten heap.
+   */
+  let create = (Module) => {
+    /**
+     * A Buffer is a block of memory in the Emscripten heap. Typed arrays may get detached when Emscripten
+     * memory growth happens, so any JS code that wants to read from the heap needs to create its typed views
+     * right before they are used.
+     *
+     * The views are safe to use during synchronous execution, but for example a 'yield' in a generator may
+     * trigger memory growth before the caller gets the returned value.
+     */
+    class Buffer {
+      constructor (size, type = Float32Array) {
+        assertInteger(size / type.BYTES_PER_ELEMENT);
+        if (size === 0) {
+          throw new Error('Buffer size was zero')
+        }
+
+        this.ofs = Module._malloc(size);
+        if (this.ofs === 0) {
+          throw new Error(`Allocation of ${size} bytes failed.`)
+        }
+        this.size = size; // In bytes
+        this.type = type;
+      }
+
+      destroy () {
+        Module._free(this.ofs);
+        this.ofs = 0;
+        this.size = 0;
+      }
+
+      /**
+       * A destructive resize operation that never shrinks the buffer.
+       * NOTE: Does *not* copy the old data over.
+       */
+      ensureSize (newSize) {
+        if (this.size < newSize) {
+          this.destroy();
+          this.ofs = Module._malloc(newSize);
+          if (this.ofs === 0) {
+            throw new Error(`Buffer growth to ${newSize} bytes failed.`)
+          }
+          this.size = newSize;
+        }
+      }
+
+      floats () {
+        return new Float32Array(Module.HEAPF32.buffer, this.ofs, this.size / 4)
+      }
+
+      bytes () {
+        return new Uint8Array(Module.HEAPU8.buffer, this.ofs, this.size)
+      }
+    }
+
+    class BufferView {
+      constructor (buffer, start = 0, size = buffer.size, type = buffer.type) {
+        this.ofs = buffer.ofs;
+        this.start = start;
+        this.size = size;
+        this.type = type;
+        this.heapName = arrayToHeap.get(type);
+      }
+
+      getArray () {
+        // eslint-disable-next-line new-cap
+        return new this.type(Module[this.heapName].buffer, this.ofs + this.start, this.size / this.type.BYTES_PER_ELEMENT)
+      }
+    }
+
+    // Struct size and field offsets are requried for zero-copy interop
+    const renderableSize = Module.getRenderableSize();
+    const renderableFields = Module.getRenderableFields();
+
+    // Used by MeshLoader to copy over mesh AABB without extra allocs
+    const boundsBuffer = new Buffer(2 * 3 * 4);
+
+    const arrayToHeap = new Map([
+      [Float32Array, 'HEAPF32'],
+      [Uint32Array, 'HEAPU32'],
+      [Uint16Array, 'HEAPU16'],
+      [Uint8Array, 'HEAPU8']
+    ]);
+
+    function copyMat4 (buf, elements) {
+      for (let i = 0; i < 16; i++) {
+        buf[i] = elements[i];
+      }
+    }
+
+    function copyVec3 (buf, elements) {
+      buf[0] = elements[0];
+      buf[1] = elements[1];
+      buf[2] = elements[2];
+    }
+
+    class Client {
+      constructor () {
+        this.ptr = Module.clientCreate();
+      }
+
+      destroy () {
+        Module.clientDestroy(this.ptr);
+        this.ptr = 0;
+      }
+    }
+
+    class Scene {
+      constructor (ptr) {
+        this.ptr = ptr;
+        this.creds = Module.sceneCredsCreate();
+        this.matrixBuffer = new Buffer(16 * 4);
+      }
+
+      destroy () {
+        Module.sceneCredsDestroy(this.creds);
+        this.matrixBuffer.destroy();
+      }
+
+      connect (token, projectID, modelID) {
+        Module.sceneConnect(this.ptr, this.creds, token, projectID, modelID);
+      }
+
+      connectionStatus () {
+        return Module.sceneGetConnectionStatus(this.ptr)
+      }
+
+      getInfo (scenePtr) {
+        return Module.sceneGetInfo(this.ptr)
+      }
+
+      isConnected () {
+        return this.connectionStatus() === Module.ConnectionStatus.Connected
+      }
+
+      update (matrix) {
+        if (!Array.isArray(matrix)) {
+          throw new TypeError('Matrix should be an array')
+        }
+        if (matrix.length !== 16) {
+          throw new TypeError('Matrix should be of size 4x4')
+        }
+
+        copyMat4(this.matrixBuffer.floats(), matrix);
+
+        Module.sceneUpdate(this.ptr, this.matrixBuffer.ofs);
+      }
+    }
+
+    class View {
+      constructor (ptr, runtimeAssets) {
+        this.ptr = ptr;
+        this.matrixBuffer = new Buffer(16 * 4);
+        this.vectorBuffer = new Buffer(4 * 4);
+        this.lightBuffer = new Buffer(MAX_LIGHTS * 3 * 4);
+        this.temp = undefined;
+        this.runtimeAssets = runtimeAssets;
+      }
+
+      destroy () {
+        this.matrixBuffer.destroy();
+        this.vectorBuffer.destroy();
+        this.lightBuffer.destroy();
+        if (this.temp) {
+          this.temp.destroy();
+        }
+      }
+
+      update (cameraMatrix, positionVector, quality, lights = []) {
+        if (!Array.isArray(cameraMatrix)) {
+          throw new TypeError('Camera matrix should be an array')
+        }
+        if (!Array.isArray(positionVector)) {
+          throw new TypeError('Position should be an array')
+        }
+        if (typeof quality !== 'number') {
+          throw new TypeError('Quality should be a number')
+        }
+        if (cameraMatrix.length !== 16) {
+          throw new TypeError('Camera matrix should be of size 4x4')
+        }
+        if (positionVector.length !== 3) {
+          throw new TypeError('Position vector should be of length 3')
+        }
+
+        copyMat4(this.matrixBuffer.floats(), cameraMatrix);
+        copyVec3(this.vectorBuffer.floats(), positionVector);
+
+        if (lights) {
+          if (lights.length > MAX_LIGHTS) {
+            throw new Error('Too many lights given')
+          }
+          const buffer = this.lightBuffer.floats();
+          for (let i = 0; i < lights.length; i++) {
+            buffer[3 * i + 0] = lights[i][0];
+            buffer[3 * i + 1] = lights[i][1];
+            buffer[3 * i + 2] = lights[i][2];
+          }
+        }
+
+        Module.viewUpdate(this.ptr, this.matrixBuffer.ofs, quality, this.vectorBuffer.ofs, this.lightBuffer.ofs, lights.length);
+      }
+
+      getVisible (batchSize) {
+        assertInteger(batchSize);
+        const bufferSize = batchSize * renderableSize;
+
+        // Check if we should enlarge or allocate the temp buffer
+        if (!this.temp || this.temp.size < bufferSize) {
+          if (this.temp) {
+            this.temp.destroy();
+          }
+          this.temp = new Buffer(bufferSize);
+        }
+
+        const temp = this.temp;
+        const strideInWords = renderableSize / 4;
+        const bufferWordSize = bufferSize / 4;
+        const offsets = renderableFields;
+
+        assertInteger(strideInWords);
+        assertInteger(bufferWordSize);
+
+        let getView = (arrayType, heap, ptr, ofs) => {
+          assertInteger(ofs / 4);
+          // eslint-disable-next-line new-cap
+          return new arrayType(heap.buffer, ptr + ofs, bufferWordSize - ofs / 4)
+        };
+
+        const meshIDs = getView(Uint32Array, Module.HEAPU32, temp.ofs, offsets['mesh']);
+        const lodLevels = getView(Int32Array, Module.HEAP32, temp.ofs, offsets['lodLevel']);
+        const masks = getView(Uint32Array, Module.HEAPU32, temp.ofs, offsets['visibilityMask']);
+        // const transforms = getView(Float32Array, Module.HEAPF32, temp.ofs, offsets['transform'])
+
+        const count = Module.viewNextRenderables(this.ptr, temp.ofs, batchSize);
+        let output = [];
+
+        for (let i = 0; i < count; i++) {
+          const id = meshIDs[strideInWords * i];
+          const lod = lodLevels[strideInWords * i];
+          const mask = masks[strideInWords * i];
+          // TODO extract individual transforms too
+          output.push({
+            'id': id,
+            'mesh': this.runtimeAssets.get(id),
+            'lod': lod,
+            'mask': mask
+          });
+        }
+
+        return output
+      }
+    }
+
+    let jobTypeToString = new Map([
+      [Module.JobType.StreamIn, 'Create'],
+      [Module.JobType.StreamOut, 'Destroy']
+    ]);
+
+    let assetTypeToString = new Map([
+      [Module.AssetType.Material, 'Material'],
+      [Module.AssetType.Texture, 'Texture'],
+      [Module.AssetType.Mesh, 'Mesh']
+    ]);
+
+    class AssetJob {
+      constructor (ptr) {
+        this.ptr = ptr;
+        this.jobType = jobTypeToString.get(Module.jobGetJobType(ptr));
+        this.assetType = assetTypeToString.get(Module.jobGetAssetType(ptr));
+        this.type = this.jobType + this.assetType;
+        this.data = {}; // Type specific asset data set from the outside
+      }
+
+      finish (result, userPtr) {
+        Module.jobFinish(this.ptr, result, userPtr);
+      }
+
+      success (userPtr = 0) {
+        Module.jobFinish(this.ptr, Module.JobResult.Success, userPtr);
+      }
+
+      fail () {
+        Module.jobFinish(this.ptr, Module.JobResult.Failure, 0);
+      }
+
+      get userPointer () {
+        return Module.jobGetUserPointer(this.ptr)
+      }
+    }
+
+    const vertexBufferMap = new Map([
+      ['position', new Buffer(4)],
+      ['normal', new Buffer(4)],
+      ['uv', new Buffer(4)],
+      ['tangent', new Buffer(4)],
+      ['index', new Buffer(4)]
+    ]);
+
+    function getBufferForAttribute (name, newSize, type) {
+      let buffer = vertexBufferMap.get(name);
+
+      if (buffer.size < newSize) {
+        if (buffer.size > 0) {
+          buffer.destroy();
+        }
+
+        buffer = new Buffer(newSize, type);
+        vertexBufferMap.set(name, buffer);
+      } else if (type) {
+        buffer.type = type;
+      }
+
+      return buffer
+    }
+
+    class MeshLoader {
+      constructor (ptr) {
+        this.ptr = ptr;
+      }
+
+      setBuffers (bufferDescriptors) {
+        if (!Module.meshLoaderSetBuffers(this.ptr, bufferDescriptors)) {
+          console.log(bufferDescriptors);
+          throw new Error('setBuffers failed')
+        }
+      }
+
+      loadNext () {
+        return Module.meshLoaderLoadNext(this.ptr)
+      }
+
+      done () {
+        return Module.meshLoaderDone(this.ptr)
+      }
+
+      allocateBuffers () {
+        const attrInfo = Module.meshLoaderGetAttributes(this.ptr);
+        const vertexCount = this.uniqueVertexCount;
+        /**
+         * We support the following attributes: 'position', 'uv', 'normal', 'tangent', and 'index'.
+         */
+        let bufferDescs = Module.getEmptyMeshBufferDesc();
+        let heapBuffers = {};
+        let bufferSizes = {};
+
+        Object.keys(attrInfo).forEach(name => {
+          const byteSize = vertexCount * attrInfo[name].elemSize;
+          assertInteger(byteSize / Float32Array.BYTES_PER_ELEMENT);
+          bufferSizes[name] = byteSize;
+        });
+
+        Object.keys(attrInfo).forEach(name => {
+          let buffer = getBufferForAttribute(name, bufferSizes[name], Float32Array);
+          let desc = bufferDescs[name];
+
+          heapBuffers[name] = buffer;
+
+          desc.ptr = buffer.ofs; // Emscripten heap offset
+          desc.elemSize = attrInfo[name].elemSize; // Size of a single element
+          desc.size = vertexCount; // Number of elements
+          desc.stride = desc.elemSize; // Distance (in bytes) between consecutive elements
+          desc.flags = 0; // 0: cached memory, 1: uncached memory
+        });
+
+        const indexCount = this.indexCount;
+        const indexBytes = vertexCount < (1 << 16) ? 2 : 4;
+
+        if (indexCount === 0) {
+          throw new Error('Mesh index count was zero!')
+        }
+
+        let indexType = indexBytes === 2 ? Uint16Array : Uint32Array;
+
+        let indexBufferSize = indexCount * indexBytes;
+        const indexBuffer = getBufferForAttribute('index', indexBufferSize, indexType);
+
+        let index = {};
+        index.elemSize = indexBytes;
+        index.ptr = indexBuffer.ofs;
+        index.size = indexCount;
+        index.stride = index.elemSize;
+        index.flags = 0;
+
+        heapBuffers['index'] = indexBuffer;
+        bufferSizes['index'] = indexBufferSize;
+        bufferDescs['index'] = index;
+
+        let views = {};
+        Object.keys(heapBuffers).forEach(name => {
+          views[name] = new BufferView(heapBuffers[name], 0, bufferSizes[name]);
+        });
+
+        return { 'buffers': views, 'desc': bufferDescs }
+      }
+
+      get uniqueVertexCount () {
+        return Module.meshLoaderUniqueVertexCount(this.ptr)
+      }
+
+      get indexCount () {
+        return Module.meshLoaderIndexCount(this.ptr)
+      }
+
+      get attributes () {
+        return Module.meshLoaderGetAttributes(this.ptr)
+      }
+
+      get material () {
+        return Module.meshLoaderGetMaterial(this.ptr)
+      }
+
+      get bounds () {
+        Module.meshLoaderGetBounds(this.ptr, boundsBuffer.ofs);
+        const aabb = boundsBuffer.floats();
+        return [[aabb[0], aabb[1], aabb[2]], [aabb[3], aabb[4], aabb[5]]]
+      }
+    }
+
+    class Runtime {
+      constructor (client, textureFormats) {
+        /**
+         * If no normal map formats are supported then force support for
+         * BC5 so that textures get transcoded into an uncompressed format.
+         */
+        const normalFormats = (
+          TextureCapability$1.ETC1 |
+          TextureCapability$1.ASTC |
+          TextureCapability$1.PVRTC1 |
+          TextureCapability$1.BC5);
+
+        let capabilityMask = textureFormats.flags;
+
+        if (!(capabilityMask & normalFormats)) {
+          capabilityMask |= TextureCapability$1.BC5 | TextureCapability$1.BC4;
+        }
+
+        this.client = client;
+        this.ptr = Module.runtimeCreate(client.ptr, capabilityMask);
+        this.supportedTextureFormats = textureFormats;
+
+        this.assets = new Map();
+        this.nextId = 1;
+        this.loader = undefined;
+        this.tempTextureBuffer = new Buffer(1024 * 1024, Uint8Array);
+        this.tempTranscodedBuffer = new Buffer(4, Uint8Array);
+
+        this.debug = {
+          textureFormatsInUse: new Set()
+        };
+      }
+
+      destroy () {
+        this.tempTextureBuffer.destroy();
+        this.tempTranscodedBuffer.destroy();
+        this.client.destory();
+        Module.runtimeDestroy(this.ptr);
+        this.ptr = 0;
+      }
+
+      createScene () {
+        const scenePtr = Module.runtimeCreateScene(this.ptr);
+        return new Scene(scenePtr)
+      }
+
+      destroyScene (scene) {
+        Module.runtimeSceneDestroy(scene.ptr);
+      }
+
+      createView () {
+        const viewPtr = Module.runtimeCreateView(this.ptr);
+        return new View(viewPtr, this.assets)
+      }
+
+      destroyView (view) {
+        Module.runtimeViewDestroy(view.ptr);
+      }
+
+      update () {
+        Module.runtimeUpdate(this.ptr);
+      }
+
+      * getJobs () {
+        while (true) {
+          if (this.loader) {
+            if (this.loader.done()) {
+              let job = this.loader.ownerJob;
+              // The buffers allocated by MeshLoader are handed over to the caller.
+              job.data.buffers = this.loader.vertexBuffers.buffers;
+              job.data.desc = this.loader.vertexBuffers.desc;
+              job.data.material = this.assets.get(this.loader.material);
+              job.data.bounds = this.loader.bounds;
+
+              this.loader = undefined;
+              yield job;
+            } else {
+              /**
+               * A mesh is still decompressing so we'll advance the decompression
+               * one step further and return the control to the caller for a timeout check.
+               */
+              if (!this.loader.loadNext()) {
+                throw new Error('loadNext failed')
+              }
+              yield undefined;
+
+              // This processing step might have finished the decompression already, so loop back.
+              continue
+            }
+          }
+
+          let jobPtr = Module.runtimeGetJob(this.ptr);
+
+          // Terminate the generator when there are no more jobs to process.
+          if (jobPtr === 0) {
+            return undefined
+          }
+
+          let job = new AssetJob(jobPtr);
+
+          if (job.type === 'CreateMaterial') {
+            job.data = Module.jobGetMaterialData(job.ptr);
+            job.data.textures = job.data.textures.map(id => this.assets.get(id));
+            yield job;
+          } else if (job.type === 'CreateTexture') {
+            let info = Module.jobGetTextureData(job.ptr);
+            let buffer = this.tempTextureBuffer;
+
+            buffer.ensureSize(info.dataByteSize);
+
+            // Fill the allocated buffer with texture data
+            const success = Module.jobCopyTextureContents(job.ptr, buffer.ofs, buffer.size, false);
+
+            if (!success) {
+              job.fail();
+              const msg = 'Texture copying failed! Job pointer: ' + job.ptr + ', buffer ofs: ' + buffer.ofs + ', buffer size: ' + buffer.size;
+              throw new Error(msg)
+            }
+
+            let bufferView = new BufferView(buffer, 0, info.dataByteSize);
+
+            if (this.formatNeedsTranscoding(info.format)) {
+              let newInfo = this.transcodeTexture(info, buffer, this.tempTranscodedBuffer);
+
+              info = newInfo;
+
+              const formatToArrayType = {
+                [TextureFormat.RGBA32]: Uint8Array,
+                [TextureFormat.RGB565]: Uint16Array,
+                [TextureFormat.RG8]: Uint8Array,
+                [TextureFormat.RG16F]: Uint16Array
+              };
+
+              bufferView = new BufferView(this.tempTranscodedBuffer, 0, info.dataByteSize);
+              bufferView.type = formatToArrayType[info.format];
+            }
+
+            // Convert internal enums to string constants
+            info.format = TextureFormatNames[info.format];
+            info.colorSpace = ColorSpaceNames[info.colorSpace];
+            info.textureType = TextureTypeNames[info.textureType];
+
+            this.debug.textureFormatsInUse.add(info.format);
+
+            job.data = { info: info, buffer: bufferView };
+            yield job;
+          } else if (job.type === 'CreateMesh') {
+            // Mesh jobs create decompression work that needs to be done first.
+            this.loader = new MeshLoader(Module.jobGetMeshLoader(job.ptr));
+            this.loader.vertexBuffers = this.loader.allocateBuffers();
+            this.loader.setBuffers(this.loader.vertexBuffers.desc);
+            this.loader.ownerJob = job;
+            yield undefined;
+          } else if (job.jobType === 'Destroy') {
+            // The handler gets a reference to the asset object in 'job.data'
+            job.data = this.assets.get(job.userPointer);
+            yield job;
+          } else {
+            throw new Error('Job wasn\'t handled correctly')
+          }
+        }
+      }
+
+      handleJobs (handlers, timeLimit) {
+        const startTime = performance.now();
+
+        for (let job of this.getJobs()) {
+          // If job is 'undefined' it means a mesh is still decompressing
+          if (job) {
+            try {
+              handlers[job.type](job);
+            } catch (error) {
+              job.fail();
+              throw error
+            }
+          }
+
+          // We always process at least one job before checking the time
+          if (performance.now() - startTime > timeLimit) {
+            break
+          }
+        }
+      }
+
+      addAsset (job, asset) {
+        // AssetJob IDs are just an increasing 32-bit series
+        const userPtr = this.nextId;
+        this.nextId = (this.nextId + 1) | 0;
+        if (this.nextId === 0) {
+          this.nextId = 1;
+        }
+        this.assets.set(userPtr, asset);
+
+        job.finish(Module.JobResult.Success, userPtr);
+      }
+
+      /**
+       * Removes the asset reference of the stream out job.
+       * Assumes the caller has already freed their own asset resources.
+       */
+      removeAsset (job, asset) {
+        const id = job.userPointer;
+        if (this.assets.has(id)) {
+          this.assets.delete(id);
+        }
+        job.finish(Module.JobResult.Success, 0);
+      }
+
+      failJob (job) {
+        job.finish(Module.JobResult.Failure, 0);
+      }
+
+      formatNeedsTranscoding (format) {
+        const flags = this.supportedTextureFormats.flags;
+
+        switch (format) {
+          case TextureFormat.BC1:
+            if (flags & TextureCapability.BC1) {
+              return false
+            }
+            break
+
+          case TextureFormat.BC3:
+            if (flags & TextureCapability.BC3) {
+              return false
+            }
+            break
+
+          case TextureFormat.BC4:
+            if (flags & TextureCapability.BC4) {
+              return false
+            }
+            break
+
+          case TextureFormat.BC5:
+            if (flags & TextureCapability.BC5) {
+              return false
+            }
+            break
+
+          default:
+            return false
+        }
+
+        return true
+      }
+
+      transcodeTexture (info, buffer, outputBuffer) {
+        const newFormat = Module.getUncompressedFromBCFormat(info.format);
+
+        if (newFormat === TextureFormat.COUNT) {
+          throw new Error("Couldn't find a matching BC format")
+        }
+
+        const outputSize = Module.getTextureByteSize(info.width, info.height, newFormat);
+        outputBuffer.ensureSize(outputSize);
+        const output = Module.transcodeTexture(
+          info.width,
+          info.height,
+          info.format,
+          buffer.ofs,
+          info.dataByteSize,
+          this.supportedTextureFormats.halfFloat,
+          outputBuffer.ofs,
+          outputBuffer.size);
+
+        if (output.data === 0) {
+          console.log(info);
+          console.log(buffer);
+          throw new Error(`Texture transcoding failed. Input: ${info.format}, output: ${newFormat}, output size: ${outputSize}`)
+        }
+
+        // Create a new texture descriptor with updated properties and return it.
+
+        let info2 = Object.assign({}, info);
+
+        info2 = Object.assign(info2, {
+          format: output.format,
+          width: output.width,
+          height: output.height,
+          dataByteSize: output.dataByteSize,
+          mipByteSizes: [output.dataByteSize]
+        });
+
+        return info2
+      }
+
+      getDebugInfo () {
+        return Module.runtimeGetDebugInfo(this.ptr)
+      }
+    }
+
+    return {
+      'Client': Client,
+      'Runtime': Runtime
+    }
+  };
+
+  /**
+   * Returns a library instance that uses the Emscripten resources of "Module".
+   */
+  function UmbraRuntimeLibrary (Module) {
+    const API_VERSION = 'api/v2';
+
+    let apicall = function (endPoint, path, options) {
+      let buildURL = function (endPoint, path) {
+        let url = endPoint.url;
+        if (url.substr(-1) !== '/') {
+          url += '/';
+        }
+        url += API_VERSION;
+        url += path;
+        return url
+      };
+
+      let url = buildURL(endPoint, path);
+      let init = Object.assign({
+        method: 'GET',
+        headers: {
+          'Umbra-Client': 'UmbraJS',
+          'Authorization': 'Basic ' + btoa(endPoint.key + ':')
+          // 'Umbra-Device' : '{}'
+        },
+        mode: 'cors'
+      }, options);
+
+      return fetch(url, init)
+        .then(function (response) {
+          if (!response.ok) {
+            // FIXME: handle http errors better
+            throw new Error('HTTP error, status = ' + response.status)
+          }
+          return response.json()
+        })
+    };
+
+    const lib = {};
+
+    lib.NATIVE_VERSION = Module.getLibraryVersion();
+
+    lib.getProjects = (token) => {
+      let endPoint = Module.parseCloudCredentials(token);
+      if (endPoint.key === '') {
+        throw new Error('Couldn\'t parse token ', token)
+      }
+      return apicall(endPoint, '/projects', {})
+    };
+
+    // TODO: This assumes all extensions that are available are also enabled by the application.
+    lib.getSupportedTextureFormats = (gl) => {
+      let flags = 0; // Accumulate a texture format bitmask here
+      let formats = new Set(); // Will hold all supported format names
+      let supportsSRGB = false;
+      let supportsHalfFloat = false;
+
+      let extStrings = gl.getSupportedExtensions();
+      extStrings = extStrings.map(s => s.replace(/^(.*)_WEBGL_/, 'WEBGL_'));
+
+      const mapping = new Map([
+        ['WEBGL_compressed_texture_s3tc', {
+          mask: TextureCapability.BC1 | TextureCapability.BC2 | TextureCapability.BC3,
+          names: ['bc1', 'bc2', 'bc3'] }],
+        ['WEBGL_compressed_texture_s3tc_srgb', {
+          mask: TextureCapability.BC1 | TextureCapability.BC2 | TextureCapability.BC3,
+          names: ['bc1', 'bc2', 'bc3'] }],
+        ['WEBGL_compressed_texture_rgtc', {
+          mask: TextureCapability.BC4 | TextureCapability.BC5,
+          names: ['bc4', 'bc5'] }],
+        ['WEBGL_compressed_texture_pvrtc', {
+          mask: TextureCapability.PVRTC1,
+          names: ['pvrtc1_rgb4', 'pvrtc1_rgba4'] }],
+        ['WEBGL_compressed_texture_etc1', {
+          mask: TextureCapability.ETC1,
+          names: ['etc1_rgb'] }],
+        ['WEBGL_compressed_texture_astc', {
+          mask: TextureCapability.ASTC,
+          names: ['astc_4x4'] }]
+      ]);
+
+      for (let key of mapping.keys()) {
+        if (extStrings.includes(key)) {
+          let value = mapping.get(key);
+          flags |= value.mask;
+          value.names.forEach(name => formats.add(name));
+        }
+      }
+
+      if (extStrings.includes('WEBGL_compressed_texture_s3tc_srgb')) {
+        supportsSRGB = true;
+      }
+
+      if (extStrings.includes('EXT_sRGB')) {
+        supportsSRGB = true;
+      }
+
+      if (extStrings.includes('OES_texture_half_float')) {
+        supportsHalfFloat = true;
+      }
+
+      return { flags: flags, formats: [...formats], srgb: supportsSRGB, halfFloat: supportsHalfFloat }
+    };
+
+    lib.getIDs = ({ token, projectID, modelID, model, project }) => {
+      // The application can connect with either direct IDs or names
+      if (projectID && modelID) {
+        return Promise.resolve({ project: projectID, model: modelID })
+      } else {
+        return lib.getProjects(token).then((projects) => {
+          const proj = projects.find(p => p.name === project);
+          const model = proj.models.find(m => m.name === model);
+
+          if (!proj) {
+            const names = projects.map(p => p.name);
+            throw new Error('Couldn\'t find a project with name "' + project + '". Only found the following: ' + names)
+          }
+
+          if (!model) {
+            const names = proj.models.map(m => m.name);
+            throw new Error('Couldn\'t find a model with name "' + model + '". Only found the following: ' + names)
+          }
+
+          return { project: proj.id, model: model.id }
+        })
+      }
+    };
+
+    // Access to the Emscripten module shouldn't be needed but expose it anyway
+    lib.nativeModule = Module;
+
+    // Allow access to API classes
+    lib.wrappers = create(Module);
+
+    return lib
+  }
+
+  /**
+   * Compiles the WebAssembly and code and initializes the Emscripten environment.
+   * Returns a Promise that resolves with the library instance ready for use.
+   */
+  let UmbraLibrary = function (config) {
+
+    const defaults = {
+      wasmURL: ''
+    };
+
+    config = Object.assign(defaults, config);
+
+    return new Promise((resolve, reject) => {
+      try {
+        let redirectWasmURL = (path, prefix) => {
+          // If it's our wasm file, return a custom URL
+          if (path.endsWith('umbra.wasm') && config.wasmURL !== '') {
+            return config.wasmURL
+          }
+
+          return prefix + path
+        };
+
+        UmbraNativeAPI({ locateFile: redirectWasmURL }).then(Module => {
+          // A workaround for https://github.com/emscripten-core/emscripten/issues/5820
+          delete Module['then'];
+          Module['onAbort'] = what => {
+            reject(what);
+          };
+
+          resolve(UmbraRuntimeLibrary(Module));
+        });
+      } catch (e) {
+        reject(e);
+      }
+    })
+  };
+
+  /**
+   * ShaderPatcher is a preprocessor function that replaces the default PBR texture read
+   * shader chunks with the correct Umbra versions. Doing it this way instead of completely
+   * custom shaders allows the application to use its own materials with Umbrafied models.
+   */
+
+  const normalmapChunk = `
+
+#ifdef USE_NORMALMAP
+#ifdef USE_TANGENT
+
+vec3 tangentToWorld2 = normal;
+vec3 tangentToWorld0 = normalize(tangent - tangentToWorld2 * dot(tangentToWorld2, tangent));
+vec3 tangentToWorld1 = normalize(cross(tangentToWorld2, tangentToWorld0));
+
+#if defined(UMBRA_TEXTURE_SUPPORT_BC5) || defined(UMBRA_TEXTURE_SUPPORT_ASTC)
+normal.xy = texture2D(normalMap, vUv).xy * 2.0 - 1.0;
+normal.z = sqrt(1.0 - clamp(dot(normal.xy, normal.xy), 0.0, 1.0));
+#elif defined(UMBRA_TEXTURE_SUPPORT_BC3)
+normal.xy = texture2D(normalMap, vUv).yw * 2.0 - 1.0;
+normal.z = sqrt(1.0 - clamp(dot(normal.xy, normal.xy), 0.0, 1.0));
+#else
+normal.xyz = texture2D(normalMap, vUv).xyz;
+normal.xy *= 2.0;
+normal.xy -= 1.0;
+normal = normalize(normal);
+#endif
+
+normal = tangentToWorld0 * normal.x + tangentToWorld1 * normal.y + tangentToWorld2 * normal.z;
+normal = normalize(normal);
+#endif
+#endif
+
+`;
+
+  const metalnessMapChunk = `
+float metalnessFactor = metalness;
+#ifdef USE_METALNESSMAP
+vec4 texelMetalness = texture2D( metalnessMap, vUv );
+metalnessFactor *= texelMetalness.r;
+#endif
+`;
+
+  // The BSDF function (see 'bsdfs.glsl') squares the roughness so we don't need to do it here.
+  const roughnessMapChunk = `
+float roughnessFactor = roughness;
+#ifdef USE_ROUGHNESSMAP
+vec4 texelRoughness = texture2D( roughnessMap, vUv );
+float roughness = 1.0 - texelRoughness.g;
+roughnessFactor *= roughness;
+#endif
+`;
+
+  function createShaderPatcher (formats) {
+    let defines = '';
+
+    if (formats.formats.indexOf('bc3') > -1) {
+      defines += '#define UMBRA_TEXTURE_SUPPORT_BC3\n';
+    }
+    if (formats.formats.indexOf('bc5') > -1) {
+      defines += '#define UMBRA_TEXTURE_SUPPORT_BC5\n';
+    }
+    if (formats.formats.indexOf('astc_4x4') > -1) {
+      defines += '#define UMBRA_TEXTURE_SUPPORT_ASTC\n';
+    }
+
+    return function (shader, renderer) {
+      let frag = shader.fragmentShader;
+      frag = defines + frag;
+      frag = frag.replace('#include <normal_fragment_maps>', normalmapChunk);
+      frag = frag.replace('#include <metalnessmap_fragment>', metalnessMapChunk);
+      frag = frag.replace('#include <roughnessmap_fragment>', roughnessMapChunk);
+      shader.fragmentShader = frag;
+    }
+  }
+
+  function makeFormat (format, type, compressed) {
+    return { format, type, compressed }
+  }
+
+  const ThreeFormats = {
+    rgb24: makeFormat(THREE.RGBFormat, THREE.UnsignedByteType, false),
+    rgba32: makeFormat(THREE.RGBAFormat, THREE.UnsignedByteType, false),
+    rgb565: makeFormat(THREE.RGBFormat, THREE.UnsignedShort565Type, false),
+    rg8: makeFormat(THREE.LuminanceAlphaFormat, THREE.UnsignedByteType, false),
+    rg16f: makeFormat(THREE.LuminanceAlphaFormat, THREE.HalfFloatType, false),
+    bc1: makeFormat(THREE.RGBA_S3TC_DXT1_Format, THREE.UnsignedByteType, true),
+    bc3: makeFormat(THREE.RGBA_S3TC_DXT5_Format, THREE.UnsignedByteType, true),
+    etc1_rgb: makeFormat(THREE.RGB_ETC1_Format, THREE.UnsignedByteType, true),
+    astc_4x4: makeFormat(THREE.RGBA_ASTC_4x4_Format, THREE.UnsignedByteType, true),
+    pvrtc1_rgb4: makeFormat(THREE.RGB_PVRTC_4BPPV1_Format, THREE.UnsignedByteType, true)
+  };
+
+  class ObjectPool {
+    constructor () {
+      this.usedList = [];
+      this.freeList = [];
+    }
+
+    allocate (makeFunc) {
+      let obj;
+      if (this.freeList.length > 0) {
+        obj = this.freeList.pop();
+      } else {
+        obj = makeFunc();
+      }
+
+      this.usedList.push(obj);
+      return obj
+    }
+
+    freeAll (clearFunc) {
+      for (let i = 0; i < this.usedList.length; i++) {
+        if (clearFunc) {
+          clearFunc(this.usedList[i]);
+        }
+        this.freeList.push(this.usedList[i]);
+      }
+      this.usedList.length = 0;
+    }
+  }
+
+  /**
+   * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
+   * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
+   * THREE.Material instance using the textures and transparency flag in 'materialDesc'
+   */
+  function MeshDescriptor (geometry, materialDesc) {
+    this.geometry = geometry;
+    this.materialDesc = materialDesc;
+  }
+
+  function ModelObject (runtime, scene, renderer, platform) {
+    THREE.Object3D.call(this);
+
+    // User editable config
+    this.quality = 0.5; // Streaming model quality. Ranges from 0 to 1.
+    this.opaqueMaterial = new THREE.MeshBasicMaterial();
+    this.wireframe = false;
+
+    // Streaming debug info accessible through getInfo()
+    this.stats = {
+      numVisible: 0,
+      numShadowCasters: 0,
+      numCachedMaterials: 0,
+      numAssets: 0
+    };
+
+    // We need to present ourselves as a LOD object to get the update() call
+    this.isLOD = true;
+    this.autoUpdate = true;
+    this.renderer = renderer;
+    this.cameraToView = new Map();
+    this.viewLastUsed = new Map();
+    this.materialPool = new ObjectPool();
+    this.shaderPatcher = createShaderPatcher(platform.supportedFormats);
+    this.name = 'UmbraModel';
+
+    // Add API objects under their own object for clarity
+    this.umbra = {
+      runtime: runtime,
+      scene: scene
+    };
+
+    // Temporary values we don't want to reallocate every frame
+    this.matrixWorldInverse = new THREE.Matrix4();
+    this.projScreenMatrix = new THREE.Matrix4();
+    this.cameraWorldPosition = new THREE.Vector3();
+
+    this.tempVector = new THREE.Vector3();
+    this.dirVector = new THREE.Vector3();
+  }
+
+  ModelObject.prototype = Object.create(THREE.Object3D.prototype);
+  ModelObject.prototype.constructor = THREE.Object3D;
+
+  ModelObject.prototype.getInfo = function () {
+    let info = { connected: this.umbra.scene.isConnected() };
+    if (info.connected) {
+      info['sceneInfo'] = this.umbra.scene.getInfo();
+    }
+    Object.assign(info, this.stats);
+    return info
+  };
+
+  ModelObject.prototype.getBounds = function () {
+    if (!this.umbra.scene.isConnected()) {
+      return undefined
+    }
+
+    const info = this.umbra.scene.getInfo();
+    const bounds = info.bounds;
+    const min = bounds.min;
+    const max = bounds.max;
+    let box = new THREE.Box3(new THREE.Vector3(min[0], min[1], min[2]), new THREE.Vector3(max[0], max[1], max[2]));
+    return box
+  };
+
+  function findLights (scene) {
+    const lights = [];
+    scene.traverseVisible(obj => {
+      if (obj.isDirectionalLight && obj.castShadow) {
+        lights.push(obj);
+      }
+    });
+
+    return lights
+  }
+
+  ModelObject.prototype.getCenter = function () {
+    const bounds = this.getBounds();
+    bounds.applyMatrix4(this.matrixWorld);
+    let center = new THREE.Vector3();
+    bounds.getCenter(center);
+    return center
+  };
+
+  ModelObject.prototype.pruneOldViews = function (frame) {
+    /**
+     * We get no notification when cameras are removed from the scene graph
+     * so we'll go and remove old views.
+     */
+    for (let [view, lastUsed] of this.viewLastUsed) {
+      if (frame - lastUsed > 1000) {
+        for (let [cam, view2] of this.cameraToView) {
+          if (view2 === view) {
+            this.cameraToView.delete(cam);
+            break
+          }
+        }
+        this.umbra.runtime.destroyView(view);
+        this.viewLastUsed.delete(view);
+      }
+    }
+  };
+
+  ModelObject.prototype.update = function (camera) {
+    let scene;
+
+    this.traverseAncestors(obj => {
+      if (obj.isScene) {
+        scene = obj;
+      }
+    });
+
+    if (!scene && !scene.isScene) {
+      console.log('No parent scene found');
+      return
+    }
+
+    let lights = [];
+
+    if (this.renderer.shadowMap.enabled) {
+      lights = findLights(scene);
+    }
+
+    let view = this.cameraToView.get(camera);
+
+    if (!view) {
+      view = this.umbra.runtime.createView();
+      this.cameraToView.set(camera, view);
+    }
+
+    const frame = this.renderer.info.render.frame;
+    this.viewLastUsed.set(view, frame);
+
+    this.pruneOldViews(frame);
+
+    this.umbra.scene.update(this.matrixWorld.elements);
+
+    this.matrixWorldInverse.getInverse(camera.matrixWorld);
+    this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse);
+
+    let dir = this.dirVector;
+    let vector3 = this.tempVector;
+
+    const lightDirections = lights.map(light => {
+      dir.setFromMatrixPosition(light.target.matrixWorld);
+      vector3.setFromMatrixPosition(light.matrixWorld);
+      dir.sub(vector3);
+      return [dir.x, dir.y, dir.z]
+    }, lights);
+
+    // By default we stream in meshes around the camera, but the user can override it too.
+    if (camera.umbraStreamingPosition) {
+      this.cameraWorldPosition.copy(camera.umbraStreamingPosition);
+    } else {
+      camera.getWorldPosition(this.cameraWorldPosition);
+    }
+
+    const pos = this.cameraWorldPosition;
+    view.update(this.projScreenMatrix.elements, [pos.x, pos.y, pos.z], this.quality, lightDirections);
+
+    this.stats.numVisible = 0;
+    this.stats.numAssets = this.umbra.runtime.assets.size;
+
+    /**
+     * Next we find the visible Umbra meshes and add them to the scene graph.
+     * This is pretty tricky, because we want more meshes to show up in the shadow map pass
+     * than in the main camera render pass. This is why 'mesh.castShadow' doesn't help here
+     * since it does the exact opposite.
+     *
+     * We use a workaround that first adds the common meshes as children of the Umbra model
+     * object but stashes the shadow caster meshes (visible only from lights) to an extra
+     * list 'shadowCasters'.
+     *
+     * The trick is that after the children, we add a 'proxy' object that presents itself
+     * as a 'LOD' object. As a consequence it gets its own update() call, and there we go
+     * and add the shadow casters also to the children list. At this point the opaque
+     * renderable objects were already collected to their own render list, so 'children'
+     * is safe to modify.
+     *
+     * In essence, the flow is the following.
+     *
+     *    three.js                           model object (this)
+     *    --------                           ------------------
+     *    Starts traversing scene graph
+     *    Calls model.update(cam) ---------> Updates views
+     *                                       Fetches a list of renderables
+     *                                       Adds common meshes to this.children
+     *    Adds model.children to
+     *      the render list
+     *    Starts rendering model.children
+     *    Calls proxy.update(cam) ---------> Proxy goes and adds shadow casters to this.children
+     *    Starts the shadow pass
+     *    Adds model.children to shadow
+     *      render list
+     *    Renders the shadow pass
+     *    Renders the opaque pass
+     *    Renders the transparent pass
+     *
+     * As you can see, the 'this.children' list is mutated halfway through the renderer's
+     * scene graph traversal so that different object list ends up to the shadow pass render code.
+     */
+
+    // First filter away last frame's meshes
+    let newChildren = [];
+    for (let i = 0; i < this.children.length; i++) {
+      if (!this.children[i].isUmbraMesh) {
+        newChildren.push(this.children[i]);
+      }
+    }
+
+    this.children = newChildren;
+
+    let shadowCasters = [];
+
+    let proxy = new THREE.Object3D();
+    proxy.isLOD = true;
+    proxy.autoUpdate = true;
+    proxy.update = cam => {
+      // Remove the proxy itself
+      this.children.pop();
+
+      // Add the shadow casters
+      for (let i = 0; i < shadowCasters.length; i++) {
+        this.children.push(shadowCasters[i]);
+      }
+    };
+
+    this.materialPool.freeAll(mat => {
+      // Remove references to textures so GC can release the three.js objects
+      delete mat.map;
+      delete mat.normalMap;
+      delete mat.metalnessMap;
+      delete mat.roughnessMap;
+    });
+
+    const batchSize = 200;
+    let visible = [];
+
+    do {
+      visible = view.getVisible(batchSize);
+
+      for (let i = 0; i < visible.length; i++) {
+        const { materialDesc, geometry } = visible[i].mesh;
+
+        // Fetch a new material from the pool if we already have free ones. This avoids
+        // extra allocations and more importantly 'onBeforeCompile' calls.
+        const material = this.materialPool.allocate(() => this.opaqueMaterial.clone());
+        material.wireframe = this.wireframe;
+
+        material.onBeforeCompile = (shader, renderer) => {
+          /**
+           * If the original material already had a custom preprocessor callback we need to call
+           * that first. We need to use 'apply' in case the callback uses 'this' reference to
+           * access some material properties.
+           */
+          if (this.opaqueMaterial.onBeforeCompile) {
+            this.opaqueMaterial.onBeforeCompile.apply(material, [shader, renderer]);
+          }
+
+          this.shaderPatcher(shader, renderer);
+        };
+
+        const diffuseMap = materialDesc.textures[TextureType.DIFFUSE];
+        const normalMap = materialDesc.textures[TextureType.NORMAL];
+        const metalglossMap = materialDesc.textures[TextureType.SPECULAR];
+
+        if (diffuseMap && diffuseMap.isTexture) {
+          material.map = diffuseMap;
+        }
+
+        if (normalMap && normalMap.isTexture) {
+          material.normalMap = normalMap;
+          material.vertexTangents = true;
+          material.normalMapType = THREE.TangentSpaceNormalMap;
+        }
+
+        if (metalglossMap && metalglossMap.isTexture) {
+          material.metalnessMap = metalglossMap;
+          material.metalness = 1.0;
+          material.roughnessMap = metalglossMap;
+          material.roughness = 1.0;
+        }
+
+        /**
+         * We instatiate new Mesh objects each frame but the constructor is very cheap
+         * and the references should live for a very short time since 'this.children'
+         * gets cleared every frame. However if this still causes too much allocations
+         * an object pool could help.
+         */
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.isUmbraMesh = true;
+        mesh.matrixWorld.copy(this.matrixWorld);
+        mesh.castShadow = this.castShadow;
+        mesh.receiveShadow = this.receiveShadow;
+        mesh.visible = true;
+        this.children.push(mesh);
+
+        if ((visible[i].mask & 0x01) === 0) {
+          shadowCasters.push(mesh);
+          mesh.frustumCulled = true;
+        } else {
+          this.children.push(mesh);
+          mesh.frustumCulled = false;
+        }
+      }
+
+      this.stats.numVisible += visible.length;
+    } while (visible.length === batchSize)
+
+    this.stats.numShadowCasters = shadowCasters.length;
+    this.stats.numCachedMaterials = this.materialPool.usedList.length + this.materialPool.freeList.length;
+
+    if (shadowCasters.length > 0) {
+      this.children.push(proxy);
+    }
+  };
+
+  ModelObject.prototype.dispose = function () {
+    this.umbra.runtime.destroyView(this.umbra.view);
+    this.umbra.runtime.destroyScene(this.umbra.scene);
+    // Runtime must be manually freed by the user with .dispose() of the API object
+  };
+
+  function makeBoundingSphere (aabb) {
+    const min = aabb[0];
+    const max = aabb[1];
+    const size = new THREE.Vector3(max[0] - min[0], max[1] - min[1], max[2] - min[2]);
+    const pos = new THREE.Vector3(min[0] + size.x * 0.5, min[1] + size.y * 0.5, min[2] + size.z * 0.5);
+    return new THREE.Sphere(pos, size.length())
+  }
+
+  function initWithThreeJS (renderer, userConfig) {
+    return UmbraLibrary(userConfig).then(Umbra => {
+      const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context);
+
+      // Three.js does not support BC5 compressed formats so we manually disable them.
+      supportedFormats.flags &= ~TextureCapability.BC5;
+
+      let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats);
+
+      /**
+       * Creating a model is an asynchronous operation because we might need to query the Project API
+       * to map the given string names into numeric IDs. If the IDs are used then the promise will
+       * resolve immediately.
+       */
+      let modelFactory = cloudArgs => {
+        return Umbra.getIDs(cloudArgs).then((IDs) => {
+          const scene = runtime.createScene();
+          scene.connect(cloudArgs.token, IDs.project, IDs.model);
+
+          const model = new ModelObject(runtime, scene, renderer, {
+            supportedFormats: supportedFormats
+          });
+
+          return model
+        })
+      };
+
+      /*
+       * This launches new downloads and hands out generated assets to three.js.
+       * Should be called at the beginning of a frame.
+       */
+      let update = function (timeBudget = 10) {
+        const handlers = {
+          CreateMaterial: job => {
+            runtime.addAsset(job, job.data);
+          },
+          DestroyMaterial: job => {
+            runtime.removeAsset(job, job.data);
+          },
+          CreateTexture: job => {
+            const info = job.data.info;
+            const buffer = job.data.buffer;
+
+            let glformat;
+
+            if (ThreeFormats.hasOwnProperty(info.format)) {
+              glformat = ThreeFormats[info.format];
+            }
+
+            if (!glformat) {
+              console.log('Unknown texture format', info.format);
+              job.fail();
+              return
+            }
+
+            // eslint-disable-next-line new-cap
+            const pixelData = new buffer.type(buffer.getArray().slice());
+
+            let tex;
+            if (glformat.compressed) {
+              const mip = {
+                width: info.width,
+                height: info.height,
+                data: pixelData
+              };
+              tex = new THREE.CompressedTexture([mip], info.width, info.height);
+            } else {
+              tex = new THREE.DataTexture(pixelData, info.width, info.height);
+            }
+
+            tex.format = glformat.format;
+            tex.type = glformat.type;
+            tex.magFilter = THREE.LinearFilter;
+            tex.minFilter = THREE.LinearFilter;
+            tex.anisotropy = 0;
+
+            /**
+             * A workaround for the case where we directly output colors in gamma space.
+             * We make all textures linear to avoid gamma expansion at texture fetch time.
+             * This is slightly wrong because texture filtering and shading will be done
+             * in gamma space, but this behavior is what people usually expect.
+             */
+            if (info.textureType === 'diffuse' && !renderer.gammaOutput) {
+              tex.encoding = THREE.LinearEncoding;
+            } else {
+              tex.encoding = info.colorSpace === 'linear' ? THREE.LinearEncoding : THREE.sRGBEncoding;
+            }
+
+            tex.needsUpdate = true;
+
+            runtime.addAsset(job, tex);
+          },
+          DestroyTexture: job => {
+            // Free texture data only if it's not a dummy texture
+            if (job.data.isTexture) {
+              job.data.dispose();
+            }
+            runtime.removeAsset(job, job.data);
+          },
+          CreateMesh: job => {
+            /**
+             * The mesh creation job gives us all the vertex data in job.data.buffers.
+             * The buffers are only valid during this handler, and the memory will be
+             * reused for other meshes later. Therefore we make copies of the arrays
+             * for three.js which is something we would have to do anyway.
+             */
+
+            const geometry = new THREE.BufferGeometry();
+            const indexArray = job.data.buffers['index'].getArray();
+            const indices = Array.from(indexArray);
+            geometry.setIndex(indices);
+            geometry.boundingSphere = makeBoundingSphere(job.data.bounds);
+
+            const attribs = {
+              position: { components: 3 },
+              normal: { components: 3 },
+              uv: { components: 2 },
+              tangent: { components: 3 }
+            };
+
+            Object.keys(attribs).forEach(name => {
+              const buffer = job.data.buffers[name];
+
+              if (buffer) {
+                const array = buffer.getArray();
+                const attrib = new THREE.Float32BufferAttribute(array.slice(), attribs[name].components);
+                geometry.addAttribute(name, attrib);
+              }
+            });
+
+            const meshDescriptor = new MeshDescriptor(geometry, job.data.material);
+            runtime.addAsset(job, meshDescriptor);
+          },
+          DestroyMesh: job => {
+            const meshDesc = job.data;
+            // Tell Umbra's runtime that this asset doesn't exist anymore and finish the job
+            runtime.removeAsset(job, meshDesc);
+            // Release three.js's resources
+            meshDesc.geometry.dispose();
+          }
+        };
+
+        runtime.handleJobs(handlers, timeBudget);
+        runtime.update();
+      };
+
+      return {
+        createModel: modelFactory,
+        update: update,
+        dispose: () => {
+          runtime.destroy();
+          runtime = undefined;
+        },
+        lib: Umbra,
+        runtime: runtime
+      }
+    })
+  }
+
+  exports.initWithThreeJS = initWithThreeJS;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
