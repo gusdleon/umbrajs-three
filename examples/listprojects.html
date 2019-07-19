@@ -9,9 +9,10 @@
     <script src="../dist/umbrajs-three.js"></script>
 
     <script>
+'use strict';
 
-(async function() {
-  let token = new URL(window.location.href).searchParams.get("key")
+(async function () {
+  let token = new URL(window.location.href).searchParams.get('key')
 
   let info = document.getElementById('info')
   info.textContent = 'Fetching projects...\n'
@@ -20,13 +21,14 @@
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
   try {
+    // Call the low-level umbrajs lib directly
     let projects = await Umbra.lib.getProjects(token)
 
     info.textContent += `Found ${projects.length} projects:\n`
 
+    // Print out project infos
     for (let i = 0; i < projects.length; i++) {
       const p = projects[i]
-      const date = new Date(p.created * 1000)
       info.textContent += `${p.name} (${p.id}) (${p.organizationName})\n`
       console.log(projects[i])
       for (let j = 0; j < p.models.length; j++) {
@@ -39,7 +41,6 @@
     info.textContent += `Failed: ${e}`
   }
 })()
-
     </script>
   </body>
 </html>

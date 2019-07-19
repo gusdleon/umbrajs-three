@@ -2,23 +2,7 @@
     <head>
         <meta charset="utf-8">
         <title>Player Example</title>
-
-        <style>
-        body { margin: 0; }
-        #c {
-          width: 100%;
-          height: 100%
-        }
-        .debug {
-            position: absolute;
-            left: 5px;
-            bottom: 0px;
-            padding: 3px;
-            background-color: rgba(0,0,0,0.5);
-            color: #fff;
-            z-index: 100;
-        }
-        </style>
+        <link rel="stylesheet" type="text/css" href="samples.css">
     </head>
     <body>
         <pre class="debug" id="info"></pre>
@@ -61,18 +45,11 @@
   }
 
   let scene = new THREE.Scene()
-  let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000)
+  let camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.01, 1000)
   let controls = new THREE.OrbitControls(camera, renderer.domElement)
 
   scene.background = new THREE.Color(0x222222)
-
-  window.addEventListener('resize', () => {
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-  })
-
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  setResizeListener(renderer, camera)
 
   let stats = new Stats()
   stats.showPanel(0) // Show FPS by default

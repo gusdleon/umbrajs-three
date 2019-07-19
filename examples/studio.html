@@ -1,0 +1,227 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Tommi Toija's Studio</title>
+        <link rel="stylesheet" type="text/css" href="samples.css">
+        <style>
+        .switch {
+            position: absolute;
+            left: 0.5em;
+            top: 0.5em;
+        }
+        #gui-container {
+            position: absolute;
+            top: initial;
+            right: initial;
+            left: initial;
+            bottom: 0px;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="gui-container" onclick="event.stopPropagation()"></div>
+        <span class="message" onclick="event.stopPropagation()">
+          Explore Tommi Toija's studio by tapping on the circles or by dragging the camera.
+            <br>
+            Made with <a href="https://github.com/UmbraSoftware/umbrajs-three">umbrajs-three</a>.
+        </span>
+
+        <script src="js/three-r106.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script> 
+        <script src="js/dat.gui.min.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+        'use strict';
+
+        (async function () {
+          let token = 'pubk-831ba3c2-7937-4ecf-8d35-8ccc6b3ce101'
+          let projectID = '1005906'
+          let modelID = '325618543'
+
+          let renderer = new THREE.WebGLRenderer({ antialias: false })
+
+          let raycaster = new THREE.Raycaster()
+
+          let cameraReturnPosition = new THREE.Vector3(0, 0, 0)
+          let cameraTargetReturnPosition = new THREE.Vector3(0, 0, 0)
+
+          let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
+          camera.position.set(-18, 20, -25)
+
+          // Set camera state is either "orbit", "transition", or "detail"
+          let cameraState = 'orbit'
+
+          let orbitControls = new THREE.OrbitControls(camera, renderer.domElement)
+          orbitControls.target.set (0,7,0)
+
+          // Initialize the library and create a three.js object that contains our model
+
+          let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+          let scene = new THREE.Scene()
+          scene.background = new THREE.Color(0x222222)
+
+          let model = await Umbra.createModel({
+            token: token,
+            projectID: projectID,
+            modelID: modelID
+          })
+
+          model.scale.set(1, 1, -1)
+          model.position.set(0, 0, 0)
+          model.quality = 0.5
+
+          // Add Umbra model to the scene
+          scene.add(model)
+
+          // Create and add target sprites
+          let targetTexture = new THREE.TextureLoader().load('img/targetReticle.png')
+
+          let makeSprite = () => {
+            let targetMaterial = new THREE.SpriteMaterial({ map: targetTexture, transparent: true })
+            let newSprite = new THREE.Sprite(targetMaterial)
+            newSprite.clickableTarget = true
+            newSprite.scale.set (3, 3, 1.0)
+            return newSprite
+          }
+
+          let sprites = {
+            center: makeSprite(),
+            ball: makeSprite(),
+            pictures: makeSprite(),
+            shelf: makeSprite()
+          }
+
+          sprites.center.position.set(-5.5,7,2)
+          sprites.ball.position.set(-2.2,9,-11.7)
+          sprites.pictures.position.set(-13,8,27)
+          sprites.shelf.position.set(-5, 7,20)
+
+          for (let name of Object.keys(sprites)) {
+            sprites[name].targetid = name
+            scene.add(sprites[name])
+          }
+
+          // Resizing window keeps scene in center
+          window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            camera.aspect = window.innerWidth / window.innerHeight
+            camera.updateProjectionMatrix()
+          })
+
+          document.body.appendChild(renderer.domElement)
+          renderer.setSize(window.innerWidth, window.innerHeight)
+
+          var gui = new dat.GUI({ autoPlace: false, closeOnTop: true })
+          gui.domElement.id = 'gui'
+          document.querySelector('#gui-container').appendChild(gui.domElement)
+          gui.add(model, 'wireframe').name('Wireframe')
+
+          orbitControls.update()
+
+          let animate = function () {
+            // Find visible blocks and update streaming
+            Umbra.update()
+
+            orbitControls.update()
+
+            // Fade out the sprites that are close to camera
+            for (let key of Object.keys(sprites)) {
+              let distance = camera.position.distanceTo(sprites[key].position)
+              sprites[key].material.opacity = Math.pow(Math.min(1.0, distance / 30), 3)
+            }
+
+            renderer.render(scene, camera)
+
+            requestAnimationFrame(animate)
+          }
+
+          // Camera transitions close to clicked target
+          function onMouseClick (event) {
+            event.preventDefault()
+
+            let coords = new THREE.Vector2()
+            if (event.changedTouches && event.changedTouches.length > 0) {
+              coords.x = event.changedTouches[0].clientX
+              coords.y = event.changedTouches[0].clientY
+            } else {
+              coords.x = event.clientX
+              coords.y = event.clientY
+            }
+
+            coords.x = (coords.x / window.innerWidth) * 2 - 1
+            coords.y = -(coords.y / window.innerHeight) * 2 + 1
+
+            raycaster.setFromCamera(coords, camera)
+
+            const animTime = 2
+
+            let intersectedObjects = raycaster.intersectObjects(scene.children, true)
+
+            if (intersectedObjects.length === 0) {
+              return
+            }
+
+            let targetObject = intersectedObjects[0].object
+
+            for (let i = 0; i < intersectedObjects.length; i++) {
+              if (intersectedObjects[i].object.targetid) {
+                targetObject = intersectedObjects[i].object
+                break
+              }
+            }
+
+            function setCameraState (statetype) {
+              cameraState = statetype
+              orbitControls.enabled = true
+            }
+
+            if (cameraState === 'orbit' && targetObject.clickableTarget) {
+              cameraTargetReturnPosition.copy(orbitControls.target)
+              cameraReturnPosition.copy(camera.position)
+              let clickTarget = new THREE.Vector3(0, 0, 0)
+
+              clickTarget.copy(targetObject.position)
+
+              let focusTarget = {
+                center:   { x: -2,  y: 7, z: 5, ease: Expo.easeInOut },
+                pictures: { x: -12, y: 7, z: 12, ease: Expo.easeInOut },
+                ball:     { x: 0,   y: 7, z: 0, ease: Expo.easeInOut },
+                shelf:    { x: -12, y: 7, z: 18, ease: Expo.easeInOut }
+              }
+
+              let focusName = targetObject.targetid
+
+              if (focusTarget[focusName]) {
+                cameraState = 'transition'
+                this.tl = new TimelineMax().delay(0.1)
+                this.tl.to(camera.position, animTime, focusTarget[focusName])
+                this.tl.to(orbitControls.target, animTime / 2, { x: clickTarget.x, y: clickTarget.y, z: clickTarget.z, ease: Power0.easeIn }, '=-animTime')
+                orbitControls.enabled = false
+                window.setTimeout(setCameraState, animTime * 1000, 'detail')
+              }
+
+            } else if (cameraState === 'detail') {
+              // Camera returns to previous position
+              cameraState = 'transition'
+              this.tl = new TimelineMax().delay(0.1)
+              let uPos = cameraReturnPosition
+              this.tl.to(camera.position, animTime / 2, { x: uPos.x, y: uPos.y, z: uPos.z, ease: Expo.easeInOut })
+              this.tl.to(orbitControls.target, animTime / 2, { x: cameraTargetReturnPosition.x, y: cameraTargetReturnPosition.y, z: cameraTargetReturnPosition.z, ease: Expo.easeInOut }, '=-animTime/2')
+              orbitControls.enabled = false
+              window.setTimeout(setCameraState, animTime * 1000, 'orbit')
+            }
+          }
+
+          animate()
+
+          window.addEventListener('click', onMouseClick)
+          window.addEventListener('touchend', onMouseClick)
+          document.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
+        })()
+        </script>
+    </body>
+</html>
+

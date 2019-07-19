@@ -17,4 +17,20 @@ function makeBoundingBoxMesh (box) {
   return new THREE.Mesh(geometry, material)
 }
 
+// Sets up the automatic resize handler
+function setResizeListener(renderer, camera) {
+  const listener = () => {
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+  }
 
+  window.addEventListener('resize', listener)
+  listener()
+}
+
+function makeSphere(radius, color) {
+  var geometry = new THREE.SphereGeometry(radius, 32, 32)
+  var material = new THREE.MeshBasicMaterial({ color })
+  return new THREE.Mesh(geometry, material)
+}
