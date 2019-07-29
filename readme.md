@@ -60,4 +60,4 @@ You should see a red shoe.
 
 **Uploading models**
 
-You need a free trial account to upload models to Umbra's cloud. Contact [sales@umbra3d.com](mailto:sales@umbra3d.com) to start your trial.
+You need a free trial account to upload models to Umbra's cloud. Please fill a request access form at [https://www.umbra3d.com/access-request](https://www.umbra3d.com/access-request) to start your trial.
