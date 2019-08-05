@@ -119,8 +119,6 @@
           document.querySelector('#gui-container').appendChild(gui.domElement)
           gui.add(model, 'wireframe').name('Wireframe')
 
-          orbitControls.update()
-
           let animate = function () {
             // Find visible blocks and update streaming
             Umbra.update()
@@ -136,6 +134,15 @@
             renderer.render(scene, camera)
 
             requestAnimationFrame(animate)
+          }
+
+          //Capture mouse coordinates at click to check mouse movement, incase of dragging to orbit
+          let mouseDX 
+          let mouseDY 
+
+          function onMouseDown (event) {
+          mouseDX = event.clientX
+          mouseDY = event.clientY         
           }
 
           // Camera transitions close to clicked target
@@ -195,6 +202,7 @@
               let focusName = targetObject.targetid
 
               if (focusTarget[focusName]) {
+                orbitControls.enablePan = false
                 cameraState = 'transition'
                 this.tl = new TimelineMax().delay(0.1)
                 this.tl.to(camera.position, animTime, focusTarget[focusName])
@@ -204,22 +212,27 @@
               }
 
             } else if (cameraState === 'detail') {
-              // Camera returns to previous position
-              cameraState = 'transition'
-              this.tl = new TimelineMax().delay(0.1)
-              let uPos = cameraReturnPosition
-              this.tl.to(camera.position, animTime / 2, { x: uPos.x, y: uPos.y, z: uPos.z, ease: Expo.easeInOut })
-              this.tl.to(orbitControls.target, animTime / 2, { x: cameraTargetReturnPosition.x, y: cameraTargetReturnPosition.y, z: cameraTargetReturnPosition.z, ease: Expo.easeInOut }, '=-animTime/2')
-              orbitControls.enabled = false
-              window.setTimeout(setCameraState, animTime * 1000, 'orbit')
+              //Check for mouse movement, and prevent cameraState from changing to transition
+              if(mouseDX === event.clientX && mouseDY === event.clientY){
+                // Camera returns to previous position
+                orbitControls.enablePan = true
+                cameraState = 'transition'
+                this.tl = new TimelineMax().delay(0.1)
+                let uPos = cameraReturnPosition
+                this.tl.to(camera.position, animTime / 2, { x: uPos.x, y: uPos.y, z: uPos.z, ease: Expo.easeInOut })
+                this.tl.to(orbitControls.target, animTime / 2, { x: cameraTargetReturnPosition.x, y: cameraTargetReturnPosition.y, z: cameraTargetReturnPosition.z, ease: Expo.easeInOut }, '=-animTime/2')
+                orbitControls.enabled = false
+                window.setTimeout(setCameraState, animTime * 1000, 'orbit')
+              }
             }
           }
 
           animate()
 
           window.addEventListener('click', onMouseClick)
+          window.addEventListener('mousedown', onMouseDown)
           window.addEventListener('touchend', onMouseClick)
-          document.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
+          document.addEventListener("touchmove", e => e.preventDefault(), { passive: false })
         })()
         </script>
     </body>
