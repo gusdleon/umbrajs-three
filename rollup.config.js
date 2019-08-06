@@ -3,8 +3,6 @@ import { eslint } from "rollup-plugin-eslint";
 import { terser } from "rollup-plugin-terser";
 import fs from "fs";
 
-const globals = { three: "THREE" };
-
 function copyfiles(files) {
   return {
     name: "copy",
@@ -27,23 +25,20 @@ const commonPlugins = () => [
   ])
 ];
 
+const makeOutput = (name, format) => ({
+  file: name,
+  format: format,
+  name: "UmbraRuntime",
+  globals: { three: "THREE" }
+});
 
 const config = [
   {
     input: "src/threesupport.js",
     output: [
-      {
-        file: `dist/umbrajs-three.js`,
-        format: "umd",
-        name: "UmbraRuntime",
-        globals
-      },
-      {
-        file: `dist/umbrajs-three.amd.js`,
-        format: "amd",
-        name: "UmbraRuntime",
-        globals
-      }
+        makeOutput(`dist/umbrajs-three.js`, "umd"),
+        makeOutput(`dist/umbrajs-three.amd.js`, "amd"),
+        makeOutput(`dist/umbrajs-three.esm.js`, "es")
     ],
     external: ["three"],
     plugins: commonPlugins()
@@ -51,18 +46,9 @@ const config = [
   {
     input: "src/threesupport.js",
     output: [
-      {
-        file: `dist/umbrajs-three.min.js`,
-        format: "umd",
-        name: "UmbraRuntime",
-        globals
-      },
-      {
-        file: `dist/umbrajs-three.amd.min.js`,
-        format: "amd",
-        name: "UmbraRuntime",
-        globals
-      }
+        makeOutput(`dist/umbrajs-three.min.js`, "umd"),
+        makeOutput(`dist/umbrajs-three.amd.min.js`, "amd"),
+        makeOutput(`dist/umbrajs-three.esm.min.js`, "es")
     ],
     external: ["three"],
     plugins: [
