@@ -375,6 +375,14 @@ function makeBoundingSphere (aabb) {
 }
 
 export function initWithThreeJS (renderer, userConfig) {
+  if (THREE.REVISION !== '106') {
+    throw new Error(`Only three.js r106 is supported. Got three.js ${THREE.REVISION} instead.`)
+  }
+
+  if (!renderer) {
+    throw new TypeError('"renderer" should be of type THREE.WebGLRenderer')
+  }
+
   return UmbraLibrary(userConfig).then(Umbra => {
     const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
 
