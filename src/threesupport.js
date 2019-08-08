@@ -424,8 +424,9 @@ export function initWithThreeJS (renderer, userConfig) {
           }
 
           if (!glformat) {
+            // Add a dummy object for unknown formats. They will appear as a solid black color.
             console.log('Unknown texture format', info.format)
-            job.fail()
+            runtime.addAsset(job, { isTexture: false })
             return
           }
 
