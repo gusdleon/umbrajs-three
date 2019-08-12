@@ -405,28 +405,41 @@ export function initWithThreeJS (renderer, userConfig) {
   }
 
   return UmbraLibrary(userConfig).then(Umbra => {
-    const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context)
+    const features = Umbra.getPlatformFeatures(renderer.context)
 
     // Three.js does not support BC5 compressed formats so we manually disable them.
-    supportedFormats.flags &= ~Formats.TextureCapability.BC5
+    features.capabilityMask &= ~Formats.TextureCapability.BC5
 
-    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats)
+    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), features)
 
     /**
      * Creating a model is an asynchronous operation because we might need to query the Project API
-     * to map the given string names into numeric IDs. If the IDs are used then the promise will
+     * to map the given string names into numeric IDs. If IDs or URL are used then the promise will
      * resolve immediately.
      */
-    let modelFactory = cloudArgs => {
-      return Umbra.getIDs(cloudArgs).then((IDs) => {
-        const scene = runtime.createScene()
-        scene.connect(cloudArgs.token, IDs.project, IDs.model)
+    let createModel = cloudArgs => {
+      const scene = runtime.createScene()
 
-        const model = new ModelObject(runtime, scene, renderer, {
-          supportedFormats: supportedFormats
-        })
-
-        return model
+      return new Promise((resolve, reject) => {
+        try {
+          if ('url' in cloudArgs) {
+            scene.connectWithURL(cloudArgs.url)
+            resolve(new ModelObject(runtime, scene, renderer, { features }))
+          } else {
+            return Umbra.getIDs(cloudArgs).then(
+              IDs => {
+                scene.connect(cloudArgs.token, IDs.project, IDs.model)
+                resolve(new ModelObject(runtime, scene, renderer, { features }))
+              },
+              () => {
+                console.log('error')
+                throw new Error(`Couldn't fetch IDs matching names ${cloudArgs.project} and ${cloudArgs.model}`)
+              })
+          }
+        } catch (e) {
+          runtime.destroyScene(scene)
+          reject(e)
+        }
       })
     }
 
@@ -550,8 +563,26 @@ export function initWithThreeJS (renderer, userConfig) {
       runtime.update()
     }
 
+    /**
+     * Returns streaming information. We can't tell which files came from the browser cache
+     * so we report lower and upper limits of the true download size.
+     *
+     * The returned object has the following fields:
+     *
+     *  'maxBytesDownloaded' is an upper limit assuming no file was cached,
+     *  'minBytesDownloaded' is the corresponding lower limit assuming all duplicates came from cache.
+     *
+     */
+    function getStats () {
+      return {
+        maxBytesDownloaded: Umbra.nativeModule.maxBytesDownloaded,
+        minBytesDownloaded: Umbra.nativeModule.minBytesDownloaded
+      }
+    }
+
     return {
-      createModel: modelFactory,
+      createModel,
+      getStats,
       update: update,
       dispose: () => {
         runtime.destroy()
