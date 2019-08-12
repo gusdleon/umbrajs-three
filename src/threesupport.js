@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { UmbraLibrary, Formats } from '@umbra3d/umbrajs'
-import { createShaderPatcher } from './ShaderPatcher.js'
+import { ShaderPatcher } from './ShaderPatcher.js'
 import { ThreeFormats } from './ThreeFormats.js'
 
 class ObjectPool {
@@ -30,6 +30,11 @@ class ObjectPool {
     }
     this.usedList.length = 0
   }
+
+  clear () {
+    this.usedList.length = 0
+    this.freeList.length = 0
+  }
 }
 
 /**
@@ -49,6 +54,7 @@ function ModelObject (runtime, scene, renderer, platform) {
   this.quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
   this.opaqueMaterial = new THREE.MeshBasicMaterial()
   this.wireframe = false
+  this.freeze = false
 
   // Streaming debug info accessible through getInfo()
   this.stats = {
@@ -65,7 +71,7 @@ function ModelObject (runtime, scene, renderer, platform) {
   this.cameraToView = new Map()
   this.viewLastUsed = new Map()
   this.materialPool = new ObjectPool()
-  this.shaderPatcher = createShaderPatcher(platform.supportedFormats)
+  this.shaderPatcher = new ShaderPatcher(platform.features)
   this.name = 'UmbraModel'
 
   // Add API objects under their own object for clarity
@@ -149,6 +155,10 @@ ModelObject.prototype.pruneOldViews = function (frame) {
 ModelObject.prototype.update = function (camera) {
   let scene
 
+  if (this.freeze) {
+    return
+  }
+
   this.traverseAncestors(obj => {
     if (obj.isScene) {
       scene = obj
@@ -174,11 +184,22 @@ ModelObject.prototype.update = function (camera) {
   }
 
   const frame = this.renderer.info.render.frame
-  this.viewLastUsed.set(view, frame)
 
+  this.viewLastUsed.set(view, frame)
   this.pruneOldViews(frame)
 
   this.umbra.scene.update(this.matrixWorld.elements)
+
+  // If we are using a PBR material then we might need to flip the tangent vector
+  if (typeof this.opaqueMaterial.normalMapType !== 'undefined') {
+    // TODO(pvaananen): Would be nice to avoid recalculating the determinant every frame.
+    const flip = this.matrixWorld.determinant() < 0
+
+    if (flip !== this.shaderPatcher.flipTangent) {
+      this.shaderPatcher.flipTangent = flip
+      this.materialPool.clear()
+    }
+  }
 
   this.matrixWorldInverse.getInverse(camera.matrixWorld)
   this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse)
@@ -302,7 +323,7 @@ ModelObject.prototype.update = function (camera) {
           this.opaqueMaterial.onBeforeCompile.apply(material, [shader, renderer])
         }
 
-        this.shaderPatcher(shader, renderer)
+        this.shaderPatcher.process(shader, renderer)
       }
 
       const diffuseMap = materialDesc.textures[Formats.TextureType.DIFFUSE]

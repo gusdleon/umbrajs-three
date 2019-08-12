@@ -1,17 +1,15 @@
-/**
- * ShaderPatcher is a preprocessor function that replaces the default PBR texture read
- * shader chunks with the correct Umbra versions. Doing it this way instead of completely
- * custom shaders allows the application to use its own materials with Umbrafied models.
- */
-
 const normalmapChunk = `
-
 #ifdef USE_NORMALMAP
 #ifdef USE_TANGENT
 
 vec3 tangentToWorld2 = normal;
 vec3 tangentToWorld0 = normalize(tangent - tangentToWorld2 * dot(tangentToWorld2, tangent));
+
+#ifdef UMBRA_FLIP_TANGENT
+vec3 tangentToWorld1 = normalize(cross(tangentToWorld0, tangentToWorld2));
+#else
 vec3 tangentToWorld1 = normalize(cross(tangentToWorld2, tangentToWorld0));
+#endif
 
 #if defined(UMBRA_TEXTURE_SUPPORT_BC5) || defined(UMBRA_TEXTURE_SUPPORT_ASTC)
 normal.xy = texture2D(normalMap, vUv).xy * 2.0 - 1.0;
@@ -51,27 +49,47 @@ roughnessFactor *= roughness;
 #endif
 `
 
-function createShaderPatcher (formats) {
-  let defines = ''
+/**
+ * ShaderPatcher is a preprocessor class that replaces the default PBR texture read
+ * shader chunks with the correct Umbra versions. Doing it this way instead of completely
+ * custom shaders allows the application to use its own materials with Umbrafied models.
+ */
+class ShaderPatcher {
+  constructor (formats) {
+    /*
+     * World space transform can swap handedness which isn't handled by three.js in tangent space
+     * normal maps so we need to be able to flip them ourselves.
+     */
+    this.flipTangent = false
 
-  if (formats.formats.indexOf('bc3') > -1) {
-    defines += '#define UMBRA_TEXTURE_SUPPORT_BC3\n'
-  }
-  if (formats.formats.indexOf('bc5') > -1) {
-    defines += '#define UMBRA_TEXTURE_SUPPORT_BC5\n'
-  }
-  if (formats.formats.indexOf('astc_4x4') > -1) {
-    defines += '#define UMBRA_TEXTURE_SUPPORT_ASTC\n'
+    // Texture format feature flags
+    this.defines = ''
+
+    if (formats.formats.indexOf('bc3') > -1) {
+      this.defines += '#define UMBRA_TEXTURE_SUPPORT_BC3\n'
+    }
+    if (formats.formats.indexOf('bc5') > -1) {
+      this.defines += '#define UMBRA_TEXTURE_SUPPORT_BC5\n'
+    }
+    if (formats.formats.indexOf('astc_4x4') > -1) {
+      this.defines += '#define UMBRA_TEXTURE_SUPPORT_ASTC\n'
+    }
   }
 
-  return function (shader, renderer) {
+  process (shader, renderer) {
     let frag = shader.fragmentShader
-    frag = defines + frag
+
+    if (this.flipTangent) {
+      frag = '#define UMBRA_FLIP_TANGENT\n' + frag
+    }
+
+    frag = this.defines + frag
     frag = frag.replace('#include <normal_fragment_maps>', normalmapChunk)
     frag = frag.replace('#include <metalnessmap_fragment>', metalnessMapChunk)
     frag = frag.replace('#include <roughnessmap_fragment>', roughnessMapChunk)
+
     shader.fragmentShader = frag
   }
 }
 
-export { createShaderPatcher }
+export { ShaderPatcher }
