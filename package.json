@@ -1,6 +1,6 @@
 {
   "name": "@umbra3d/umbrajs-three",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "",
   "browser": "dist/umbrajs-three.js",
   "module": "dist/umbrajs-three.esm.js",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "three": "0.106.2",
-    "@umbra3d/umbrajs": "1.6.20-preview3"
+    "@umbra3d/umbrajs": "1.6.24-rc2"
   },
   "devDependencies": {
     "add": "^2.0.6",
