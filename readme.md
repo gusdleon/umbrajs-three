@@ -15,8 +15,8 @@ Click on any of the images above to see Umbra running in your browser.
 
 
 [Getting Started](https://github.com/UmbraSoftware/umbrajs-three/wiki/Getting-Started) &mdash;
-[Example code](https://github.com/UmbraSoftware/umbrajs-three/tree/master/examples) &mdash;
-[Wiki](https://github.com/UmbraSoftware/umbrajs-three/wiki)
+[API](https://github.com/UmbraSoftware/umbrajs-three/wiki/Library-API) &mdash;
+[Example code](https://github.com/UmbraSoftware/umbrajs-three/tree/master/examples)
 
 ## Usage
 
