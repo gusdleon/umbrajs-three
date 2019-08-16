@@ -5,7 +5,10 @@
         <link rel="stylesheet" type="text/css" href="samples.css">
     </head>
     <body>
-        <pre class="debug" id="info"></pre>
+        <div class="debug">
+        <pre id="info"></pre>
+        <pre id="modelInfo"></pre>
+        </div>
         <canvas id="c"></canvas>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/106/three.js"></script>
@@ -27,6 +30,7 @@
   let modelID = params.get('model')
   let quality = params.get('quality')
   let leftHanded = params.get('leftHanded')
+  let pbr = params.get('pbr')
 
   const canvas = document.querySelector('#c')
   let renderer = new THREE.WebGLRenderer({ canvas })
@@ -36,19 +40,46 @@
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
   let model = await Umbra.createModel({
-    token: token,
-    projectID: projectID,
-    modelID: modelID })
+    token,
+    projectID,
+    modelID })
 
   if (quality) {
     model.quality = parseFloat(quality)
   }
 
   let scene = new THREE.Scene()
+
+  if (pbr === '1' || pbr === 'on') {
+    const loader = new THREE.CubeTextureLoader()
+    const cubeTexture = loader.load([
+      'img/road/posx.jpg',
+      'img/road/negx.jpg',
+      'img/road/posy.jpg',
+      'img/road/negy.jpg',
+      'img/road/posz.jpg',
+      'img/road/negz.jpg'
+    ])
+    scene.background = cubeTexture
+
+    let sun = new THREE.DirectionalLight(0xffffff, 3.0)
+    sun.position.set(-1, 1.5, 1).normalize().multiplyScalar(2.0)
+    scene.add(sun)
+
+    model.opaqueMaterial = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
+    renderer.gammaInput = true
+    renderer.gammaOutput = true
+  } else {
+    scene.background = new THREE.Color(0x222222)
+  }
+
+  // The user can switch between this using the 'Show normals' toggle
+  let regularMaterial = model.opaqueMaterial
+  let normalDebugMaterial = new THREE.MeshNormalMaterial()
+
   let camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.01, 1000)
   let controls = new THREE.OrbitControls(camera, renderer.domElement)
 
-  scene.background = new THREE.Color(0x222222)
   setResizeListener(renderer, camera)
 
   let stats = new Stats()
@@ -56,13 +87,30 @@
   document.body.appendChild(stats.dom)
 
   let debug = {
-    visible: false
+    streamingInfo: false,
+    modelInfo: false,
+    streamingEnabled: true,
+    dumpTextures: () => {
+      let textures = Array.from(Umbra.runtime.assets.values()).filter(x => x.isTexture)
+      console.log(textures)
+    },
+    showNormals: false
   }
 
-  var gui = new dat.GUI()
+
+  let gui = new dat.GUI()
+  gui.close()
   gui.add(model, 'quality', 0, 1).name('Model quality')
   gui.add(model, 'wireframe').name('Wireframe')
-  gui.add(debug, 'visible').name('Streaming info')
+  gui.add(debug, 'streamingInfo').name('Streaming info')
+  gui.add(debug, 'modelInfo').name('Model info')
+  gui.add(debug, 'streamingEnabled').name('Enable streaming')
+  gui.add(model, 'freeze').name('Freeze LOD updates')
+  gui.add(debug, 'dumpTextures').name('Dump textures')
+  gui.add(debug, 'showNormals').name('Show normals').onChange(() => {
+    model.opaqueMaterial = debug.showNormals ? normalDebugMaterial : regularMaterial
+    model.materialPool.clear()
+  })
 
   let light1 = new THREE.DirectionalLight(0xffffff, 1.0)
   let light2 = new THREE.DirectionalLight(0x8888ff, 0.5)
@@ -77,9 +125,8 @@
   // Add Umbra model to the scene
   scene.add(model)
 
-  if (leftHanded) {
+  if (leftHanded === '1') {
     model.scale.set(1.0, 1.0, -1.0)
-    model.updateMatrix()
   }
 
   let timeToTriangle = 0
@@ -93,7 +140,9 @@
     stats.begin()
 
     // Find visible blocks and update streaming
-    Umbra.update()
+    if (debug.streamingEnabled) {
+      Umbra.update()
+    }
 
     if (timeToTriangle === 0.0 && renderer.info.render.triangles > 0) {
       timeToTriangle = performance.now() - startTime
@@ -123,12 +172,32 @@
     // Visible:          the number of visible meshes
     // Assets:           the total number of resident assets (includes materials, textures, meshes)
     // Time-to-triangle: how long it took until a first triangle was shown
-    if (debug.visible) {
+    if (debug.streamingInfo) {
       let debugString = `Connected: ${info.connected}\nVisible meshes: ${info.numVisible}\nTime-to-triangle: ${Math.floor(timeToTriangle)} ms\n`
       debugString += Umbra.runtime.getDebugInfo()
+      let minMegs = Umbra.getStats().minBytesDownloaded / (1024*1024);
+      let maxMegs = Umbra.getStats().maxBytesDownloaded / (1024*1024);
+      debugString += `Downloaded: ${minMegs.toFixed(1)}-${maxMegs.toFixed(1)} MiB`
       document.getElementById('info').textContent = debugString
     } else {
       document.getElementById('info').textContent = ''
+    }
+
+    if (debug.modelInfo && info.connected) {
+      let data = Object.assign({}, info)
+      delete data.sceneInfo.ecefToLocal
+      delete data.sceneInfo.localToEcef
+      let message = JSON.stringify(data, null, 2)
+
+      let used = Array.from(Umbra.runtime.debug.textureFormatsInUse)
+      let supported = JSON.stringify(Umbra.runtime.debug.platformFeatures)
+
+      message += `\n\nTexture formats used: ${used}\n`
+      message += `Texture formats supported: ${supported}`
+
+      document.getElementById('modelInfo').textContent = message
+    } else {
+      document.getElementById('modelInfo').textContent = ''
     }
 
     controls.update()

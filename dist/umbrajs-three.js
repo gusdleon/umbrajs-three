@@ -5,123 +5,116 @@
 }(this, function (exports, THREE) { 'use strict';
 
   var UmbraNativeAPI = (function() {
-    var _scriptDir = typeof document !== 'undefined' && document.currentScript ? document.currentScript.src : undefined;
+    var _scriptDir = (typeof document === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : (document.currentScript && document.currentScript.src || new URL('umbrajs-three.js', document.baseURI).href));
     return (
   function(UmbraNativeAPI) {
     UmbraNativeAPI = UmbraNativeAPI || {};
 
-  var e;e||(e=typeof UmbraNativeAPI !== 'undefined' ? UmbraNativeAPI : {});var aa={},m;for(m in e)e.hasOwnProperty(m)&&(aa[m]=e[m]);e.arguments=[];e.thisProgram="./this.program";e.quit=function(a,b){throw b;};e.preRun=[];e.postRun=[];var r="";document.currentScript&&(r=document.currentScript.src);_scriptDir&&(r=_scriptDir);0!==r.indexOf("blob:")?r=r.substr(0,r.lastIndexOf("/")+1):r="";e.read=function(a){var b=new XMLHttpRequest;b.open("GET",a,!1);b.send(null);return b.responseText};
-  e.readAsync=function(a,b,c){var d=new XMLHttpRequest;d.open("GET",a,!0);d.responseType="arraybuffer";d.onload=function(){200==d.status||0==d.status&&d.response?b(d.response):c();};d.onerror=c;d.send(null);};e.setWindowTitle=function(a){document.title=a;};var ba=e.print||("undefined"!==typeof console?console.log.bind(console):"undefined"!==typeof print?print:null),u=e.printErr||("undefined"!==typeof printErr?printErr:"undefined"!==typeof console&&console.warn.bind(console)||ba);
-  for(m in aa)aa.hasOwnProperty(m)&&(e[m]=aa[m]);aa=void 0;function da(a){var b=v[ea>>2];a=b+a+15&-16;a>fa()&&w();v[ea>>2]=a;return b}function ha(a){ia||(ia={});ia[a]||(ia[a]=1,u(a));}var ia,ja={"f64-rem":function(a,b){return a%b},"debugger":function(){debugger}};"object"!==typeof WebAssembly&&u("no native wasm support detected");var ka,y=!1;function la(a,b){a||w("Assertion failed: "+b);}
-  function ma(a){if("number"===typeof a){var b=!0;var c=a;}else b=!1,c=a.length;var d=z(Math.max(c,1));if(b){a=d;la(0==(d&3));for(b=d+(c&-4);a<b;a+=4)v[a>>2]=0;for(b=d+c;a<b;)A[a++>>0]=0;return d}a.subarray||a.slice?B.set(a,d):B.set(new Uint8Array(a),d);return d}var na="undefined"!==typeof TextDecoder?new TextDecoder("utf8"):void 0;
-  function oa(a,b,c){var d=b+c;for(c=b;a[c]&&!(c>=d);)++c;if(16<c-b&&a.subarray&&na)return na.decode(a.subarray(b,c));for(d="";b<c;){var f=a[b++];if(f&128){var g=a[b++]&63;if(192==(f&224))d+=String.fromCharCode((f&31)<<6|g);else{var k=a[b++]&63;f=224==(f&240)?(f&15)<<12|g<<6|k:(f&7)<<18|g<<12|k<<6|a[b++]&63;65536>f?d+=String.fromCharCode(f):(f-=65536,d+=String.fromCharCode(55296|f>>10,56320|f&1023));}}else d+=String.fromCharCode(f);}return d}function C(a){return a?oa(B,a,void 0):""}
+  var e;e||(e=typeof UmbraNativeAPI !== 'undefined' ? UmbraNativeAPI : {});var aa={},m;for(m in e)e.hasOwnProperty(m)&&(aa[m]=e[m]);e.arguments=[];e.thisProgram="./this.program";e.quit=function(a,b){throw b;};e.preRun=[];e.postRun=[];var q="";document.currentScript&&(q=document.currentScript.src);_scriptDir&&(q=_scriptDir);0!==q.indexOf("blob:")?q=q.substr(0,q.lastIndexOf("/")+1):q="";e.read=function(a){var b=new XMLHttpRequest;b.open("GET",a,!1);b.send(null);return b.responseText};
+  e.readAsync=function(a,b,c){var d=new XMLHttpRequest;d.open("GET",a,!0);d.responseType="arraybuffer";d.onload=function(){200==d.status||0==d.status&&d.response?b(d.response):c();};d.onerror=c;d.send(null);};e.setWindowTitle=function(a){document.title=a;};var ba=e.print||("undefined"!==typeof console?console.log.bind(console):"undefined"!==typeof print?print:null),v=e.printErr||("undefined"!==typeof printErr?printErr:"undefined"!==typeof console&&console.warn.bind(console)||ba);
+  for(m in aa)aa.hasOwnProperty(m)&&(e[m]=aa[m]);aa=void 0;function da(a){var b=x[ea>>2];a=b+a+15&-16;a>fa()&&y();x[ea>>2]=a;return b}function ha(a){ia||(ia={});ia[a]||(ia[a]=1,v(a));}var ia,ja={"f64-rem":function(a,b){return a%b},"debugger":function(){debugger}};"object"!==typeof WebAssembly&&v("no native wasm support detected");var ka,z=!1;function la(a,b){a||y("Assertion failed: "+b);}
+  function ma(a){if("number"===typeof a){var b=!0;var c=a;}else b=!1,c=a.length;var d=A(Math.max(c,1));if(b){a=d;la(0==(d&3));for(b=d+(c&-4);a<b;a+=4)x[a>>2]=0;for(b=d+c;a<b;)B[a++>>0]=0;return d}a.subarray||a.slice?C.set(a,d):C.set(new Uint8Array(a),d);return d}var na="undefined"!==typeof TextDecoder?new TextDecoder("utf8"):void 0;
+  function oa(a,b,c){var d=b+c;for(c=b;a[c]&&!(c>=d);)++c;if(16<c-b&&a.subarray&&na)return na.decode(a.subarray(b,c));for(d="";b<c;){var f=a[b++];if(f&128){var g=a[b++]&63;if(192==(f&224))d+=String.fromCharCode((f&31)<<6|g);else{var k=a[b++]&63;f=224==(f&240)?(f&15)<<12|g<<6|k:(f&7)<<18|g<<12|k<<6|a[b++]&63;65536>f?d+=String.fromCharCode(f):(f-=65536,d+=String.fromCharCode(55296|f>>10,56320|f&1023));}}else d+=String.fromCharCode(f);}return d}function D(a){return a?oa(C,a,void 0):""}
   function pa(a,b,c,d){if(0<d){d=c+d-1;for(var f=0;f<a.length;++f){var g=a.charCodeAt(f);if(55296<=g&&57343>=g){var k=a.charCodeAt(++f);g=65536+((g&1023)<<10)|k&1023;}if(127>=g){if(c>=d)break;b[c++]=g;}else{if(2047>=g){if(c+1>=d)break;b[c++]=192|g>>6;}else{if(65535>=g){if(c+2>=d)break;b[c++]=224|g>>12;}else{if(c+3>=d)break;b[c++]=240|g>>18;b[c++]=128|g>>12&63;}b[c++]=128|g>>6&63;}b[c++]=128|g&63;}}b[c]=0;}}
-  function qa(a){for(var b=0,c=0;c<a.length;++c){var d=a.charCodeAt(c);55296<=d&&57343>=d&&(d=65536+((d&1023)<<10)|a.charCodeAt(++c)&1023);127>=d?++b:b=2047>=d?b+2:65535>=d?b+3:b+4;}return b}"undefined"!==typeof TextDecoder&&new TextDecoder("utf-16le");function ra(a){0<a%65536&&(a+=65536-a%65536);return a}var D,A,B,sa,ta,v,E,ua,va;
-  function wa(){e.HEAP8=A=new Int8Array(D);e.HEAP16=sa=new Int16Array(D);e.HEAP32=v=new Int32Array(D);e.HEAPU8=B=new Uint8Array(D);e.HEAPU16=ta=new Uint16Array(D);e.HEAPU32=E=new Uint32Array(D);e.HEAPF32=ua=new Float32Array(D);e.HEAPF64=va=new Float64Array(D);}var ea=16800,xa=e.TOTAL_MEMORY||134217728;5242880>xa&&u("TOTAL_MEMORY should be larger than TOTAL_STACK, was "+xa+"! (TOTAL_STACK=5242880)");
-  e.buffer?D=e.buffer:"object"===typeof WebAssembly&&"function"===typeof WebAssembly.Memory?(ka=new WebAssembly.Memory({initial:xa/65536}),D=ka.buffer):D=new ArrayBuffer(xa);wa();v[ea>>2]=5259712;function ya(a){for(;0<a.length;){var b=a.shift();if("function"==typeof b)b();else{var c=b.lb;"number"===typeof c?void 0===b.ab?e.dynCall_v(c):e.dynCall_vi(c,b.ab):c(void 0===b.ab?null:b.ab);}}}var za=[],Aa=[],Ba=[],Ca=[],Da=!1;function Ea(){var a=e.preRun.shift();za.unshift(a);}var F=0,Fa=null,Ga=null;
-  e.preloadedImages={};e.preloadedAudios={};function Ha(){var a=G;return String.prototype.startsWith?a.startsWith("data:application/octet-stream;base64,"):0===a.indexOf("data:application/octet-stream;base64,")}var G="umbra.wasm";if(!Ha()){var Ia=G;G=e.locateFile?e.locateFile(Ia,r):r+Ia;}function Ja(){try{if(e.wasmBinary)return new Uint8Array(e.wasmBinary);if(e.readBinary)return e.readBinary(G);throw"both async and sync fetching of the wasm failed";}catch(a){w(a);}}
-  function Ka(){return e.wasmBinary||"function"!==typeof fetch?new Promise(function(a){a(Ja());}):fetch(G,{credentials:"same-origin"}).then(function(a){if(!a.ok)throw"failed to load wasm binary file at '"+G+"'";return a.arrayBuffer()}).catch(function(){return Ja()})}
-  function La(a){function b(a){e.asm=a.exports;F--;e.monitorRunDependencies&&e.monitorRunDependencies(F);0==F&&(null!==Fa&&(clearInterval(Fa),Fa=null),Ga&&(a=Ga,Ga=null,a()));}function c(a){b(a.instance);}function d(a){return Ka().then(function(a){return WebAssembly.instantiate(a,f)}).then(a,function(a){u("failed to asynchronously prepare wasm: "+a);w(a);})}var f={env:a,global:{NaN:NaN,Infinity:Infinity},"global.Math":Math,asm2wasm:ja};F++;e.monitorRunDependencies&&e.monitorRunDependencies(F);if(e.instantiateWasm)try{return e.instantiateWasm(f,
-  b)}catch(g){return u("Module.instantiateWasm callback failed with error: "+g),!1}(function(){if(e.wasmBinary||"function"!==typeof WebAssembly.instantiateStreaming||Ha()||"function"!==typeof fetch)return d(c);fetch(G,{credentials:"same-origin"}).then(function(a){return WebAssembly.instantiateStreaming(a,f).then(c,function(a){u("wasm streaming compile failed: "+a);u("falling back to ArrayBuffer instantiation");d(c);})});})();return {}}
-  e.asm=function(a,b){b.memory=ka;b.table=new WebAssembly.Table({initial:533,maximum:533,element:"anyfunc"});b.__memory_base=1024;b.__table_base=0;return La(b)};var Na=[function(){alert("Invalid http method.");},function(a,b,c,d,f,g,k,h,l,n,q){return Ma(a,b,c,d,f,g,k,h,l,n,q)},function(){alert("Uploads are not supported.");}];Aa.push({lb:function(){Oa();}});var H={};
-  function Pa(a){if(Pa.qb){var b=v[a>>2];var c=v[b>>2];}else Pa.qb=!0,H.USER=H.LOGNAME="web_user",H.PATH="/",H.PWD="/",H.HOME="/home/web_user",H.LANG="C.UTF-8",H._=e.thisProgram,c=Da?z(1024):da(1024),b=Da?z(256):da(256),v[b>>2]=c,v[a>>2]=b;a=[];var d=0,f;for(f in H)if("string"===typeof H[f]){var g=f+"="+H[f];a.push(g);d+=g.length;}if(1024<d)throw Error("Environment size exceeded TOTAL_ENV_SIZE!");for(f=0;f<a.length;f++){d=g=a[f];for(var k=c,h=0;h<d.length;++h)A[k++>>0]=d.charCodeAt(h);A[k>>0]=0;v[b+4*
-  f>>2]=c;c+=g.length+1;}v[b+4*a.length>>2]=0;}var Qa=[null,[],[]],I=0;function J(){I+=4;return v[I-4>>2]}var Ra={},Sa={};function Ua(a){for(;a.length;){var b=a.pop();a.pop()(b);}}function Va(a){return this.fromWireType(E[a>>2])}var K={},L={},Wa={};function Xa(a){if(void 0===a)return "_unknown";a=a.replace(/[^a-zA-Z0-9_]/g,"$");var b=a.charCodeAt(0);return 48<=b&&57>=b?"_"+a:a}
+  function qa(a){for(var b=0,c=0;c<a.length;++c){var d=a.charCodeAt(c);55296<=d&&57343>=d&&(d=65536+((d&1023)<<10)|a.charCodeAt(++c)&1023);127>=d?++b:b=2047>=d?b+2:65535>=d?b+3:b+4;}return b}"undefined"!==typeof TextDecoder&&new TextDecoder("utf-16le");function ra(a){0<a%65536&&(a+=65536-a%65536);return a}var E,B,C,sa,ta,x,F,ua,va;
+  function wa(){e.HEAP8=B=new Int8Array(E);e.HEAP16=sa=new Int16Array(E);e.HEAP32=x=new Int32Array(E);e.HEAPU8=C=new Uint8Array(E);e.HEAPU16=ta=new Uint16Array(E);e.HEAPU32=F=new Uint32Array(E);e.HEAPF32=ua=new Float32Array(E);e.HEAPF64=va=new Float64Array(E);}var ea=18464,xa=e.TOTAL_MEMORY||134217728;5242880>xa&&v("TOTAL_MEMORY should be larger than TOTAL_STACK, was "+xa+"! (TOTAL_STACK=5242880)");
+  e.buffer?E=e.buffer:"object"===typeof WebAssembly&&"function"===typeof WebAssembly.Memory?(ka=new WebAssembly.Memory({initial:xa/65536}),E=ka.buffer):E=new ArrayBuffer(xa);wa();x[ea>>2]=5261376;function ya(a){for(;0<a.length;){var b=a.shift();if("function"==typeof b)b();else{var c=b.hb;"number"===typeof c?void 0===b.Xa?e.dynCall_v(c):e.dynCall_vi(c,b.Xa):c(void 0===b.Xa?null:b.Xa);}}}var za=[],Aa=[],Ba=[],Ca=[],Da=!1;function Ea(){var a=e.preRun.shift();za.unshift(a);}var G=0,Fa=null,Ga=null;
+  e.preloadedImages={};e.preloadedAudios={};function Ha(){var a=H;return String.prototype.startsWith?a.startsWith("data:application/octet-stream;base64,"):0===a.indexOf("data:application/octet-stream;base64,")}var H="umbra.wasm";if(!Ha()){var Ia=H;H=e.locateFile?e.locateFile(Ia,q):q+Ia;}function Ja(){try{if(e.wasmBinary)return new Uint8Array(e.wasmBinary);if(e.readBinary)return e.readBinary(H);throw"both async and sync fetching of the wasm failed";}catch(a){y(a);}}
+  function Ka(){return e.wasmBinary||"function"!==typeof fetch?new Promise(function(a){a(Ja());}):fetch(H,{credentials:"same-origin"}).then(function(a){if(!a.ok)throw"failed to load wasm binary file at '"+H+"'";return a.arrayBuffer()}).catch(function(){return Ja()})}
+  function La(a){function b(a){e.asm=a.exports;G--;e.monitorRunDependencies&&e.monitorRunDependencies(G);0==G&&(null!==Fa&&(clearInterval(Fa),Fa=null),Ga&&(a=Ga,Ga=null,a()));}function c(a){b(a.instance);}function d(a){return Ka().then(function(a){return WebAssembly.instantiate(a,f)}).then(a,function(a){v("failed to asynchronously prepare wasm: "+a);y(a);})}var f={env:a,global:{NaN:NaN,Infinity:Infinity},"global.Math":Math,asm2wasm:ja};G++;e.monitorRunDependencies&&e.monitorRunDependencies(G);if(e.instantiateWasm)try{return e.instantiateWasm(f,
+  b)}catch(g){return v("Module.instantiateWasm callback failed with error: "+g),!1}(function(){if(e.wasmBinary||"function"!==typeof WebAssembly.instantiateStreaming||Ha()||"function"!==typeof fetch)return d(c);fetch(H,{credentials:"same-origin"}).then(function(a){return WebAssembly.instantiateStreaming(a,f).then(c,function(a){v("wasm streaming compile failed: "+a);v("falling back to ArrayBuffer instantiation");d(c);})});})();return {}}
+  e.asm=function(a,b){b.memory=ka;b.table=new WebAssembly.Table({initial:541,maximum:541,element:"anyfunc"});b.__memory_base=1024;b.__table_base=0;return La(b)};var Na=[function(){alert("Invalid http method.");},function(a,b,c,d,f,g,k,h,l,n,p){return Ma(a,b,c,d,f,g,k,h,l,n,p)},function(){alert("Uploads are not supported.");}];Aa.push({hb:function(){Oa();}});var I={};
+  function Pa(a){if(Pa.mb){var b=x[a>>2];var c=x[b>>2];}else Pa.mb=!0,I.USER=I.LOGNAME="web_user",I.PATH="/",I.PWD="/",I.HOME="/home/web_user",I.LANG="C.UTF-8",I._=e.thisProgram,c=Da?A(1024):da(1024),b=Da?A(256):da(256),x[b>>2]=c,x[a>>2]=b;a=[];var d=0,f;for(f in I)if("string"===typeof I[f]){var g=f+"="+I[f];a.push(g);d+=g.length;}if(1024<d)throw Error("Environment size exceeded TOTAL_ENV_SIZE!");for(f=0;f<a.length;f++){d=g=a[f];for(var k=c,h=0;h<d.length;++h)B[k++>>0]=d.charCodeAt(h);B[k>>0]=0;x[b+4*
+  f>>2]=c;c+=g.length+1;}x[b+4*a.length>>2]=0;}var Qa=[null,[],[]],J=0;function K(){J+=4;return x[J-4>>2]}var Ra={},Ta={};function Ua(a){for(;a.length;){var b=a.pop();a.pop()(b);}}function Va(a){return this.fromWireType(F[a>>2])}var L={},M={},Wa={};function Xa(a){if(void 0===a)return "_unknown";a=a.replace(/[^a-zA-Z0-9_]/g,"$");var b=a.charCodeAt(0);return 48<=b&&57>=b?"_"+a:a}
   function Ya(a,b){a=Xa(a);return (new Function("body","return function "+a+'() {\n    "use strict";    return body.apply(this, arguments);\n};\n'))(b)}function Za(a){var b=Error,c=Ya(a,function(b){this.name=a;this.message=b;b=Error(b).stack;void 0!==b&&(this.stack=this.toString()+"\n"+b.replace(/^Error(:[^\n]*)?\n/,""));});c.prototype=Object.create(b.prototype);c.prototype.constructor=c;c.prototype.toString=function(){return void 0===this.message?this.name:this.name+": "+this.message};return c}
-  var $a=void 0;function ab(a){throw new $a(a);}function bb(a,b,c){function d(b){b=c(b);b.length!==a.length&&ab("Mismatched type converter count");for(var d=0;d<a.length;++d)M(a[d],b[d]);}a.forEach(function(a){Wa[a]=b;});var f=Array(b.length),g=[],k=0;b.forEach(function(a,b){L.hasOwnProperty(a)?f[b]=L[a]:(g.push(a),K.hasOwnProperty(a)||(K[a]=[]),K[a].push(function(){f[b]=L[a];++k;k===g.length&&d(f);}));});0===g.length&&d(f);}
-  function cb(a){switch(a){case 1:return 0;case 2:return 1;case 4:return 2;case 8:return 3;default:throw new TypeError("Unknown type size: "+a);}}var db=void 0;function N(a){for(var b="";B[a];)b+=db[B[a++]];return b}var eb=void 0;function P(a){throw new eb(a);}
-  function M(a,b,c){c=c||{};if(!("argPackAdvance"in b))throw new TypeError("registerType registeredInstance requires argPackAdvance");var d=b.name;a||P('type "'+d+'" must have a positive integer typeid pointer');if(L.hasOwnProperty(a)){if(c.Ab)return;P("Cannot register type '"+d+"' twice");}L[a]=b;delete Wa[a];K.hasOwnProperty(a)&&(b=K[a],delete K[a],b.forEach(function(a){a();}));}function fb(a){return {count:a.count,Wa:a.Wa,Za:a.Za,Na:a.Na,Pa:a.Pa,Qa:a.Qa,Sa:a.Sa}}
-  function gb(a){P(a.Ma.Pa.Oa.name+" instance already deleted");}var hb=!1;function ib(){}function jb(a){--a.count.value;0===a.count.value&&(a.Qa?a.Sa.Va(a.Qa):a.Pa.Oa.Va(a.Na));}
-  function kb(a){if("undefined"===typeof FinalizationGroup)return kb=function(a){return a},a;hb=new FinalizationGroup(function(a){for(var b=a.next();!b.done;b=a.next())b=b.value,b.Na?jb(b):console.warn("object already deleted: "+b.Na);});kb=function(a){hb.register(a,a.Ma,a.Ma);return a};ib=function(a){hb.unregister(a.Ma);};return kb(a)}var lb=void 0,mb=[];function nb(){for(;mb.length;){var a=mb.pop();a.Ma.Wa=!1;a["delete"]();}}function Q(){}var ob={};
-  function pb(a,b){var c=e;if(void 0===c[a].Ua){var d=c[a];c[a]=function(){c[a].Ua.hasOwnProperty(arguments.length)||P("Function '"+b+"' called with an invalid number of arguments ("+arguments.length+") - expects one of ("+c[a].Ua+")!");return c[a].Ua[arguments.length].apply(this,arguments)};c[a].Ua=[];c[a].Ua[d.pb]=d;}}
-  function qb(a,b,c){e.hasOwnProperty(a)?((void 0===c||void 0!==e[a].Ua&&void 0!==e[a].Ua[c])&&P("Cannot register public name '"+a+"' twice"),pb(a,a),e.hasOwnProperty(c)&&P("Cannot register multiple overloads of a function with the same number of arguments ("+c+")!"),e[a].Ua[c]=b):(e[a]=b,void 0!==c&&(e[a].Ub=c));}function rb(a,b,c,d,f,g,k,h){this.name=a;this.constructor=b;this.Ya=c;this.Va=d;this.Ta=f;this.ub=g;this.$a=k;this.sb=h;}
-  function sb(a,b,c){for(;b!==c;)b.$a||P("Expected null or instance of "+c.name+", got an instance of "+b.name),a=b.$a(a),b=b.Ta;return a}function tb(a,b){if(null===b)return this.fb&&P("null is not a valid "+this.name),0;b.Ma||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ma.Na||P("Cannot pass deleted object as a pointer of type "+this.name);return sb(b.Ma.Na,b.Ma.Pa.Oa,this.Oa)}
-  function ub(a,b){if(null===b){this.fb&&P("null is not a valid "+this.name);if(this.cb){var c=this.gb();null!==a&&a.push(this.Va,c);return c}return 0}b.Ma||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ma.Na||P("Cannot pass deleted object as a pointer of type "+this.name);!this.bb&&b.Ma.Pa.bb&&P("Cannot convert argument of type "+(b.Ma.Sa?b.Ma.Sa.name:b.Ma.Pa.name)+" to parameter type "+this.name);c=sb(b.Ma.Na,b.Ma.Pa.Oa,this.Oa);if(this.cb)switch(void 0===b.Ma.Qa&&P("Passing raw pointer to smart pointer is illegal"),
-  this.Ib){case 0:b.Ma.Sa===this?c=b.Ma.Qa:P("Cannot convert argument of type "+(b.Ma.Sa?b.Ma.Sa.name:b.Ma.Pa.name)+" to parameter type "+this.name);break;case 1:c=b.Ma.Qa;break;case 2:if(b.Ma.Sa===this)c=b.Ma.Qa;else{var d=b.clone();c=this.Eb(c,S(function(){d["delete"]();}));null!==a&&a.push(this.Va,c);}break;default:P("Unsupporting sharing policy");}return c}
-  function vb(a,b){if(null===b)return this.fb&&P("null is not a valid "+this.name),0;b.Ma||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ma.Na||P("Cannot pass deleted object as a pointer of type "+this.name);b.Ma.Pa.bb&&P("Cannot convert argument of type "+b.Ma.Pa.name+" to parameter type "+this.name);return sb(b.Ma.Na,b.Ma.Pa.Oa,this.Oa)}function wb(a,b,c){if(b===c)return a;if(void 0===c.Ta)return null;a=wb(a,b,c.Ta);return null===a?null:c.sb(a)}var xb={};
-  function yb(a,b){for(void 0===b&&P("ptr should not be undefined");a.Ta;)b=a.$a(b),a=a.Ta;return xb[b]}function zb(a,b){b.Pa&&b.Na||ab("makeClassHandle requires ptr and ptrType");!!b.Sa!==!!b.Qa&&ab("Both smartPtrType and smartPtr must be specified");b.count={value:1};return kb(Object.create(a,{Ma:{value:b}}))}
-  function T(a,b,c,d){this.name=a;this.Oa=b;this.fb=c;this.bb=d;this.cb=!1;this.Va=this.Eb=this.gb=this.ob=this.Ib=this.Cb=void 0;void 0!==b.Ta?this.toWireType=ub:(this.toWireType=d?tb:vb,this.Ra=null);}function Ab(a,b,c){e.hasOwnProperty(a)||ab("Replacing nonexistant public symbol");void 0!==e[a].Ua&&void 0!==c?e[a].Ua[c]=b:(e[a]=b,e[a].pb=c);}
-  function V(a,b){a=N(a);if(void 0!==e["FUNCTION_TABLE_"+a])var c=e["FUNCTION_TABLE_"+a][b];else if("undefined"!==typeof FUNCTION_TABLE)c=FUNCTION_TABLE[b];else{c=e["dynCall_"+a];void 0===c&&(c=e["dynCall_"+a.replace(/f/g,"d")],void 0===c&&P("No dynCall invoker for signature: "+a));for(var d=[],f=1;f<a.length;++f)d.push("a"+f);f="return function "+("dynCall_"+a+"_"+b)+"("+d.join(", ")+") {\n";f+="    return dynCall(rawFunction"+(d.length?", ":"")+d.join(", ")+");\n";c=(new Function("dynCall","rawFunction",
-  f+"};\n"))(c,b);}"function"!==typeof c&&P("unknown function pointer with signature "+a+": "+b);return c}var Bb=void 0;function Cb(a){a=Db(a);var b=N(a);W(a);return b}function Eb(a,b){function c(a){f[a]||L[a]||(Wa[a]?Wa[a].forEach(c):(d.push(a),f[a]=!0));}var d=[],f={};b.forEach(c);throw new Bb(a+": "+d.map(Cb).join([", "]));}var Fb=[],X=[{},{value:void 0},{value:null},{value:!0},{value:!1}];function Gb(a){4<a&&0===--X[a].hb&&(X[a]=void 0,Fb.push(a));}
-  function S(a){switch(a){case void 0:return 1;case null:return 2;case !0:return 3;case !1:return 4;default:var b=Fb.length?Fb.pop():X.length;X[b]={hb:1,value:a};return b}}function Hb(a,b,c){switch(b){case 0:return function(a){return this.fromWireType((c?A:B)[a])};case 1:return function(a){return this.fromWireType((c?sa:ta)[a>>1])};case 2:return function(a){return this.fromWireType((c?v:E)[a>>2])};default:throw new TypeError("Unknown integer type: "+a);}}
-  function Ib(a,b){var c=L[a];void 0===c&&P(b+" has unknown type "+Cb(a));return c}function R(a){if(null===a)return "null";var b=typeof a;return "object"===b||"array"===b||"function"===b?a.toString():""+a}function Jb(a,b){switch(b){case 2:return function(a){return this.fromWireType(ua[a>>2])};case 3:return function(a){return this.fromWireType(va[a>>3])};default:throw new TypeError("Unknown float type: "+a);}}
-  function Kb(a){var b=Function;if(!(b instanceof Function))throw new TypeError("new_ called with constructor type "+typeof b+" which is not a function");var c=Ya(b.name||"unknownFunctionName",function(){});c.prototype=b.prototype;c=new c;a=b.apply(c,a);return a instanceof Object?a:c}function Lb(a,b){for(var c=[],d=0;d<a;d++)c.push(v[(b>>2)+d]);return c}
-  function Mb(a,b,c){switch(b){case 0:return c?function(a){return A[a]}:function(a){return B[a]};case 1:return c?function(a){return sa[a>>1]}:function(a){return ta[a>>1]};case 2:return c?function(a){return v[a>>2]}:function(a){return E[a>>2]};default:throw new TypeError("Unknown integer type: "+a);}}var Nb={};function Ob(a){var b=Nb[a];return void 0===b?N(a):b}var Pb=[];function Qb(a){a||P("Cannot use deleted val. handle = "+a);return X[a].value}function Rb(a){var b=Pb.length;Pb.push(a);return b}
-  function Sb(a,b){for(var c=Array(a),d=0;d<a;++d)c[d]=Ib(v[(b>>2)+d],"parameter "+d);return c}
-  function Tb(a,b){Ub=a;Vb=b;if(Wb)if(0==a)Y=function(){var a=Math.max(0,Xb+b-Z())|0;setTimeout(Yb,a);},Zb="timeout";else if(1==a)Y=function(){$b(Yb);},Zb="rAF";else if(2==a){if("undefined"===typeof setImmediate){var c=[];addEventListener("message",function(a){if("setimmediate"===a.data||"setimmediate"===a.data.target)a.stopPropagation(),c.shift()();},!0);setImmediate=function(a){c.push(a);postMessage("setimmediate","*");};}Y=function(){setImmediate(Yb);};Zb="immediate";}}function Z(){w();}
-  function ac(a){var b=bc;e.noExitRuntime=!0;la(!Wb,"emscripten_set_main_loop: there can only be one main loop function at once: call emscripten_cancel_main_loop to cancel the previous one before setting a new one with different parameters.");Wb=a;bc=b;var c="undefined"!==typeof b?function(){e.dynCall_vi(a,b);}:function(){e.dynCall_v(a);};var d=cc;Yb=function(){if(!y)if(0<dc.length){var a=Date.now(),b=dc.shift();b.lb(b.ab);if(ec){var k=ec,h=0==k%1?k-1:Math.floor(k);ec=b.Lb?h:(8*k+(h+.5))/9;}console.log('main loop blocker "'+
-  b.name+'" took '+(Date.now()-a)+" ms");e.setStatus&&(a=e.statusMessage||"Please wait...",b=ec,k=fc.Pb,b?b<k?e.setStatus(a+" ("+(k-b)+"/"+k+")"):e.setStatus(a):e.setStatus(""));d<cc||setTimeout(Yb,0);}else if(!(d<cc))if(gc=gc+1|0,1==Ub&&1<Vb&&0!=gc%Vb)Y();else{0==Ub&&(Xb=Z());"timeout"===Zb&&e.eb&&(u("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!"),
-  Zb="");a:if(!(y||e.preMainLoop&&!1===e.preMainLoop())){try{c();}catch(l){if(l instanceof hc)break a;l&&"object"===typeof l&&l.stack&&u("exception thrown: "+[l,l.stack]);throw l;}e.postMainLoop&&e.postMainLoop();}d<cc||("object"===typeof SDL&&SDL.audio&&SDL.audio.Db&&SDL.audio.Db(),Y());}};}var Y=null,Zb="",cc=0,Wb=null,bc=0,Ub=0,Vb=0,gc=0,dc=[],fc={},Xb,Yb,ec,jc=!1,kc=!1,lc=[];
+  var $a=void 0;function ab(a){throw new $a(a);}function bb(a,b,c){function d(b){b=c(b);b.length!==a.length&&ab("Mismatched type converter count");for(var d=0;d<a.length;++d)N(a[d],b[d]);}a.forEach(function(a){Wa[a]=b;});var f=Array(b.length),g=[],k=0;b.forEach(function(a,b){M.hasOwnProperty(a)?f[b]=M[a]:(g.push(a),L.hasOwnProperty(a)||(L[a]=[]),L[a].push(function(){f[b]=M[a];++k;k===g.length&&d(f);}));});0===g.length&&d(f);}
+  function cb(a){switch(a){case 1:return 0;case 2:return 1;case 4:return 2;case 8:return 3;default:throw new TypeError("Unknown type size: "+a);}}var db=void 0;function O(a){for(var b="";C[a];)b+=db[C[a++]];return b}var eb=void 0;function P(a){throw new eb(a);}
+  function N(a,b,c){c=c||{};if(!("argPackAdvance"in b))throw new TypeError("registerType registeredInstance requires argPackAdvance");var d=b.name;a||P('type "'+d+'" must have a positive integer typeid pointer');if(M.hasOwnProperty(a)){if(c.wb)return;P("Cannot register type '"+d+"' twice");}M[a]=b;delete Wa[a];L.hasOwnProperty(a)&&(b=L[a],delete L[a],b.forEach(function(a){a();}));}function fb(a){return {count:a.count,Sa:a.Sa,Va:a.Va,Ja:a.Ja,La:a.La,Ma:a.Ma,Oa:a.Oa}}
+  function gb(a){P(a.Ia.La.Ka.name+" instance already deleted");}var hb=!1;function ib(){}function jb(a){--a.count.value;0===a.count.value&&(a.Ma?a.Oa.Ra(a.Ma):a.La.Ka.Ra(a.Ja));}
+  function kb(a){if("undefined"===typeof FinalizationGroup)return kb=function(a){return a},a;hb=new FinalizationGroup(function(a){for(var b=a.next();!b.done;b=a.next())b=b.value,b.Ja?jb(b):console.warn("object already deleted: "+b.Ja);});kb=function(a){hb.register(a,a.Ia,a.Ia);return a};ib=function(a){hb.unregister(a.Ia);};return kb(a)}var lb=void 0,mb=[];function nb(){for(;mb.length;){var a=mb.pop();a.Ia.Sa=!1;a["delete"]();}}function Q(){}var ob={};
+  function pb(a,b){var c=e;if(void 0===c[a].Qa){var d=c[a];c[a]=function(){c[a].Qa.hasOwnProperty(arguments.length)||P("Function '"+b+"' called with an invalid number of arguments ("+arguments.length+") - expects one of ("+c[a].Qa+")!");return c[a].Qa[arguments.length].apply(this,arguments)};c[a].Qa=[];c[a].Qa[d.lb]=d;}}
+  function qb(a,b,c){e.hasOwnProperty(a)?((void 0===c||void 0!==e[a].Qa&&void 0!==e[a].Qa[c])&&P("Cannot register public name '"+a+"' twice"),pb(a,a),e.hasOwnProperty(c)&&P("Cannot register multiple overloads of a function with the same number of arguments ("+c+")!"),e[a].Qa[c]=b):(e[a]=b,void 0!==c&&(e[a].Qb=c));}function rb(a,b,c,d,f,g,k,h){this.name=a;this.constructor=b;this.Ua=c;this.Ra=d;this.Pa=f;this.qb=g;this.Wa=k;this.ob=h;}
+  function sb(a,b,c){for(;b!==c;)b.Wa||P("Expected null or instance of "+c.name+", got an instance of "+b.name),a=b.Wa(a),b=b.Pa;return a}function tb(a,b){if(null===b)return this.ab&&P("null is not a valid "+this.name),0;b.Ia||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ia.Ja||P("Cannot pass deleted object as a pointer of type "+this.name);return sb(b.Ia.Ja,b.Ia.La.Ka,this.Ka)}
+  function ub(a,b){if(null===b){this.ab&&P("null is not a valid "+this.name);if(this.Za){var c=this.bb();null!==a&&a.push(this.Ra,c);return c}return 0}b.Ia||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ia.Ja||P("Cannot pass deleted object as a pointer of type "+this.name);!this.Ya&&b.Ia.La.Ya&&P("Cannot convert argument of type "+(b.Ia.Oa?b.Ia.Oa.name:b.Ia.La.name)+" to parameter type "+this.name);c=sb(b.Ia.Ja,b.Ia.La.Ka,this.Ka);if(this.Za)switch(void 0===b.Ia.Ma&&P("Passing raw pointer to smart pointer is illegal"),
+  this.Eb){case 0:b.Ia.Oa===this?c=b.Ia.Ma:P("Cannot convert argument of type "+(b.Ia.Oa?b.Ia.Oa.name:b.Ia.La.name)+" to parameter type "+this.name);break;case 1:c=b.Ia.Ma;break;case 2:if(b.Ia.Oa===this)c=b.Ia.Ma;else{var d=b.clone();c=this.Ab(c,S(function(){d["delete"]();}));null!==a&&a.push(this.Ra,c);}break;default:P("Unsupporting sharing policy");}return c}
+  function vb(a,b){if(null===b)return this.ab&&P("null is not a valid "+this.name),0;b.Ia||P('Cannot pass "'+R(b)+'" as a '+this.name);b.Ia.Ja||P("Cannot pass deleted object as a pointer of type "+this.name);b.Ia.La.Ya&&P("Cannot convert argument of type "+b.Ia.La.name+" to parameter type "+this.name);return sb(b.Ia.Ja,b.Ia.La.Ka,this.Ka)}function wb(a,b,c){if(b===c)return a;if(void 0===c.Pa)return null;a=wb(a,b,c.Pa);return null===a?null:c.ob(a)}var xb={};
+  function yb(a,b){for(void 0===b&&P("ptr should not be undefined");a.Pa;)b=a.Wa(b),a=a.Pa;return xb[b]}function zb(a,b){b.La&&b.Ja||ab("makeClassHandle requires ptr and ptrType");!!b.Oa!==!!b.Ma&&ab("Both smartPtrType and smartPtr must be specified");b.count={value:1};return kb(Object.create(a,{Ia:{value:b}}))}
+  function T(a,b,c,d){this.name=a;this.Ka=b;this.ab=c;this.Ya=d;this.Za=!1;this.Ra=this.Ab=this.bb=this.kb=this.Eb=this.yb=void 0;void 0!==b.Pa?this.toWireType=ub:(this.toWireType=d?tb:vb,this.Na=null);}function Ab(a,b,c){e.hasOwnProperty(a)||ab("Replacing nonexistant public symbol");void 0!==e[a].Qa&&void 0!==c?e[a].Qa[c]=b:(e[a]=b,e[a].lb=c);}
+  function V(a,b){a=O(a);if(void 0!==e["FUNCTION_TABLE_"+a])var c=e["FUNCTION_TABLE_"+a][b];else if("undefined"!==typeof FUNCTION_TABLE)c=FUNCTION_TABLE[b];else{c=e["dynCall_"+a];void 0===c&&(c=e["dynCall_"+a.replace(/f/g,"d")],void 0===c&&P("No dynCall invoker for signature: "+a));for(var d=[],f=1;f<a.length;++f)d.push("a"+f);f="return function "+("dynCall_"+a+"_"+b)+"("+d.join(", ")+") {\n";f+="    return dynCall(rawFunction"+(d.length?", ":"")+d.join(", ")+");\n";c=(new Function("dynCall","rawFunction",
+  f+"};\n"))(c,b);}"function"!==typeof c&&P("unknown function pointer with signature "+a+": "+b);return c}var Bb=void 0;function Cb(a){a=Db(a);var b=O(a);W(a);return b}function Eb(a,b){function c(a){f[a]||M[a]||(Wa[a]?Wa[a].forEach(c):(d.push(a),f[a]=!0));}var d=[],f={};b.forEach(c);throw new Bb(a+": "+d.map(Cb).join([", "]));}var Fb=[],X=[{},{value:void 0},{value:null},{value:!0},{value:!1}];function Gb(a){4<a&&0===--X[a].cb&&(X[a]=void 0,Fb.push(a));}
+  function S(a){switch(a){case void 0:return 1;case null:return 2;case !0:return 3;case !1:return 4;default:var b=Fb.length?Fb.pop():X.length;X[b]={cb:1,value:a};return b}}function Hb(a,b,c){switch(b){case 0:return function(a){return this.fromWireType((c?B:C)[a])};case 1:return function(a){return this.fromWireType((c?sa:ta)[a>>1])};case 2:return function(a){return this.fromWireType((c?x:F)[a>>2])};default:throw new TypeError("Unknown integer type: "+a);}}
+  function Ib(a,b){var c=M[a];void 0===c&&P(b+" has unknown type "+Cb(a));return c}function R(a){if(null===a)return "null";var b=typeof a;return "object"===b||"array"===b||"function"===b?a.toString():""+a}function Jb(a,b){switch(b){case 2:return function(a){return this.fromWireType(ua[a>>2])};case 3:return function(a){return this.fromWireType(va[a>>3])};default:throw new TypeError("Unknown float type: "+a);}}
+  function Kb(a){var b=Function;if(!(b instanceof Function))throw new TypeError("new_ called with constructor type "+typeof b+" which is not a function");var c=Ya(b.name||"unknownFunctionName",function(){});c.prototype=b.prototype;c=new c;a=b.apply(c,a);return a instanceof Object?a:c}function Lb(a,b){for(var c=[],d=0;d<a;d++)c.push(x[(b>>2)+d]);return c}
+  function Mb(a,b,c){switch(b){case 0:return c?function(a){return B[a]}:function(a){return C[a]};case 1:return c?function(a){return sa[a>>1]}:function(a){return ta[a>>1]};case 2:return c?function(a){return x[a>>2]}:function(a){return F[a>>2]};default:throw new TypeError("Unknown integer type: "+a);}}var Nb={};function Ob(a){var b=Nb[a];return void 0===b?O(a):b}var Pb=[];function Qb(a){a||P("Cannot use deleted val. handle = "+a);return X[a].value}function Rb(a){var b=Pb.length;Pb.push(a);return b}
+  function Sb(a,b){for(var c=Array(a),d=0;d<a;++d)c[d]=Ib(x[(b>>2)+d],"parameter "+d);return c}
+  function Tb(a,b){Ub=a;Vb=b;if(Wb)if(0==a)Y=function(){var a=Math.max(0,Xb+b-Z())|0;setTimeout(Yb,a);},Zb="timeout";else if(1==a)Y=function(){$b(Yb);},Zb="rAF";else if(2==a){if("undefined"===typeof setImmediate){var c=[];addEventListener("message",function(a){if("setimmediate"===a.data||"setimmediate"===a.data.target)a.stopPropagation(),c.shift()();},!0);setImmediate=function(a){c.push(a);postMessage("setimmediate","*");};}Y=function(){setImmediate(Yb);};Zb="immediate";}}function Z(){y();}
+  function ac(a){var b=bc;e.noExitRuntime=!0;la(!Wb,"emscripten_set_main_loop: there can only be one main loop function at once: call emscripten_cancel_main_loop to cancel the previous one before setting a new one with different parameters.");Wb=a;bc=b;var c="undefined"!==typeof b?function(){e.dynCall_vi(a,b);}:function(){e.dynCall_v(a);};var d=cc;Yb=function(){if(!z)if(0<dc.length){var a=Date.now(),b=dc.shift();b.hb(b.Xa);if(ec){var k=ec,h=0==k%1?k-1:Math.floor(k);ec=b.Hb?h:(8*k+(h+.5))/9;}console.log('main loop blocker "'+
+  b.name+'" took '+(Date.now()-a)+" ms");e.setStatus&&(a=e.statusMessage||"Please wait...",b=ec,k=fc.Lb,b?b<k?e.setStatus(a+" ("+(k-b)+"/"+k+")"):e.setStatus(a):e.setStatus(""));d<cc||setTimeout(Yb,0);}else if(!(d<cc))if(gc=gc+1|0,1==Ub&&1<Vb&&0!=gc%Vb)Y();else{0==Ub&&(Xb=Z());"timeout"===Zb&&e.$a&&(v("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!"),
+  Zb="");a:if(!(z||e.preMainLoop&&!1===e.preMainLoop())){try{c();}catch(l){if(l instanceof hc)break a;l&&"object"===typeof l&&l.stack&&v("exception thrown: "+[l,l.stack]);throw l;}e.postMainLoop&&e.postMainLoop();}d<cc||("object"===typeof SDL&&SDL.audio&&SDL.audio.zb&&SDL.audio.zb(),Y());}};}var Y=null,Zb="",cc=0,Wb=null,bc=0,Ub=0,Vb=0,gc=0,dc=[],fc={},Xb,Yb,ec,jc=!1,kc=!1,lc=[];
   function mc(){function a(){kc=document.pointerLockElement===e.canvas||document.mozPointerLockElement===e.canvas||document.webkitPointerLockElement===e.canvas||document.msPointerLockElement===e.canvas;}e.preloadPlugins||(e.preloadPlugins=[]);if(!nc){nc=!0;try{oc=!0;}catch(c){oc=!1,console.log("warning: no blob constructor, cannot create blobs with mimetypes");}pc="undefined"!=typeof MozBlobBuilder?MozBlobBuilder:"undefined"!=typeof WebKitBlobBuilder?WebKitBlobBuilder:oc?null:console.log("warning: no BlobBuilder");
-  qc="undefined"!=typeof window?window.URL?window.URL:window.webkitURL:void 0;e.nb||"undefined"!==typeof qc||(console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available."),e.nb=!0);e.preloadPlugins.push({canHandle:function(a){return !e.nb&&/\.(jpg|jpeg|png|bmp)$/i.test(a)},handle:function(a,b,f,g){var c=null;if(oc)try{c=new Blob([a],{type:rc(b)}),c.size!==a.length&&(c=new Blob([(new Uint8Array(a)).buffer],{type:rc(b)}));}catch(n){ha("Blob constructor present but fails: "+
-  n+"; falling back to blob builder");}c||(c=new pc,c.append((new Uint8Array(a)).buffer),c=c.getBlob());var d=qc.createObjectURL(c),l=new Image;l.onload=function(){la(l.complete,"Image "+b+" could not be decoded");var c=document.createElement("canvas");c.width=l.width;c.height=l.height;c.getContext("2d").drawImage(l,0,0);e.preloadedImages[b]=c;qc.revokeObjectURL(d);f&&f(a);};l.onerror=function(){console.log("Image "+d+" could not be decoded");g&&g();};l.src=d;}});e.preloadPlugins.push({canHandle:function(a){return !e.Tb&&
-  a.substr(-4)in{".ogg":1,".wav":1,".mp3":1}},handle:function(a,b,f,g){function c(c){l||(l=!0,e.preloadedAudios[b]=c,f&&f(a));}function d(){l||(l=!0,e.preloadedAudios[b]=new Audio,g&&g());}var l=!1;if(oc){try{var n=new Blob([a],{type:rc(b)});}catch(p){return d()}n=qc.createObjectURL(n);var q=new Audio;q.addEventListener("canplaythrough",function(){c(q);},!1);q.onerror=function(){if(!l){console.log("warning: browser could not fully decode audio "+b+", trying slower base64 approach");for(var d="",f=0,g=0,
-  h=0;h<a.length;h++)for(f=f<<8|a[h],g+=8;6<=g;){var k=f>>g-6&63;g-=6;d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[k];}2==g?(d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[(f&3)<<4],d+="=="):4==g&&(d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[(f&15)<<2],d+="=");q.src="data:audio/x-"+b.substr(-3)+";base64,"+d;c(q);}};q.src=n;sc(function(){c(q);});}else return d()}});var b=e.canvas;b&&(b.requestPointerLock=b.requestPointerLock||b.mozRequestPointerLock||
+  qc="undefined"!=typeof window?window.URL?window.URL:window.webkitURL:void 0;e.jb||"undefined"!==typeof qc||(console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available."),e.jb=!0);e.preloadPlugins.push({canHandle:function(a){return !e.jb&&/\.(jpg|jpeg|png|bmp)$/i.test(a)},handle:function(a,b,f,g){var c=null;if(oc)try{c=new Blob([a],{type:rc(b)}),c.size!==a.length&&(c=new Blob([(new Uint8Array(a)).buffer],{type:rc(b)}));}catch(n){ha("Blob constructor present but fails: "+
+  n+"; falling back to blob builder");}c||(c=new pc,c.append((new Uint8Array(a)).buffer),c=c.getBlob());var d=qc.createObjectURL(c),l=new Image;l.onload=function(){la(l.complete,"Image "+b+" could not be decoded");var c=document.createElement("canvas");c.width=l.width;c.height=l.height;c.getContext("2d").drawImage(l,0,0);e.preloadedImages[b]=c;qc.revokeObjectURL(d);f&&f(a);};l.onerror=function(){console.log("Image "+d+" could not be decoded");g&&g();};l.src=d;}});e.preloadPlugins.push({canHandle:function(a){return !e.Pb&&
+  a.substr(-4)in{".ogg":1,".wav":1,".mp3":1}},handle:function(a,b,f,g){function c(c){l||(l=!0,e.preloadedAudios[b]=c,f&&f(a));}function d(){l||(l=!0,e.preloadedAudios[b]=new Audio,g&&g());}var l=!1;if(oc){try{var n=new Blob([a],{type:rc(b)});}catch(t){return d()}n=qc.createObjectURL(n);var p=new Audio;p.addEventListener("canplaythrough",function(){c(p);},!1);p.onerror=function(){if(!l){console.log("warning: browser could not fully decode audio "+b+", trying slower base64 approach");for(var d="",f=0,g=0,
+  h=0;h<a.length;h++)for(f=f<<8|a[h],g+=8;6<=g;){var k=f>>g-6&63;g-=6;d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[k];}2==g?(d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[(f&3)<<4],d+="=="):4==g&&(d+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[(f&15)<<2],d+="=");p.src="data:audio/x-"+b.substr(-3)+";base64,"+d;c(p);}};p.src=n;sc(function(){c(p);});}else return d()}});var b=e.canvas;b&&(b.requestPointerLock=b.requestPointerLock||b.mozRequestPointerLock||
   b.webkitRequestPointerLock||b.msRequestPointerLock||function(){},b.exitPointerLock=document.exitPointerLock||document.mozExitPointerLock||document.webkitExitPointerLock||document.msExitPointerLock||function(){},b.exitPointerLock=b.exitPointerLock.bind(document),document.addEventListener("pointerlockchange",a,!1),document.addEventListener("mozpointerlockchange",a,!1),document.addEventListener("webkitpointerlockchange",a,!1),document.addEventListener("mspointerlockchange",a,!1),e.elementPointerLock&&
   b.addEventListener("click",function(a){!kc&&e.canvas.requestPointerLock&&(e.canvas.requestPointerLock(),a.preventDefault());},!1));}}
-  function tc(a,b,c,d){if(b&&e.eb&&a==e.canvas)return e.eb;var f;if(b){var g={antialias:!1,alpha:!1,Rb:1};if(d)for(var k in d)g[k]=d[k];if("undefined"!==typeof GL&&(f=GL.Mb(a,g)))var h=GL.getContext(f).Kb;}else h=a.getContext("2d");if(!h)return null;c&&(b||la("undefined"===typeof GLctx,"cannot set in module if GLctx is used, but we are a non-GL context that would replace it"),e.eb=h,b&&GL.Sb(f),e.Vb=b,lc.forEach(function(a){a();}),mc());return h}var uc=!1,vc=void 0,wc=void 0;
-  function xc(a,b,c){function d(){jc=!1;var a=f.parentNode;(document.fullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||document.webkitFullscreenElement||document.webkitCurrentFullScreenElement)===a?(f.exitFullscreen=yc,vc&&f.requestPointerLock(),jc=!0,wc?("undefined"!=typeof SDL&&(v[SDL.screen>>2]=E[SDL.screen>>2]|8388608),zc(e.canvas),Ac()):zc(f)):(a.parentNode.insertBefore(f,a),a.parentNode.removeChild(a),wc?("undefined"!=typeof SDL&&(v[SDL.screen>>2]=E[SDL.screen>>2]&
+  function tc(a,b,c,d){if(b&&e.$a&&a==e.canvas)return e.$a;var f;if(b){var g={antialias:!1,alpha:!1,Nb:1};if(d)for(var k in d)g[k]=d[k];if("undefined"!==typeof GL&&(f=GL.Ib(a,g)))var h=GL.getContext(f).Gb;}else h=a.getContext("2d");if(!h)return null;c&&(b||la("undefined"===typeof GLctx,"cannot set in module if GLctx is used, but we are a non-GL context that would replace it"),e.$a=h,b&&GL.Ob(f),e.Rb=b,lc.forEach(function(a){a();}),mc());return h}var uc=!1,vc=void 0,wc=void 0;
+  function xc(a,b,c){function d(){jc=!1;var a=f.parentNode;(document.fullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||document.webkitFullscreenElement||document.webkitCurrentFullScreenElement)===a?(f.exitFullscreen=yc,vc&&f.requestPointerLock(),jc=!0,wc?("undefined"!=typeof SDL&&(x[SDL.screen>>2]=F[SDL.screen>>2]|8388608),zc(e.canvas),Ac()):zc(f)):(a.parentNode.insertBefore(f,a),a.parentNode.removeChild(a),wc?("undefined"!=typeof SDL&&(x[SDL.screen>>2]=F[SDL.screen>>2]&
   -8388609),zc(e.canvas),Ac()):zc(f));if(e.onFullScreen)e.onFullScreen(jc);if(e.onFullscreen)e.onFullscreen(jc);}vc=a;wc=b;"undefined"===typeof vc&&(vc=!0);"undefined"===typeof wc&&(wc=!1);var f=e.canvas;uc||(uc=!0,document.addEventListener("fullscreenchange",d,!1),document.addEventListener("mozfullscreenchange",d,!1),document.addEventListener("webkitfullscreenchange",d,!1),document.addEventListener("MSFullscreenChange",d,!1));var g=document.createElement("div");
-  f.parentNode.insertBefore(g,f);g.appendChild(f);g.requestFullscreen=g.requestFullscreen||g.mozRequestFullScreen||g.msRequestFullscreen||(g.webkitRequestFullscreen?function(){g.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);}:null)||(g.webkitRequestFullScreen?function(){g.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);}:null);c?g.requestFullscreen({Wb:c}):g.requestFullscreen();}
-  function Cc(a,b,c){u("Browser.requestFullScreen() is deprecated. Please call Browser.requestFullscreen instead.");Cc=function(a,b,c){xc(a,b,c);};xc(a,b,c);}function yc(){if(!jc)return !1;(document.exitFullscreen||document.cancelFullScreen||document.mozCancelFullScreen||document.msExitFullscreen||document.webkitCancelFullScreen||function(){}).apply(document,[]);return !0}var Dc=0;
-  function $b(a){if("function"===typeof requestAnimationFrame)requestAnimationFrame(a);else{var b=Date.now();if(0===Dc)Dc=b+1E3/60;else for(;b+2>=Dc;)Dc+=1E3/60;setTimeout(a,Math.max(Dc-b,0));}}function sc(a){e.noExitRuntime=!0;setTimeout(function(){y||a();},1E4);}function rc(a){return {jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",bmp:"image/bmp",ogg:"audio/ogg",wav:"audio/wav",mp3:"audio/mpeg"}[a.substr(a.lastIndexOf(".")+1)]}var Ec=[];
+  f.parentNode.insertBefore(g,f);g.appendChild(f);g.requestFullscreen=g.requestFullscreen||g.mozRequestFullScreen||g.msRequestFullscreen||(g.webkitRequestFullscreen?function(){g.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);}:null)||(g.webkitRequestFullScreen?function(){g.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);}:null);c?g.requestFullscreen({Sb:c}):g.requestFullscreen();}
+  function Cc(a,b,c){v("Browser.requestFullScreen() is deprecated. Please call Browser.requestFullscreen instead.");Cc=function(a,b,c){xc(a,b,c);};xc(a,b,c);}function yc(){if(!jc)return !1;(document.exitFullscreen||document.cancelFullScreen||document.mozCancelFullScreen||document.msExitFullscreen||document.webkitCancelFullScreen||function(){}).apply(document,[]);return !0}var Dc=0;
+  function $b(a){if("function"===typeof requestAnimationFrame)requestAnimationFrame(a);else{var b=Date.now();if(0===Dc)Dc=b+1E3/60;else for(;b+2>=Dc;)Dc+=1E3/60;setTimeout(a,Math.max(Dc-b,0));}}function sc(a){e.noExitRuntime=!0;setTimeout(function(){z||a();},1E4);}function rc(a){return {jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",bmp:"image/bmp",ogg:"audio/ogg",wav:"audio/wav",mp3:"audio/mpeg"}[a.substr(a.lastIndexOf(".")+1)]}var Ec=[];
   function Ac(){var a=e.canvas;Ec.forEach(function(b){b(a.width,a.height);});}
-  function zc(a,b,c){b&&c?(a.Jb=b,a.zb=c):(b=a.Jb,c=a.zb);var d=b,f=c;e.forcedAspectRatio&&0<e.forcedAspectRatio&&(d/f<e.forcedAspectRatio?d=Math.round(f*e.forcedAspectRatio):f=Math.round(d/e.forcedAspectRatio));if((document.fullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||document.webkitFullscreenElement||document.webkitCurrentFullScreenElement)===a.parentNode&&"undefined"!=typeof screen){var g=Math.min(screen.width/d,screen.height/f);d=Math.round(d*g);f=Math.round(f*
+  function zc(a,b,c){b&&c?(a.Fb=b,a.vb=c):(b=a.Fb,c=a.vb);var d=b,f=c;e.forcedAspectRatio&&0<e.forcedAspectRatio&&(d/f<e.forcedAspectRatio?d=Math.round(f*e.forcedAspectRatio):f=Math.round(d/e.forcedAspectRatio));if((document.fullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||document.webkitFullscreenElement||document.webkitCurrentFullScreenElement)===a.parentNode&&"undefined"!=typeof screen){var g=Math.min(screen.width/d,screen.height/f);d=Math.round(d*g);f=Math.round(f*
   g);}wc?(a.width!=d&&(a.width=d),a.height!=f&&(a.height=f),"undefined"!=typeof a.style&&(a.style.removeProperty("width"),a.style.removeProperty("height"))):(a.width!=b&&(a.width=b),a.height!=c&&(a.height=c),"undefined"!=typeof a.style&&(d!=b||f!=c?(a.style.setProperty("width",d+"px","important"),a.style.setProperty("height",f+"px","important")):(a.style.removeProperty("width"),a.style.removeProperty("height"))));}var Fc={},Gc=0;function Hc(){var a=Gc;Gc++;return a}var nc,oc,pc,qc;
-  function fa(){return A.length}function Ic(){if("undefined"!==typeof indexedDB)return indexedDB;var a=null;"object"===typeof window&&(a=window.indexedDB||window.mozIndexedDB||window.webkitIndexedDB||window.msIndexedDB);la(a,"IDBStore used, but indexedDB not supported");return a}var Jc={};
+  function fa(){return B.length}function Ic(){if("undefined"!==typeof indexedDB)return indexedDB;var a=null;"object"===typeof window&&(a=window.indexedDB||window.mozIndexedDB||window.webkitIndexedDB||window.msIndexedDB);la(a,"IDBStore used, but indexedDB not supported");return a}var Jc={};
   function Kc(a,b){var c=Jc[a];if(c)b(null,c);else{try{var d=Ic().open(a,22);}catch(f){b(f);return}d.onupgradeneeded=function(a){var b=a.target.result;a=a.target.transaction;b.objectStoreNames.contains("FILE_DATA")?a.objectStore("FILE_DATA"):b.createObjectStore("FILE_DATA");};d.onsuccess=function(){c=d.result;Jc[a]=c;b(null,c);};d.onerror=function(a){b(this.error);a.preventDefault();};}}
   function Lc(a,b,c){Kc(a,function(a,f){if(a)return c(a);a=f.transaction(["FILE_DATA"],b);a.onerror=function(a){c(this.error||"unknown error");a.preventDefault();};a=a.objectStore("FILE_DATA");c(null,a);});}function Mc(a,b,c){Lc(a,"readonly",function(a,f){if(a)return c(a);a=f.get(b);a.onsuccess=function(a){return (a=a.target.result)?c(null,a):c("file "+b+" not found")};a.onerror=function(a){c(a);};});}
-  function Nc(a,b,c,d){Lc(a,"readwrite",function(a,g){if(a)return d(a);a=g.put(c,b);a.onsuccess=function(){d();};a.onerror=function(a){d(a);};});}pa("GMT",B,16704,4);
-  function Oc(){function a(a){return (a=a.toTimeString().match(/\(([A-Za-z ]+)\)$/))?a[1]:"GMT"}if(!Pc){Pc=!0;v[Qc()>>2]=60*(new Date).getTimezoneOffset();var b=new Date(2E3,0,1),c=new Date(2E3,6,1);v[Rc()>>2]=Number(b.getTimezoneOffset()!=c.getTimezoneOffset());var d=a(b),f=a(c);d=ma(Sc(d));f=ma(Sc(f));c.getTimezoneOffset()<b.getTimezoneOffset()?(v[Tc()>>2]=d,v[Tc()+4>>2]=f):(v[Tc()>>2]=f,v[Tc()+4>>2]=d);}}var Pc;
-  function Uc(a){a=ra(a);var b=D.byteLength;try{return -1!==ka.grow((a-b)/65536)?(D=ka.buffer,!0):!1}catch(c){return !1}}$a=e.InternalError=Za("InternalError");for(var Vc=Array(256),Wc=0;256>Wc;++Wc)Vc[Wc]=String.fromCharCode(Wc);db=Vc;eb=e.BindingError=Za("BindingError");Q.prototype.isAliasOf=function(a){if(!(this instanceof Q&&a instanceof Q))return !1;var b=this.Ma.Pa.Oa,c=this.Ma.Na,d=a.Ma.Pa.Oa;for(a=a.Ma.Na;b.Ta;)c=b.$a(c),b=b.Ta;for(;d.Ta;)a=d.$a(a),d=d.Ta;return b===d&&c===a};
-  Q.prototype.clone=function(){this.Ma.Na||gb(this);if(this.Ma.Za)return this.Ma.count.value+=1,this;var a=kb(Object.create(Object.getPrototypeOf(this),{Ma:{value:fb(this.Ma)}}));a.Ma.count.value+=1;a.Ma.Wa=!1;return a};Q.prototype["delete"]=function(){this.Ma.Na||gb(this);this.Ma.Wa&&!this.Ma.Za&&P("Object already scheduled for deletion");ib(this);jb(this.Ma);this.Ma.Za||(this.Ma.Qa=void 0,this.Ma.Na=void 0);};Q.prototype.isDeleted=function(){return !this.Ma.Na};
-  Q.prototype.deleteLater=function(){this.Ma.Na||gb(this);this.Ma.Wa&&!this.Ma.Za&&P("Object already scheduled for deletion");mb.push(this);1===mb.length&&lb&&lb(nb);this.Ma.Wa=!0;return this};T.prototype.vb=function(a){this.ob&&(a=this.ob(a));return a};T.prototype.jb=function(a){this.Va&&this.Va(a);};T.prototype.argPackAdvance=8;T.prototype.readValueFromPointer=Va;T.prototype.deleteObject=function(a){if(null!==a)a["delete"]();};
-  T.prototype.fromWireType=function(a){function b(){return this.cb?zb(this.Oa.Ya,{Pa:this.Cb,Na:c,Sa:this,Qa:a}):zb(this.Oa.Ya,{Pa:this,Na:a})}var c=this.vb(a);if(!c)return this.jb(a),null;var d=yb(this.Oa,c);if(void 0!==d){if(0===d.Ma.count.value)return d.Ma.Na=c,d.Ma.Qa=a,d.clone();d=d.clone();this.jb(a);return d}d=this.Oa.ub(c);d=ob[d];if(!d)return b.call(this);d=this.bb?d.rb:d.pointerType;var f=wb(c,this.Oa,d.Oa);return null===f?b.call(this):this.cb?zb(d.Oa.Ya,{Pa:d,Na:f,Sa:this,Qa:a}):zb(d.Oa.Ya,
-  {Pa:d,Na:f})};e.getInheritedInstanceCount=function(){return Object.keys(xb).length};e.getLiveInheritedInstances=function(){var a=[],b;for(b in xb)xb.hasOwnProperty(b)&&a.push(xb[b]);return a};e.flushPendingDeletes=nb;e.setDelayFunction=function(a){lb=a;mb.length&&lb&&lb(nb);};Bb=e.UnboundTypeError=Za("UnboundTypeError");e.count_emval_handles=function(){for(var a=0,b=5;b<X.length;++b)void 0!==X[b]&&++a;return a};e.get_first_emval=function(){for(var a=5;a<X.length;++a)if(void 0!==X[a])return X[a];return null};
-  e.requestFullScreen=function(a,b,c){u("Module.requestFullScreen is deprecated. Please call Module.requestFullscreen instead.");e.requestFullScreen=e.requestFullscreen;Cc(a,b,c);};e.requestFullscreen=function(a,b,c){xc(a,b,c);};e.requestAnimationFrame=function(a){$b(a);};e.setCanvasSize=function(a,b,c){zc(e.canvas,a,b);c||Ac();};e.pauseMainLoop=function(){Y=null;cc++;};e.resumeMainLoop=function(){cc++;var a=Ub,b=Vb,c=Wb;Wb=null;ac(c);Tb(a,b);Y();};
+  function Nc(a,b,c,d){Lc(a,"readwrite",function(a,g){if(a)return d(a);a=g.put(c,b);a.onsuccess=function(){d();};a.onerror=function(a){d(a);};});}pa("GMT",C,18368,4);
+  function Oc(){function a(a){return (a=a.toTimeString().match(/\(([A-Za-z ]+)\)$/))?a[1]:"GMT"}if(!Pc){Pc=!0;x[Qc()>>2]=60*(new Date).getTimezoneOffset();var b=new Date(2E3,0,1),c=new Date(2E3,6,1);x[Rc()>>2]=Number(b.getTimezoneOffset()!=c.getTimezoneOffset());var d=a(b),f=a(c);d=ma(Sc(d));f=ma(Sc(f));c.getTimezoneOffset()<b.getTimezoneOffset()?(x[Tc()>>2]=d,x[Tc()+4>>2]=f):(x[Tc()>>2]=f,x[Tc()+4>>2]=d);}}var Pc;
+  function Uc(a){a=ra(a);var b=E.byteLength;try{return -1!==ka.grow((a-b)/65536)?(E=ka.buffer,!0):!1}catch(c){return !1}}$a=e.InternalError=Za("InternalError");for(var Vc=Array(256),Wc=0;256>Wc;++Wc)Vc[Wc]=String.fromCharCode(Wc);db=Vc;eb=e.BindingError=Za("BindingError");Q.prototype.isAliasOf=function(a){if(!(this instanceof Q&&a instanceof Q))return !1;var b=this.Ia.La.Ka,c=this.Ia.Ja,d=a.Ia.La.Ka;for(a=a.Ia.Ja;b.Pa;)c=b.Wa(c),b=b.Pa;for(;d.Pa;)a=d.Wa(a),d=d.Pa;return b===d&&c===a};
+  Q.prototype.clone=function(){this.Ia.Ja||gb(this);if(this.Ia.Va)return this.Ia.count.value+=1,this;var a=kb(Object.create(Object.getPrototypeOf(this),{Ia:{value:fb(this.Ia)}}));a.Ia.count.value+=1;a.Ia.Sa=!1;return a};Q.prototype["delete"]=function(){this.Ia.Ja||gb(this);this.Ia.Sa&&!this.Ia.Va&&P("Object already scheduled for deletion");ib(this);jb(this.Ia);this.Ia.Va||(this.Ia.Ma=void 0,this.Ia.Ja=void 0);};Q.prototype.isDeleted=function(){return !this.Ia.Ja};
+  Q.prototype.deleteLater=function(){this.Ia.Ja||gb(this);this.Ia.Sa&&!this.Ia.Va&&P("Object already scheduled for deletion");mb.push(this);1===mb.length&&lb&&lb(nb);this.Ia.Sa=!0;return this};T.prototype.rb=function(a){this.kb&&(a=this.kb(a));return a};T.prototype.fb=function(a){this.Ra&&this.Ra(a);};T.prototype.argPackAdvance=8;T.prototype.readValueFromPointer=Va;T.prototype.deleteObject=function(a){if(null!==a)a["delete"]();};
+  T.prototype.fromWireType=function(a){function b(){return this.Za?zb(this.Ka.Ua,{La:this.yb,Ja:c,Oa:this,Ma:a}):zb(this.Ka.Ua,{La:this,Ja:a})}var c=this.rb(a);if(!c)return this.fb(a),null;var d=yb(this.Ka,c);if(void 0!==d){if(0===d.Ia.count.value)return d.Ia.Ja=c,d.Ia.Ma=a,d.clone();d=d.clone();this.fb(a);return d}d=this.Ka.qb(c);d=ob[d];if(!d)return b.call(this);d=this.Ya?d.nb:d.pointerType;var f=wb(c,this.Ka,d.Ka);return null===f?b.call(this):this.Za?zb(d.Ka.Ua,{La:d,Ja:f,Oa:this,Ma:a}):zb(d.Ka.Ua,
+  {La:d,Ja:f})};e.getInheritedInstanceCount=function(){return Object.keys(xb).length};e.getLiveInheritedInstances=function(){var a=[],b;for(b in xb)xb.hasOwnProperty(b)&&a.push(xb[b]);return a};e.flushPendingDeletes=nb;e.setDelayFunction=function(a){lb=a;mb.length&&lb&&lb(nb);};Bb=e.UnboundTypeError=Za("UnboundTypeError");e.count_emval_handles=function(){for(var a=0,b=5;b<X.length;++b)void 0!==X[b]&&++a;return a};e.get_first_emval=function(){for(var a=5;a<X.length;++a)if(void 0!==X[a])return X[a];return null};
+  e.requestFullScreen=function(a,b,c){v("Module.requestFullScreen is deprecated. Please call Module.requestFullscreen instead.");e.requestFullScreen=e.requestFullscreen;Cc(a,b,c);};e.requestFullscreen=function(a,b,c){xc(a,b,c);};e.requestAnimationFrame=function(a){$b(a);};e.setCanvasSize=function(a,b,c){zc(e.canvas,a,b);c||Ac();};e.pauseMainLoop=function(){Y=null;cc++;};e.resumeMainLoop=function(){cc++;var a=Ub,b=Vb,c=Wb;Wb=null;ac(c);Tb(a,b);Y();};
   e.getUserMedia=function(){window.getUserMedia||(window.getUserMedia=navigator.getUserMedia||navigator.mozGetUserMedia);window.getUserMedia(void 0);};e.createContext=function(a,b,c,d){return tc(a,b,c,d)};"undefined"!==typeof dateNow?Z=dateNow:"object"===typeof performance&&performance&&"function"===typeof performance.now?Z=function(){return performance.now()}:Z=Date.now;function Sc(a){var b=Array(qa(a)+1);pa(a,b,0,b.length);return b}
-  var Zc=e.asm({},{h:w,B:function(){},ea:function(){u("missing function: _ZN5Umbra18createDirRecursiveEPKc");w(-1);},r:function(a,b,c,d){w("Assertion failed: "+C(a)+", at: "+[b?C(b):"unknown filename",c,d?C(d):"unknown function"]);},Y:Pa,u:function(){u("missing function: __cxa_allocate_exception");w(-1);},S:function(){y=!0;throw"Pure virtual function called!";},t:function(){u("missing function: __cxa_throw");w(-1);},y:function(){},A:function(a){e.___errno_location&&(v[e.___errno_location()>>2]=a);return a},
-  da:function(a,b){I=b;try{return Ra.mb(),J(),J(),J(),J(),0}catch(c){return w(c),-c.Xa}},ca:function(a,b){I=b;try{var c=Ra.mb(),d=J(),f=J();return Ra.Nb(c,d,f)}catch(g){return w(g),-g.Xa}},L:function(a,b){I=b;try{var c=J(),d=J(),f=J();for(b=a=0;b<f;b++){for(var g=v[d+8*b>>2],k=v[d+(8*b+4)>>2],h=0;h<k;h++){var l=B[g+h],n=Qa[c];0===l||10===l?((1===c?ba:u)(oa(n,0)),n.length=0):n.push(l);}a+=k;}return a}catch(q){return w(q),-q.Xa}},ba:function(a,b){I=b;try{var c=C(J()),d=J();return Ra.Ob((void 0).stat,c,
-  d)}catch(f){return w(f),-f.Xa}},x:function(a,b){I=b;return 0},aa:function(a,b){I=b;try{var c=C(J()),d=J(),f=J();return (void 0).open(c,d,f).Qb}catch(g){return w(g),-g.Xa}},K:function(a,b){I=b;return 0},J:function(a,b){I=b;try{return Ra.mb(),0}catch(c){return w(c),-c.Xa}},z:function(){},w:function(a){var b=Sa[a];delete Sa[a];var c=b.gb,d=b.Va,f=b.kb,g=f.map(function(a){return a.yb}).concat(f.map(function(a){return a.Gb}));bb([a],g,function(a){var g={};f.forEach(function(b,c){var d=a[c],h=b.wb,k=b.xb,
-  l=a[c+f.length],n=b.Fb,Ta=b.Hb;g[b.tb]={read:function(a){return d.fromWireType(h(k,a))},write:function(a,b){var c=[];n(Ta,a,l.toWireType(c,b));Ua(c);}};});return [{name:b.name,fromWireType:function(a){var b={},c;for(c in g)b[c]=g[c].read(a);d(a);return b},toWireType:function(a,b){for(var f in g)if(!(f in b))throw new TypeError("Missing field");var h=c();for(f in g)g[f].write(h,b[f]);null!==a&&a.push(d,h);return h},argPackAdvance:8,readValueFromPointer:Va,Ra:d}]});},$:function(a,b,c,d,f){var g=cb(c);b=
-  N(b);M(a,{name:b,fromWireType:function(a){return !!a},toWireType:function(a,b){return b?d:f},argPackAdvance:8,readValueFromPointer:function(a){if(1===c)var d=A;else if(2===c)d=sa;else if(4===c)d=v;else throw new TypeError("Unknown boolean type size: "+b);return this.fromWireType(d[a>>g])},Ra:null});},I:function(a,b,c,d,f,g,k,h,l,n,q,p,x){q=N(q);g=V(f,g);h&&(h=V(k,h));n&&(n=V(l,n));x=V(p,x);var O=Xa(q);qb(O,function(){Eb("Cannot construct "+q+" due to unbound types",[d]);});bb([a,b,c],d?[d]:[],function(b){b=
-  b[0];if(d){var c=b.Oa;var f=c.Ya;}else f=Q.prototype;b=Ya(O,function(){if(Object.getPrototypeOf(this)!==k)throw new eb("Use 'new' to construct "+q);if(void 0===l.ib)throw new eb(q+" has no accessible constructor");var a=l.ib[arguments.length];if(void 0===a)throw new eb("Tried to invoke ctor of "+q+" with invalid number of parameters ("+arguments.length+") - expected ("+Object.keys(l.ib).toString()+") parameters instead!");return a.apply(this,arguments)});var k=Object.create(f,{constructor:{value:b}});
-  b.prototype=k;var l=new rb(q,b,k,x,c,g,h,n);c=new T(q,l,!0,!1);f=new T(q+"*",l,!1,!1);var p=new T(q+" const*",l,!1,!0);ob[a]={pointerType:f,rb:p};Ab(O,b);return [c,f,p]});},_:function(a,b,c){a=N(a);bb([],[b],function(b){b=b[0];e[a]=b.fromWireType(c);return []});},Z:function(a,b){b=N(b);M(a,{name:b,fromWireType:function(a){var b=X[a].value;Gb(a);return b},toWireType:function(a,b){return S(b)},argPackAdvance:8,readValueFromPointer:Va,Ra:null});},s:function(a,b,c,d){function f(){}c=cb(c);b=N(b);f.values=
-  {};M(a,{name:b,constructor:f,fromWireType:function(a){return this.constructor.values[a]},toWireType:function(a,b){return b.value},argPackAdvance:8,readValueFromPointer:Hb(b,c,d),Ra:null});qb(b,f);},g:function(a,b,c){var d=Ib(a,"enum");b=N(b);a=d.constructor;d=Object.create(d.constructor.prototype,{value:{value:c},constructor:{value:Ya(d.name+"_"+b,function(){})}});a.values[c]=d;a[b]=d;},H:function(a,b,c){c=cb(c);b=N(b);M(a,{name:b,fromWireType:function(a){return a},toWireType:function(a,b){if("number"!==
-  typeof b&&"boolean"!==typeof b)throw new TypeError('Cannot convert "'+R(b)+'" to '+this.name);return b},argPackAdvance:8,readValueFromPointer:Jb(b,c),Ra:null});},d:function(a,b,c,d,f,g){var k=Lb(b,c);a=N(a);f=V(d,f);qb(a,function(){Eb("Cannot call "+a+" due to unbound types",k);},b-1);bb([],k,function(c){var d=a,h=a;c=[c[0],null].concat(c.slice(1));var k=f,p=c.length;2>p&&P("argTypes array size mismatch! Must at least get return value and 'this' types!");for(var x=null!==c[1]&&!1,O=!1,t=1;t<c.length;++t)if(null!==
-  c[t]&&void 0===c[t].Ra){O=!0;break}var Ta="void"!==c[0].name,U="",ca="";for(t=0;t<p-2;++t)U+=(0!==t?", ":"")+"arg"+t,ca+=(0!==t?", ":"")+"arg"+t+"Wired";h="return function "+Xa(h)+"("+U+") {\nif (arguments.length !== "+(p-2)+") {\nthrowBindingError('function "+h+" called with ' + arguments.length + ' arguments, expected "+(p-2)+" args!');\n}\n";O&&(h+="var destructors = [];\n");var ic=O?"destructors":"null";U="throwBindingError invoker fn runDestructors retType classParam".split(" ");k=[P,k,g,Ua,
-  c[0],c[1]];x&&(h+="var thisWired = classParam.toWireType("+ic+", this);\n");for(t=0;t<p-2;++t)h+="var arg"+t+"Wired = argType"+t+".toWireType("+ic+", arg"+t+"); // "+c[t+2].name+"\n",U.push("argType"+t),k.push(c[t+2]);x&&(ca="thisWired"+(0<ca.length?", ":"")+ca);h+=(Ta?"var rv = ":"")+"invoker(fn"+(0<ca.length?", ":"")+ca+");\n";if(O)h+="runDestructors(destructors);\n";else for(t=x?1:2;t<c.length;++t)p=1===t?"thisWired":"arg"+(t-2)+"Wired",null!==c[t].Ra&&(h+=p+"_dtor("+p+"); // "+c[t].name+"\n",
-  U.push(p+"_dtor"),k.push(c[t].Ra));Ta&&(h+="var ret = retType.fromWireType(rv);\nreturn ret;\n");U.push(h+"}\n");c=Kb(U).apply(null,k);Ab(d,c,b-1);return []});},n:function(a,b,c,d,f){function g(a){return a}b=N(b);-1===f&&(f=4294967295);var k=cb(c);if(0===d){var h=32-8*c;g=function(a){return a<<h>>>h};}var l=-1!=b.indexOf("unsigned");M(a,{name:b,fromWireType:g,toWireType:function(a,c){if("number"!==typeof c&&"boolean"!==typeof c)throw new TypeError('Cannot convert "'+R(c)+'" to '+this.name);if(c<d||c>
-  f)throw new TypeError('Passing a number "'+R(c)+'" from JS side to C/C++ side to an argument of type "'+b+'", which is outside the valid range ['+d+", "+f+"]!");return l?c>>>0:c|0},argPackAdvance:8,readValueFromPointer:Mb(b,k,0!==d),Ra:null});},j:function(a,b,c){function d(a){a>>=2;var b=E;return new f(b.buffer,b[a+1],b[a])}var f=[Int8Array,Uint8Array,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array,Float64Array][b];c=N(c);M(a,{name:c,fromWireType:d,argPackAdvance:8,readValueFromPointer:d},
-  {Ab:!0});},G:function(a,b){b=N(b);var c="std::string"===b;M(a,{name:b,fromWireType:function(a){var b=E[a>>2];if(c){var d=B[a+4+b],k=0;0!=d&&(k=d,B[a+4+b]=0);var h=a+4;for(d=0;d<=b;++d){var l=a+4+d;if(0==B[l]){h=C(h);if(void 0===n)var n=h;else n+=String.fromCharCode(0),n+=h;h=l+1;}}0!=k&&(B[a+4+b]=k);}else{n=Array(b);for(d=0;d<b;++d)n[d]=String.fromCharCode(B[a+4+d]);n=n.join("");}W(a);return n},toWireType:function(a,b){b instanceof ArrayBuffer&&(b=new Uint8Array(b));var d="string"===typeof b;d||b instanceof
-  Uint8Array||b instanceof Uint8ClampedArray||b instanceof Int8Array||P("Cannot pass non-string to std::string");var f=(c&&d?function(){return qa(b)}:function(){return b.length})(),h=z(4+f+1);E[h>>2]=f;if(c&&d)pa(b,B,h+4,f+1);else if(d)for(d=0;d<f;++d){var l=b.charCodeAt(d);255<l&&(W(h),P("String has UTF-16 code units that do not fit in 8 bits"));B[h+4+d]=l;}else for(d=0;d<f;++d)B[h+4+d]=b[d];null!==a&&a.push(W,h);return h},argPackAdvance:8,readValueFromPointer:Va,Ra:function(a){W(a);}});},X:function(a,
-  b,c){c=N(c);if(2===b){var d=function(){return ta};var f=1;}else 4===b&&(d=function(){return E},f=2);M(a,{name:c,fromWireType:function(a){for(var b=d(),c=E[a>>2],g=Array(c),n=a+4>>f,q=0;q<c;++q)g[q]=String.fromCharCode(b[n+q]);W(a);return g.join("")},toWireType:function(a,c){var g=d(),k=c.length,n=z(4+k*b);E[n>>2]=k;for(var q=n+4>>f,p=0;p<k;++p)g[q+p]=c.charCodeAt(p);null!==a&&a.push(W,n);return n},argPackAdvance:8,readValueFromPointer:Va,Ra:function(a){W(a);}});},v:function(a,b,c,d,f,g){Sa[a]={name:N(b),
-  gb:V(c,d),Va:V(f,g),kb:[]};},i:function(a,b,c,d,f,g,k,h,l,n){Sa[a].kb.push({tb:N(b),yb:c,wb:V(d,f),xb:g,Gb:k,Fb:V(h,l),Hb:n});},W:function(a,b){b=N(b);M(a,{Bb:!0,name:b,argPackAdvance:0,fromWireType:function(){},toWireType:function(){}});},p:function(a,b,c,d){a=Pb[a];b=Qb(b);c=Ob(c);a(b,c,null,d);},b:Gb,o:function(a,b){b=Sb(a,b);for(var c=b[0],d=c.name+"_$"+b.slice(1).map(function(a){return a.name}).join("_")+"$",f=["retType"],g=[c],k="",h=0;h<a-1;++h)k+=(0!==h?", ":"")+"arg"+h,f.push("argType"+h),g.push(b[1+
-  h]);d="return function "+Xa("methodCaller_"+d)+"(handle, name, destructors, args) {\n";var l=0;for(h=0;h<a-1;++h)d+="    var arg"+h+" = argType"+h+".readValueFromPointer(args"+(l?"+"+l:"")+");\n",l+=b[h+1].argPackAdvance;d+="    var rv = handle[name]("+k+");\n";for(h=0;h<a-1;++h)b[h+1].deleteObject&&(d+="    argType"+h+".deleteObject(arg"+h+");\n");c.Bb||(d+="    return retType.toWireType(destructors, rv);\n");f.push(d+"};\n");a=Kb(f).apply(null,g);return Rb(a)},F:function(a){4<a&&(X[a].hb+=1);},q:function(){return S([])},
-  f:function(a){return S(Ob(a))},l:function(){return S({})},c:function(a,b,c){a=Qb(a);b=Qb(b);c=Qb(c);a[b]=c;},e:function(a,b){a=Ib(a,"_emval_take_value");a=a.readValueFromPointer(b);return S(a)},m:function(){e.abort();},E:function(a){return Na[a]()},V:function(a,b,c,d,f,g,k,h,l,n,q,p){return Na[a](b,c,d,f,g,k,h,l,n,q,p)},U:function(a){(a=Fc[a])&&a.abort();},T:fa,k:Z,D:function(a,b,c,d,f){Mc(C(a),C(b),function(a,b){a?f&&Xc(f,c):(a=z(b.length),B.set(b,a),Yc(d,c,a,b.length),W(a));});},R:function(a,b,c,d,f,
-  g,k){Nc(C(a),C(b),new Uint8Array(B.subarray(c,c+d)),function(a){a?k&&Xc(k,f):g&&Xc(g,f);});},Q:function(a,b,c){B.set(B.subarray(b,b+c),a);},P:function(a){if(2147418112<a)return !1;for(var b=Math.max(fa(),16777216);b<a;)536870912>=b?b=ra(2*b):b=Math.min(ra((3*b+2147483648)/4),2147418112);if(!Uc(b))return !1;wa();return !0},C:function(){w("trap!");},O:function(a){Oc();a=new Date(1E3*v[a>>2]);v[4164]=a.getSeconds();v[4165]=a.getMinutes();v[4166]=a.getHours();v[4167]=a.getDate();v[4168]=a.getMonth();v[4169]=
-  a.getFullYear()-1900;v[4170]=a.getDay();var b=new Date(a.getFullYear(),0,1);v[4171]=(a.getTime()-b.getTime())/864E5|0;v[4173]=-(60*a.getTimezoneOffset());var c=(new Date(2E3,6,1)).getTimezoneOffset();b=b.getTimezoneOffset();a=(c!=b&&a.getTimezoneOffset()==Math.min(b,c))|0;v[4172]=a;a=v[Tc()+(a?4:0)>>2];v[4174]=a;return 16656},N:function(a){var b=Date.now()/1E3|0;a&&(v[a>>2]=b);return b},M:function(){w("OOM");},a:ea},D);e.asm=Zc;
-  e.___embind_register_native_and_builtin_types=function(){return e.asm.fa.apply(null,arguments)};
-  var Db=e.___getTypeName=function(){return e.asm.ga.apply(null,arguments)},Rc=e.__get_daylight=function(){return e.asm.ha.apply(null,arguments)},Qc=e.__get_timezone=function(){return e.asm.ia.apply(null,arguments)},Tc=e.__get_tzname=function(){return e.asm.ja.apply(null,arguments)},W=e._free=function(){return e.asm.ka.apply(null,arguments)},z=e._malloc=function(){return e.asm.la.apply(null,arguments)},Oa=e.globalCtors=function(){return e.asm.Ka.apply(null,arguments)};
-  e.stackAlloc=function(){return e.asm.La.apply(null,arguments)};e.dynCall_i=function(){return e.asm.ma.apply(null,arguments)};e.dynCall_ii=function(){return e.asm.na.apply(null,arguments)};e.dynCall_iii=function(){return e.asm.oa.apply(null,arguments)};e.dynCall_iiii=function(){return e.asm.pa.apply(null,arguments)};e.dynCall_iiiii=function(){return e.asm.qa.apply(null,arguments)};e.dynCall_iiiiii=function(){return e.asm.ra.apply(null,arguments)};
-  e.dynCall_iiiiiifi=function(){return e.asm.sa.apply(null,arguments)};e.dynCall_iiiiiiiiii=function(){return e.asm.ta.apply(null,arguments)};e.dynCall_iiiji=function(){return e.asm.ua.apply(null,arguments)};e.dynCall_ji=function(){return e.asm.va.apply(null,arguments)};e.dynCall_jiji=function(){return e.asm.wa.apply(null,arguments)};e.dynCall_v=function(){return e.asm.xa.apply(null,arguments)};var Xc=e.dynCall_vi=function(){return e.asm.ya.apply(null,arguments)};
-  e.dynCall_vii=function(){return e.asm.za.apply(null,arguments)};e.dynCall_viifiii=function(){return e.asm.Aa.apply(null,arguments)};var Yc=e.dynCall_viii=function(){return e.asm.Ba.apply(null,arguments)};e.dynCall_viiif=function(){return e.asm.Ca.apply(null,arguments)};e.dynCall_viiifi=function(){return e.asm.Da.apply(null,arguments)};e.dynCall_viiifiii=function(){return e.asm.Ea.apply(null,arguments)};e.dynCall_viiii=function(){return e.asm.Fa.apply(null,arguments)};
-  e.dynCall_viiiii=function(){return e.asm.Ga.apply(null,arguments)};e.dynCall_viiiiii=function(){return e.asm.Ha.apply(null,arguments)};e.dynCall_viiiiiiiii=function(){return e.asm.Ia.apply(null,arguments)};e.dynCall_viij=function(){return e.asm.Ja.apply(null,arguments)};e.asm=Zc;e.then=function(a){if(e.calledRun)a(e);else{var b=e.onRuntimeInitialized;e.onRuntimeInitialized=function(){b&&b();a(e);};}return e};
+  var Zc=e.asm({},{h:y,y:function(){},aa:function(){v("missing function: _ZN5Umbra18createDirRecursiveEPKc");y(-1);},Y:Pa,V:function(){z=!0;throw"Pure virtual function called!";},v:function(){},z:function(a){e.___errno_location&&(x[e.___errno_location()>>2]=a);return a},M:function(a,b){J=b;try{return Ra.ib(),K(),K(),K(),K(),0}catch(c){return y(c),-c.Ta}},L:function(a,b){J=b;try{var c=Ra.ib(),d=K(),f=K();return Ra.Jb(c,d,f)}catch(g){return y(g),-g.Ta}},x:function(a,b){J=b;try{var c=K(),d=K(),f=K();for(b=
+  a=0;b<f;b++){for(var g=x[d+8*b>>2],k=x[d+(8*b+4)>>2],h=0;h<k;h++){var l=C[g+h],n=Qa[c];0===l||10===l?((1===c?ba:v)(oa(n,0)),n.length=0):n.push(l);}a+=k;}return a}catch(p){return y(p),-p.Ta}},K:function(a,b){J=b;try{var c=D(K()),d=K();return Ra.Kb((void 0).stat,c,d)}catch(f){return y(f),-f.Ta}},u:function(a,b){J=b;return 0},$:function(a,b){J=b;try{var c=D(K()),d=K(),f=K();return (void 0).open(c,d,f).Mb}catch(g){return y(g),-g.Ta}},J:function(a,b){J=b;return 0},I:function(a,b){J=b;try{return Ra.ib(),0}catch(c){return y(c),
+  -c.Ta}},w:function(){},t:function(a){var b=Ta[a];delete Ta[a];var c=b.bb,d=b.Ra,f=b.gb,g=f.map(function(a){return a.ub}).concat(f.map(function(a){return a.Cb}));bb([a],g,function(a){var g={};f.forEach(function(b,c){var d=a[c],h=b.sb,k=b.tb,l=a[c+f.length],n=b.Bb,Sa=b.Db;g[b.pb]={read:function(a){return d.fromWireType(h(k,a))},write:function(a,b){var c=[];n(Sa,a,l.toWireType(c,b));Ua(c);}};});return [{name:b.name,fromWireType:function(a){var b={},c;for(c in g)b[c]=g[c].read(a);d(a);return b},toWireType:function(a,
+  b){for(var f in g)if(!(f in b))throw new TypeError("Missing field");var h=c();for(f in g)g[f].write(h,b[f]);null!==a&&a.push(d,h);return h},argPackAdvance:8,readValueFromPointer:Va,Na:d}]});},_:function(a,b,c,d,f){var g=cb(c);b=O(b);N(a,{name:b,fromWireType:function(a){return !!a},toWireType:function(a,b){return b?d:f},argPackAdvance:8,readValueFromPointer:function(a){if(1===c)var d=B;else if(2===c)d=sa;else if(4===c)d=x;else throw new TypeError("Unknown boolean type size: "+b);return this.fromWireType(d[a>>
+  g])},Na:null});},H:function(a,b,c,d,f,g,k,h,l,n,p,t,u){p=O(p);g=V(f,g);h&&(h=V(k,h));n&&(n=V(l,n));u=V(t,u);var w=Xa(p);qb(w,function(){Eb("Cannot construct "+p+" due to unbound types",[d]);});bb([a,b,c],d?[d]:[],function(b){b=b[0];if(d){var c=b.Ka;var f=c.Ua;}else f=Q.prototype;b=Ya(w,function(){if(Object.getPrototypeOf(this)!==k)throw new eb("Use 'new' to construct "+p);if(void 0===l.eb)throw new eb(p+" has no accessible constructor");var a=l.eb[arguments.length];if(void 0===a)throw new eb("Tried to invoke ctor of "+
+  p+" with invalid number of parameters ("+arguments.length+") - expected ("+Object.keys(l.eb).toString()+") parameters instead!");return a.apply(this,arguments)});var k=Object.create(f,{constructor:{value:b}});b.prototype=k;var l=new rb(p,b,k,u,c,g,h,n);c=new T(p,l,!0,!1);f=new T(p+"*",l,!1,!1);var r=new T(p+" const*",l,!1,!0);ob[a]={pointerType:f,nb:r};Ab(w,b);return [c,f,r]});},Z:function(a,b){b=O(b);N(a,{name:b,fromWireType:function(a){var b=X[a].value;Gb(a);return b},toWireType:function(a,b){return S(b)},
+  argPackAdvance:8,readValueFromPointer:Va,Na:null});},s:function(a,b,c,d){function f(){}c=cb(c);b=O(b);f.values={};N(a,{name:b,constructor:f,fromWireType:function(a){return this.constructor.values[a]},toWireType:function(a,b){return b.value},argPackAdvance:8,readValueFromPointer:Hb(b,c,d),Na:null});qb(b,f);},g:function(a,b,c){var d=Ib(a,"enum");b=O(b);a=d.constructor;d=Object.create(d.constructor.prototype,{value:{value:c},constructor:{value:Ya(d.name+"_"+b,function(){})}});a.values[c]=d;a[b]=d;},G:function(a,
+  b,c){c=cb(c);b=O(b);N(a,{name:b,fromWireType:function(a){return a},toWireType:function(a,b){if("number"!==typeof b&&"boolean"!==typeof b)throw new TypeError('Cannot convert "'+R(b)+'" to '+this.name);return b},argPackAdvance:8,readValueFromPointer:Jb(b,c),Na:null});},d:function(a,b,c,d,f,g){var k=Lb(b,c);a=O(a);f=V(d,f);qb(a,function(){Eb("Cannot call "+a+" due to unbound types",k);},b-1);bb([],k,function(c){var d=a,h=a;c=[c[0],null].concat(c.slice(1));var k=f,t=c.length;2>t&&P("argTypes array size mismatch! Must at least get return value and 'this' types!");
+  for(var u=null!==c[1]&&!1,w=!1,r=1;r<c.length;++r)if(null!==c[r]&&void 0===c[r].Na){w=!0;break}var Sa="void"!==c[0].name,U="",ca="";for(r=0;r<t-2;++r)U+=(0!==r?", ":"")+"arg"+r,ca+=(0!==r?", ":"")+"arg"+r+"Wired";h="return function "+Xa(h)+"("+U+") {\nif (arguments.length !== "+(t-2)+") {\nthrowBindingError('function "+h+" called with ' + arguments.length + ' arguments, expected "+(t-2)+" args!');\n}\n";w&&(h+="var destructors = [];\n");var ic=w?"destructors":"null";U="throwBindingError invoker fn runDestructors retType classParam".split(" ");
+  k=[P,k,g,Ua,c[0],c[1]];u&&(h+="var thisWired = classParam.toWireType("+ic+", this);\n");for(r=0;r<t-2;++r)h+="var arg"+r+"Wired = argType"+r+".toWireType("+ic+", arg"+r+"); // "+c[r+2].name+"\n",U.push("argType"+r),k.push(c[r+2]);u&&(ca="thisWired"+(0<ca.length?", ":"")+ca);h+=(Sa?"var rv = ":"")+"invoker(fn"+(0<ca.length?", ":"")+ca+");\n";if(w)h+="runDestructors(destructors);\n";else for(r=u?1:2;r<c.length;++r)t=1===r?"thisWired":"arg"+(r-2)+"Wired",null!==c[r].Na&&(h+=t+"_dtor("+t+"); // "+c[r].name+
+  "\n",U.push(t+"_dtor"),k.push(c[r].Na));Sa&&(h+="var ret = retType.fromWireType(rv);\nreturn ret;\n");U.push(h+"}\n");c=Kb(U).apply(null,k);Ab(d,c,b-1);return []});},n:function(a,b,c,d,f){function g(a){return a}b=O(b);-1===f&&(f=4294967295);var k=cb(c);if(0===d){var h=32-8*c;g=function(a){return a<<h>>>h};}var l=-1!=b.indexOf("unsigned");N(a,{name:b,fromWireType:g,toWireType:function(a,c){if("number"!==typeof c&&"boolean"!==typeof c)throw new TypeError('Cannot convert "'+R(c)+'" to '+this.name);if(c<
+  d||c>f)throw new TypeError('Passing a number "'+R(c)+'" from JS side to C/C++ side to an argument of type "'+b+'", which is outside the valid range ['+d+", "+f+"]!");return l?c>>>0:c|0},argPackAdvance:8,readValueFromPointer:Mb(b,k,0!==d),Na:null});},j:function(a,b,c){function d(a){a>>=2;var b=F;return new f(b.buffer,b[a+1],b[a])}var f=[Int8Array,Uint8Array,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array,Float64Array][b];c=O(c);N(a,{name:c,fromWireType:d,argPackAdvance:8,readValueFromPointer:d},
+  {wb:!0});},F:function(a,b){b=O(b);var c="std::string"===b;N(a,{name:b,fromWireType:function(a){var b=F[a>>2];if(c){var d=C[a+4+b],k=0;0!=d&&(k=d,C[a+4+b]=0);var h=a+4;for(d=0;d<=b;++d){var l=a+4+d;if(0==C[l]){h=D(h);if(void 0===n)var n=h;else n+=String.fromCharCode(0),n+=h;h=l+1;}}0!=k&&(C[a+4+b]=k);}else{n=Array(b);for(d=0;d<b;++d)n[d]=String.fromCharCode(C[a+4+d]);n=n.join("");}W(a);return n},toWireType:function(a,b){b instanceof ArrayBuffer&&(b=new Uint8Array(b));var d="string"===typeof b;d||b instanceof
+  Uint8Array||b instanceof Uint8ClampedArray||b instanceof Int8Array||P("Cannot pass non-string to std::string");var f=(c&&d?function(){return qa(b)}:function(){return b.length})(),h=A(4+f+1);F[h>>2]=f;if(c&&d)pa(b,C,h+4,f+1);else if(d)for(d=0;d<f;++d){var l=b.charCodeAt(d);255<l&&(W(h),P("String has UTF-16 code units that do not fit in 8 bits"));C[h+4+d]=l;}else for(d=0;d<f;++d)C[h+4+d]=b[d];null!==a&&a.push(W,h);return h},argPackAdvance:8,readValueFromPointer:Va,Na:function(a){W(a);}});},X:function(a,
+  b,c){c=O(c);if(2===b){var d=function(){return ta};var f=1;}else 4===b&&(d=function(){return F},f=2);N(a,{name:c,fromWireType:function(a){for(var b=d(),c=F[a>>2],g=Array(c),n=a+4>>f,p=0;p<c;++p)g[p]=String.fromCharCode(b[n+p]);W(a);return g.join("")},toWireType:function(a,c){var g=d(),k=c.length,n=A(4+k*b);F[n>>2]=k;for(var p=n+4>>f,t=0;t<k;++t)g[p+t]=c.charCodeAt(t);null!==a&&a.push(W,n);return n},argPackAdvance:8,readValueFromPointer:Va,Na:function(a){W(a);}});},r:function(a,b,c,d,f,g){Ta[a]={name:O(b),
+  bb:V(c,d),Ra:V(f,g),gb:[]};},i:function(a,b,c,d,f,g,k,h,l,n){Ta[a].gb.push({pb:O(b),ub:c,sb:V(d,f),tb:g,Cb:k,Bb:V(h,l),Db:n});},W:function(a,b){b=O(b);N(a,{xb:!0,name:b,argPackAdvance:0,fromWireType:function(){},toWireType:function(){}});},p:function(a,b,c,d){a=Pb[a];b=Qb(b);c=Ob(c);a(b,c,null,d);},b:Gb,o:function(a,b){b=Sb(a,b);for(var c=b[0],d=c.name+"_$"+b.slice(1).map(function(a){return a.name}).join("_")+"$",f=["retType"],g=[c],k="",h=0;h<a-1;++h)k+=(0!==h?", ":"")+"arg"+h,f.push("argType"+h),g.push(b[1+
+  h]);d="return function "+Xa("methodCaller_"+d)+"(handle, name, destructors, args) {\n";var l=0;for(h=0;h<a-1;++h)d+="    var arg"+h+" = argType"+h+".readValueFromPointer(args"+(l?"+"+l:"")+");\n",l+=b[h+1].argPackAdvance;d+="    var rv = handle[name]("+k+");\n";for(h=0;h<a-1;++h)b[h+1].deleteObject&&(d+="    argType"+h+".deleteObject(arg"+h+");\n");c.xb||(d+="    return retType.toWireType(destructors, rv);\n");f.push(d+"};\n");a=Kb(f).apply(null,g);return Rb(a)},E:function(a){4<a&&(X[a].cb+=1);},q:function(){return S([])},
+  f:function(a){return S(Ob(a))},m:function(){return S({})},c:function(a,b,c){a=Qb(a);b=Qb(b);c=Qb(c);a[b]=c;},e:function(a,b){a=Ib(a,"_emval_take_value");a=a.readValueFromPointer(b);return S(a)},l:function(){e.abort();},D:function(a){return Na[a]()},U:function(a,b,c,d,f,g,k,h,l,n,p,t){return Na[a](b,c,d,f,g,k,h,l,n,p,t)},C:function(a){(a=Fc[a])&&a.abort();},T:fa,k:Z,B:function(a,b,c,d,f){Mc(D(a),D(b),function(a,b){a?f&&Xc(f,c):(a=A(b.length),C.set(b,a),Yc(d,c,a,b.length),W(a));});},S:function(a,b,c,d,f,
+  g,k){Nc(D(a),D(b),new Uint8Array(C.subarray(c,c+d)),function(a){a?k&&Xc(k,f):g&&Xc(g,f);});},R:function(a,b,c){C.set(C.subarray(b,b+c),a);},Q:function(a){if(2147418112<a)return !1;for(var b=Math.max(fa(),16777216);b<a;)536870912>=b?b=ra(2*b):b=Math.min(ra((3*b+2147483648)/4),2147418112);if(!Uc(b))return !1;wa();return !0},A:function(){y("trap!");},P:function(a){Oc();a=new Date(1E3*x[a>>2]);x[4580]=a.getSeconds();x[4581]=a.getMinutes();x[4582]=a.getHours();x[4583]=a.getDate();x[4584]=a.getMonth();x[4585]=
+  a.getFullYear()-1900;x[4586]=a.getDay();var b=new Date(a.getFullYear(),0,1);x[4587]=(a.getTime()-b.getTime())/864E5|0;x[4589]=-(60*a.getTimezoneOffset());var c=(new Date(2E3,6,1)).getTimezoneOffset();b=b.getTimezoneOffset();a=(c!=b&&a.getTimezoneOffset()==Math.min(b,c))|0;x[4588]=a;a=x[Tc()+(a?4:0)>>2];x[4590]=a;return 18320},O:function(a){var b=Date.now()/1E3|0;a&&(x[a>>2]=b);return b},N:function(){y("OOM");},a:ea},E);e.asm=Zc;
+  e.___embind_register_native_and_builtin_types=function(){return e.asm.ba.apply(null,arguments)};
+  var Db=e.___getTypeName=function(){return e.asm.ca.apply(null,arguments)},Rc=e.__get_daylight=function(){return e.asm.da.apply(null,arguments)},Qc=e.__get_timezone=function(){return e.asm.ea.apply(null,arguments)},Tc=e.__get_tzname=function(){return e.asm.fa.apply(null,arguments)},W=e._free=function(){return e.asm.ga.apply(null,arguments)},A=e._malloc=function(){return e.asm.ha.apply(null,arguments)},Oa=e.globalCtors=function(){return e.asm.Ga.apply(null,arguments)};
+  e.stackAlloc=function(){return e.asm.Ha.apply(null,arguments)};e.dynCall_i=function(){return e.asm.ia.apply(null,arguments)};e.dynCall_ii=function(){return e.asm.ja.apply(null,arguments)};e.dynCall_iii=function(){return e.asm.ka.apply(null,arguments)};e.dynCall_iiii=function(){return e.asm.la.apply(null,arguments)};e.dynCall_iiiii=function(){return e.asm.ma.apply(null,arguments)};e.dynCall_iiiiii=function(){return e.asm.na.apply(null,arguments)};
+  e.dynCall_iiiiiifi=function(){return e.asm.oa.apply(null,arguments)};e.dynCall_iiiiiiiiii=function(){return e.asm.pa.apply(null,arguments)};e.dynCall_iiiji=function(){return e.asm.qa.apply(null,arguments)};e.dynCall_ji=function(){return e.asm.ra.apply(null,arguments)};e.dynCall_jiji=function(){return e.asm.sa.apply(null,arguments)};e.dynCall_v=function(){return e.asm.ta.apply(null,arguments)};var Xc=e.dynCall_vi=function(){return e.asm.ua.apply(null,arguments)};
+  e.dynCall_vii=function(){return e.asm.va.apply(null,arguments)};e.dynCall_viifiii=function(){return e.asm.wa.apply(null,arguments)};var Yc=e.dynCall_viii=function(){return e.asm.xa.apply(null,arguments)};e.dynCall_viiif=function(){return e.asm.ya.apply(null,arguments)};e.dynCall_viiifi=function(){return e.asm.za.apply(null,arguments)};e.dynCall_viiifiii=function(){return e.asm.Aa.apply(null,arguments)};e.dynCall_viiii=function(){return e.asm.Ba.apply(null,arguments)};
+  e.dynCall_viiiii=function(){return e.asm.Ca.apply(null,arguments)};e.dynCall_viiiiii=function(){return e.asm.Da.apply(null,arguments)};e.dynCall_viiiiiiiii=function(){return e.asm.Ea.apply(null,arguments)};e.dynCall_viij=function(){return e.asm.Fa.apply(null,arguments)};e.asm=Zc;e.then=function(a){if(e.calledRun)a(e);else{var b=e.onRuntimeInitialized;e.onRuntimeInitialized=function(){b&&b();a(e);};}return e};
   function hc(a){this.name="ExitStatus";this.message="Program terminated with exit("+a+")";this.status=a;}hc.prototype=Error();hc.prototype.constructor=hc;Ga=function $c(){e.calledRun||ad();e.calledRun||(Ga=$c);};
-  function ad(){function a(){if(!e.calledRun&&(e.calledRun=!0,!y)){Da||(Da=!0,ya(Aa));ya(Ba);if(e.onRuntimeInitialized)e.onRuntimeInitialized();if(e.postRun)for("function"==typeof e.postRun&&(e.postRun=[e.postRun]);e.postRun.length;){var a=e.postRun.shift();Ca.unshift(a);}ya(Ca);}}if(!(0<F)){if(e.preRun)for("function"==typeof e.preRun&&(e.preRun=[e.preRun]);e.preRun.length;)Ea();ya(za);0<F||e.calledRun||(e.setStatus?(e.setStatus("Running..."),setTimeout(function(){setTimeout(function(){e.setStatus("");},
-  1);a();},1)):a());}}e.run=ad;function w(a){if(e.onAbort)e.onAbort(a);void 0!==a?(ba(a),u(a),a='"'+a+'"'):a="";y=!0;throw"abort("+a+"). Build with -s ASSERTIONS=1 for more info.";}e.abort=w;if(e.preInit)for("function"==typeof e.preInit&&(e.preInit=[e.preInit]);0<e.preInit.length;)e.preInit.pop()();e.noExitRuntime=!0;ad();e.bytesDownloaded=0;
-  function Ma(a,b,c,d,f,g,k,h,l,n,q){a=C(a);b=C(b);g=C(g);var p=new XMLHttpRequest;p.open(b,a,!0);if("GET"!=b||0!=g.length)p.withCredentials=!0;p.responseType="arraybuffer";var x=Hc();p.onload=function(){if(200==p.status){var a=new Uint8Array(p.response);e.bytesDownloaded+=p.response.byteLength;if(n)a.length!=q?e.dynCall_viii(f,x,c,0):(B.set(a,n),e.dynCall_viiii(d,x,c,null,0));else{var b=z(a.length);B.set(a,b);e.dynCall_viiii(d,x,c,b,a.length);W(b);}}else e.dynCall_viii(f,x,c,p.status);delete Fc[x];};
-  p.onerror=function(){e.dynCall_viii(f,x,c,p.status);delete Fc[x];};p.onabort=function(){delete Fc[x];};0!=g.length&&p.setRequestHeader("Authorization","Basic "+btoa(g+":"));l=C(l).split("\n");if(2<=l.length)for(g=0;g<l.length;g+=2)p.setRequestHeader(l[g],l[g+1]);"POST"==b?p.send(A.slice(k,k+h)):p.send(null);Fc[x]=p;return x}
+  function ad(){function a(){if(!e.calledRun&&(e.calledRun=!0,!z)){Da||(Da=!0,ya(Aa));ya(Ba);if(e.onRuntimeInitialized)e.onRuntimeInitialized();if(e.postRun)for("function"==typeof e.postRun&&(e.postRun=[e.postRun]);e.postRun.length;){var a=e.postRun.shift();Ca.unshift(a);}ya(Ca);}}if(!(0<G)){if(e.preRun)for("function"==typeof e.preRun&&(e.preRun=[e.preRun]);e.preRun.length;)Ea();ya(za);0<G||e.calledRun||(e.setStatus?(e.setStatus("Running..."),setTimeout(function(){setTimeout(function(){e.setStatus("");},
+  1);a();},1)):a());}}e.run=ad;function y(a){if(e.onAbort)e.onAbort(a);void 0!==a?(ba(a),v(a),a='"'+a+'"'):a="";z=!0;throw"abort("+a+"). Build with -s ASSERTIONS=1 for more info.";}e.abort=y;if(e.preInit)for("function"==typeof e.preInit&&(e.preInit=[e.preInit]);0<e.preInit.length;)e.preInit.pop()();e.noExitRuntime=!0;ad();e.maxBytesDownloaded=0;e.minBytesDownloaded=0;e.URLsDownloaded=new Set([]);
+  function Ma(a,b,c,d,f,g,k,h,l,n,p){var t=D(a);b=D(b);g=D(g);var u=new XMLHttpRequest;u.open(b,t,!0);if("GET"!=b||0!=g.length)u.withCredentials=!0;u.responseType="arraybuffer";var w=Hc();u.onload=function(){if(200==u.status){var b=new Uint8Array(u.response),g=e.URLsDownloaded;e.maxBytesDownloaded+=u.response.byteLength;g.has(a)||(g.add(a),e.minBytesDownloaded+=u.response.byteLength);n?b.length!=p?e.dynCall_viii(f,w,c,0):(C.set(b,n),e.dynCall_viiii(d,w,c,null,0)):(g=A(b.length),C.set(b,g),e.dynCall_viiii(d,
+  w,c,g,b.length),W(g));}else e.dynCall_viii(f,w,c,u.status);delete Fc[w];};u.onerror=function(){e.dynCall_viii(f,w,c,u.status);delete Fc[w];};u.onabort=function(){delete Fc[w];};0!=g.length&&u.setRequestHeader("Authorization","Basic "+btoa(g+":"));l=D(l).split("\n");if(2<=l.length)for(t=0;t<l.length;t+=2)u.setRequestHeader(l[t],l[t+1]);"POST"==b?u.send(B.slice(k,k+h)):u.send(null);Fc[w]=u;return w}
 
     return UmbraNativeAPI
   }
   );
   })();
-  if (typeof exports === 'object' && typeof module === 'object')
-        module.exports = UmbraNativeAPI;
-      else if (typeof define === 'function' && define['amd'])
-        define([], function() { return UmbraNativeAPI; });
-      else if (typeof exports === 'object')
-        exports["UmbraNativeAPI"] = UmbraNativeAPI;
 
   const TextureFormat = {
     RGBA32: 0,
@@ -215,6 +208,11 @@
     'count'
   ];
 
+  const ColorSpace = {
+    LINEAR: 0,
+    SRGB: 1
+  };
+
   const ColorSpaceNames = [
     'linear',
     'srgb'
@@ -257,6 +255,16 @@
     HalfFloat: 1 << 15,
     All: 0xffffffff | 0
   };
+
+  var formats = /*#__PURE__*/Object.freeze({
+    TextureFormat: TextureFormat,
+    TextureFormatNames: TextureFormatNames,
+    ColorSpace: ColorSpace,
+    ColorSpaceNames: ColorSpaceNames,
+    TextureType: TextureType,
+    TextureTypeNames: TextureTypeNames,
+    TextureCapability: TextureCapability
+  });
 
   const TextureCapability$1 = TextureCapability;
 
@@ -392,7 +400,27 @@
       }
 
       connect (token, projectID, modelID) {
+        if (typeof token !== 'string') {
+          throw new TypeError('token should be a string')
+        }
+        if (typeof projectID !== 'string') {
+          throw new TypeError('projectID should be a string')
+        }
+        if (typeof modelID !== 'string') {
+          throw new TypeError('modelID should be a string')
+        }
         Module.sceneConnect(this.ptr, this.creds, token, projectID, modelID);
+      }
+
+      connectWithURL (url) {
+        if (typeof url !== 'string') {
+          throw new TypeError('URL should be a string')
+        }
+        if (url.indexOf('http:') === 0 || url.indexOf('https:') === 0) {
+          Module.sceneConnectWithURL(this.ptr, this.creds, url);
+        } else {
+          throw new Error('Should be an HTTP or HTTPS URL')
+        }
       }
 
       connectionStatus () {
@@ -692,7 +720,7 @@
     }
 
     class Runtime {
-      constructor (client, textureFormats) {
+      constructor (client, platformFeatures) {
         /**
          * If no normal map formats are supported then force support for
          * BC5 so that textures get transcoded into an uncompressed format.
@@ -703,7 +731,7 @@
           TextureCapability$1.PVRTC1 |
           TextureCapability$1.BC5);
 
-        let capabilityMask = textureFormats.flags;
+        let capabilityMask = platformFeatures.capabilityMask;
 
         if (!(capabilityMask & normalFormats)) {
           capabilityMask |= TextureCapability$1.BC5 | TextureCapability$1.BC4;
@@ -711,7 +739,7 @@
 
         this.client = client;
         this.ptr = Module.runtimeCreate(client.ptr, capabilityMask);
-        this.supportedTextureFormats = textureFormats;
+        this.platformFeatures = platformFeatures;
 
         this.assets = new Map();
         this.nextId = 1;
@@ -720,7 +748,8 @@
         this.tempTranscodedBuffer = new Buffer(4, Uint8Array);
 
         this.debug = {
-          textureFormatsInUse: new Set()
+          textureFormatsInUse: new Set(),
+          platformFeatures
         };
       }
 
@@ -738,7 +767,7 @@
       }
 
       destroyScene (scene) {
-        Module.runtimeSceneDestroy(scene.ptr);
+        Module.runtimeDestroyScene(this.ptr, scene.ptr);
       }
 
       createView () {
@@ -747,7 +776,7 @@
       }
 
       destroyView (view) {
-        Module.runtimeViewDestroy(view.ptr);
+        Module.runtimeDestroyView(this.ptr, view.ptr);
       }
 
       update () {
@@ -813,7 +842,7 @@
             let bufferView = new BufferView(buffer, 0, info.dataByteSize);
 
             if (this.formatNeedsTranscoding(info.format)) {
-              let newInfo = this.transcodeTexture(info, buffer, this.tempTranscodedBuffer);
+              let newInfo = this.downsampleAndTranscodeTexture(info, buffer, this.tempTranscodedBuffer);
 
               info = newInfo;
 
@@ -904,7 +933,7 @@
       }
 
       formatNeedsTranscoding (format) {
-        const flags = this.supportedTextureFormats.flags;
+        const flags = this.platformFeatures.capabilityMask;
 
         switch (format) {
           case TextureFormat.BC1:
@@ -938,41 +967,51 @@
         return true
       }
 
-      transcodeTexture (info, buffer, outputBuffer) {
-        const newFormat = Module.getUncompressedFromBCFormat(info.format);
+      downsampleAndTranscodeTexture (info, buffer, outputBuffer) {
+        let newFormat = Module.getUncompressedFromBCFormat(info.format);
 
         if (newFormat === TextureFormat.COUNT) {
           throw new Error("Couldn't find a matching BC format")
         }
 
+        // If half float is not supported on this platform we need to make do with an 8-bit texture.
+        if (newFormat === TextureFormat.RG16F && !this.platformFeatures.halfFloat) {
+          newFormat = TextureFormat.RG8;
+        }
+
         const outputSize = Module.getTextureByteSize(info.width, info.height, newFormat);
+
         outputBuffer.ensureSize(outputSize);
-        const output = Module.transcodeTexture(
+
+        const result = Module.downsampleAndTranscodeTexture(
+          info.format,
+          newFormat,
           info.width,
           info.height,
-          info.format,
           buffer.ofs,
           info.dataByteSize,
-          this.supportedTextureFormats.halfFloat,
           outputBuffer.ofs,
           outputBuffer.size);
 
-        if (output.data === 0) {
-          console.log(info);
-          console.log(buffer);
+        if (!result.success) {
           throw new Error(`Texture transcoding failed. Input: ${info.format}, output: ${newFormat}, output size: ${outputSize}`)
+        }
+
+        if (result.texture.format !== newFormat) {
+          throw new Error(`Transcoded texture format was ${result.texture.format} instead of the expected ${newFormat}`)
         }
 
         // Create a new texture descriptor with updated properties and return it.
 
         let info2 = Object.assign({}, info);
+        let desc = result.texture;
 
         info2 = Object.assign(info2, {
-          format: output.format,
-          width: output.width,
-          height: output.height,
-          dataByteSize: output.dataByteSize,
-          mipByteSizes: [output.dataByteSize]
+          format: desc.format,
+          width: desc.width,
+          height: desc.height,
+          dataByteSize: desc.dataByteSize,
+          mipByteSizes: [desc.dataByteSize]
         });
 
         return info2
@@ -1029,8 +1068,6 @@
 
     const lib = {};
 
-    lib.NATIVE_VERSION = Module.getLibraryVersion();
-
     lib.getProjects = (token) => {
       let endPoint = Module.parseCloudCredentials(token);
       if (endPoint.key === '') {
@@ -1039,15 +1076,29 @@
       return apicall(endPoint, '/projects', {})
     };
 
-    // TODO: This assumes all extensions that are available are also enabled by the application.
-    lib.getSupportedTextureFormats = (gl) => {
-      let flags = 0; // Accumulate a texture format bitmask here
-      let formats = new Set(); // Will hold all supported format names
+    /**
+     * Queries supported texture formats and also enables the relevant WebGL extensions.
+     */
+    lib.getPlatformFeatures = (gl) => {
+      let flags = 0; // We accumulate a texture format bitmask here
+      let formats$1 = new Set(); // Will hold all supported format names
       let supportsSRGB = false;
       let supportsHalfFloat = false;
 
-      let extStrings = gl.getSupportedExtensions();
-      extStrings = extStrings.map(s => s.replace(/^(.*)_WEBGL_/, 'WEBGL_'));
+      /**
+       * We fetch all extension strings and strip off possible vendor prefixes of WEBGL
+       * extensions. However, when we enable the extension we need the original full string.
+       * Here 'extStrings' holds a mapping from a shortened to a full extension string.
+       */
+      let extStrings = new Map([]); // Full strings
+      let extNames = []; // Shortened strings
+      let allExtensions = gl.getSupportedExtensions();
+
+      for (let full of allExtensions) {
+        let shortened = full.replace(/^(.*)_WEBGL_/, 'WEBGL_');
+        extStrings.set(shortened, full);
+        extNames.push(shortened);
+      }
 
       const mapping = new Map([
         ['WEBGL_compressed_texture_s3tc', {
@@ -1071,33 +1122,36 @@
       ]);
 
       for (let key of mapping.keys()) {
-        if (extStrings.includes(key)) {
+        if (extNames.includes(key)) {
+          gl.getExtension(extStrings.get(key));
           let value = mapping.get(key);
           flags |= value.mask;
-          value.names.forEach(name => formats.add(name));
+          value.names.forEach(name => formats$1.add(name));
         }
       }
 
-      if (extStrings.includes('WEBGL_compressed_texture_s3tc_srgb')) {
+      if (extNames.includes('WEBGL_compressed_texture_s3tc_srgb')) {
         supportsSRGB = true;
       }
 
-      if (extStrings.includes('EXT_sRGB')) {
+      if (extNames.includes('EXT_sRGB')) {
+        gl.getExtension(extStrings.get('EXT_sRGB'));
         supportsSRGB = true;
       }
 
-      if (extStrings.includes('OES_texture_half_float')) {
+      if (extNames.includes('OES_texture_half_float')) {
+        gl.getExtension(extStrings.get('OES_texture_half_float'));
         supportsHalfFloat = true;
       }
 
-      return { flags: flags, formats: [...formats], srgb: supportsSRGB, halfFloat: supportsHalfFloat }
+      return { capabilityMask: flags, formats: [...formats$1], srgb: supportsSRGB, halfFloat: supportsHalfFloat }
     };
 
     lib.getIDs = ({ token, projectID, modelID, model, project }) => {
       // The application can connect with either direct IDs or names
       if (projectID && modelID) {
         return Promise.resolve({ project: projectID, model: modelID })
-      } else {
+      } else if (project && model) {
         return lib.getProjects(token).then((projects) => {
           const proj = projects.find(p => p.name === project);
           const model = proj.models.find(m => m.name === model);
@@ -1114,6 +1168,8 @@
 
           return { project: proj.id, model: model.id }
         })
+      } else {
+        throw new Error('Invalid project & model ID combination.\nYou should define either both "projectID" and "modelID" or "project" and "model"')
       }
     };
 
@@ -1164,20 +1220,18 @@
     })
   };
 
-  /**
-   * ShaderPatcher is a preprocessor function that replaces the default PBR texture read
-   * shader chunks with the correct Umbra versions. Doing it this way instead of completely
-   * custom shaders allows the application to use its own materials with Umbrafied models.
-   */
-
   const normalmapChunk = `
-
 #ifdef USE_NORMALMAP
 #ifdef USE_TANGENT
 
 vec3 tangentToWorld2 = normal;
 vec3 tangentToWorld0 = normalize(tangent - tangentToWorld2 * dot(tangentToWorld2, tangent));
+
+#ifdef UMBRA_FLIP_TANGENT
+vec3 tangentToWorld1 = normalize(cross(tangentToWorld0, tangentToWorld2));
+#else
 vec3 tangentToWorld1 = normalize(cross(tangentToWorld2, tangentToWorld0));
+#endif
 
 #if defined(UMBRA_TEXTURE_SUPPORT_BC5) || defined(UMBRA_TEXTURE_SUPPORT_ASTC)
 normal.xy = texture2D(normalMap, vUv).xy * 2.0 - 1.0;
@@ -1217,25 +1271,45 @@ roughnessFactor *= roughness;
 #endif
 `;
 
-  function createShaderPatcher (formats) {
-    let defines = '';
+  /**
+   * ShaderPatcher is a preprocessor class that replaces the default PBR texture read
+   * shader chunks with the correct Umbra versions. Doing it this way instead of completely
+   * custom shaders allows the application to use its own materials with Umbrafied models.
+   */
+  class ShaderPatcher {
+    constructor (formats) {
+      /*
+       * World space transform can swap handedness which isn't handled by three.js in tangent space
+       * normal maps so we need to be able to flip them ourselves.
+       */
+      this.flipTangent = false;
 
-    if (formats.formats.indexOf('bc3') > -1) {
-      defines += '#define UMBRA_TEXTURE_SUPPORT_BC3\n';
-    }
-    if (formats.formats.indexOf('bc5') > -1) {
-      defines += '#define UMBRA_TEXTURE_SUPPORT_BC5\n';
-    }
-    if (formats.formats.indexOf('astc_4x4') > -1) {
-      defines += '#define UMBRA_TEXTURE_SUPPORT_ASTC\n';
+      // Texture format feature flags
+      this.defines = '';
+
+      if (formats.formats.indexOf('bc3') > -1) {
+        this.defines += '#define UMBRA_TEXTURE_SUPPORT_BC3\n';
+      }
+      if (formats.formats.indexOf('bc5') > -1) {
+        this.defines += '#define UMBRA_TEXTURE_SUPPORT_BC5\n';
+      }
+      if (formats.formats.indexOf('astc_4x4') > -1) {
+        this.defines += '#define UMBRA_TEXTURE_SUPPORT_ASTC\n';
+      }
     }
 
-    return function (shader, renderer) {
+    process (shader, renderer) {
       let frag = shader.fragmentShader;
-      frag = defines + frag;
+
+      if (this.flipTangent) {
+        frag = '#define UMBRA_FLIP_TANGENT\n' + frag;
+      }
+
+      frag = this.defines + frag;
       frag = frag.replace('#include <normal_fragment_maps>', normalmapChunk);
       frag = frag.replace('#include <metalnessmap_fragment>', metalnessMapChunk);
       frag = frag.replace('#include <roughnessmap_fragment>', roughnessMapChunk);
+
       shader.fragmentShader = frag;
     }
   }
@@ -1284,6 +1358,11 @@ roughnessFactor *= roughness;
       }
       this.usedList.length = 0;
     }
+
+    clear () {
+      this.usedList.length = 0;
+      this.freeList.length = 0;
+    }
   }
 
   /**
@@ -1303,6 +1382,7 @@ roughnessFactor *= roughness;
     this.quality = 0.5; // Streaming model quality. Ranges from 0 to 1.
     this.opaqueMaterial = new THREE.MeshBasicMaterial();
     this.wireframe = false;
+    this.freeze = false;
 
     // Streaming debug info accessible through getInfo()
     this.stats = {
@@ -1319,7 +1399,7 @@ roughnessFactor *= roughness;
     this.cameraToView = new Map();
     this.viewLastUsed = new Map();
     this.materialPool = new ObjectPool();
-    this.shaderPatcher = createShaderPatcher(platform.supportedFormats);
+    this.shaderPatcher = new ShaderPatcher(platform.features);
     this.name = 'UmbraModel';
 
     // Add API objects under their own object for clarity
@@ -1403,6 +1483,10 @@ roughnessFactor *= roughness;
   ModelObject.prototype.update = function (camera) {
     let scene;
 
+    if (this.freeze) {
+      return
+    }
+
     this.traverseAncestors(obj => {
       if (obj.isScene) {
         scene = obj;
@@ -1428,11 +1512,22 @@ roughnessFactor *= roughness;
     }
 
     const frame = this.renderer.info.render.frame;
-    this.viewLastUsed.set(view, frame);
 
+    this.viewLastUsed.set(view, frame);
     this.pruneOldViews(frame);
 
     this.umbra.scene.update(this.matrixWorld.elements);
+
+    // If we are using a PBR material then we might need to flip the tangent vector
+    if (typeof this.opaqueMaterial.normalMapType !== 'undefined') {
+      // TODO(pvaananen): Would be nice to avoid recalculating the determinant every frame.
+      const flip = this.matrixWorld.determinant() < 0;
+
+      if (flip !== this.shaderPatcher.flipTangent) {
+        this.shaderPatcher.flipTangent = flip;
+        this.materialPool.clear();
+      }
+    }
 
     this.matrixWorldInverse.getInverse(camera.matrixWorld);
     this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse);
@@ -1556,12 +1651,12 @@ roughnessFactor *= roughness;
             this.opaqueMaterial.onBeforeCompile.apply(material, [shader, renderer]);
           }
 
-          this.shaderPatcher(shader, renderer);
+          this.shaderPatcher.process(shader, renderer);
         };
 
-        const diffuseMap = materialDesc.textures[TextureType.DIFFUSE];
-        const normalMap = materialDesc.textures[TextureType.NORMAL];
-        const metalglossMap = materialDesc.textures[TextureType.SPECULAR];
+        const diffuseMap = materialDesc.textures[formats.TextureType.DIFFUSE];
+        const normalMap = materialDesc.textures[formats.TextureType.NORMAL];
+        const metalglossMap = materialDesc.textures[formats.TextureType.SPECULAR];
 
         if (diffuseMap && diffuseMap.isTexture) {
           material.map = diffuseMap;
@@ -1629,29 +1724,50 @@ roughnessFactor *= roughness;
   }
 
   function initWithThreeJS (renderer, userConfig) {
+    if (THREE.REVISION !== '106') {
+      throw new Error(`Only three.js r106 is supported. Got three.js ${THREE.REVISION} instead.`)
+    }
+
+    if (!renderer) {
+      throw new TypeError('"renderer" should be of type THREE.WebGLRenderer')
+    }
+
     return UmbraLibrary(userConfig).then(Umbra => {
-      const supportedFormats = Umbra.getSupportedTextureFormats(renderer.context);
+      const features = Umbra.getPlatformFeatures(renderer.context);
 
       // Three.js does not support BC5 compressed formats so we manually disable them.
-      supportedFormats.flags &= ~TextureCapability.BC5;
+      features.capabilityMask &= ~formats.TextureCapability.BC5;
 
-      let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), supportedFormats);
+      let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), features);
 
       /**
        * Creating a model is an asynchronous operation because we might need to query the Project API
-       * to map the given string names into numeric IDs. If the IDs are used then the promise will
+       * to map the given string names into numeric IDs. If IDs or URL are used then the promise will
        * resolve immediately.
        */
-      let modelFactory = cloudArgs => {
-        return Umbra.getIDs(cloudArgs).then((IDs) => {
-          const scene = runtime.createScene();
-          scene.connect(cloudArgs.token, IDs.project, IDs.model);
+      let createModel = cloudArgs => {
+        const scene = runtime.createScene();
 
-          const model = new ModelObject(runtime, scene, renderer, {
-            supportedFormats: supportedFormats
-          });
-
-          return model
+        return new Promise((resolve, reject) => {
+          try {
+            if ('url' in cloudArgs) {
+              scene.connectWithURL(cloudArgs.url);
+              resolve(new ModelObject(runtime, scene, renderer, { features }));
+            } else {
+              return Umbra.getIDs(cloudArgs).then(
+                IDs => {
+                  scene.connect(cloudArgs.token, IDs.project, IDs.model);
+                  resolve(new ModelObject(runtime, scene, renderer, { features }));
+                },
+                () => {
+                  console.log('error');
+                  throw new Error(`Couldn't fetch IDs matching names ${cloudArgs.project} and ${cloudArgs.model}`)
+                })
+            }
+          } catch (e) {
+            runtime.destroyScene(scene);
+            reject(e);
+          }
         })
       };
 
@@ -1678,8 +1794,9 @@ roughnessFactor *= roughness;
             }
 
             if (!glformat) {
+              // Add a dummy object for unknown formats. They will appear as a solid black color.
               console.log('Unknown texture format', info.format);
-              job.fail();
+              runtime.addAsset(job, { isTexture: false });
               return
             }
 
@@ -1774,8 +1891,26 @@ roughnessFactor *= roughness;
         runtime.update();
       };
 
+      /**
+       * Returns streaming information. We can't tell which files came from the browser cache
+       * so we report lower and upper limits of the true download size.
+       *
+       * The returned object has the following fields:
+       *
+       *  'maxBytesDownloaded' is an upper limit assuming no file was cached,
+       *  'minBytesDownloaded' is the corresponding lower limit assuming all duplicates came from cache.
+       *
+       */
+      function getStats () {
+        return {
+          maxBytesDownloaded: Umbra.nativeModule.maxBytesDownloaded,
+          minBytesDownloaded: Umbra.nativeModule.minBytesDownloaded
+        }
+      }
+
       return {
-        createModel: modelFactory,
+        createModel,
+        getStats,
         update: update,
         dispose: () => {
           runtime.destroy();
