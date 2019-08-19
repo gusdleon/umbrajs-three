@@ -13,7 +13,7 @@ requirejs(['three', '../../dist/umbrajs-three.amd'], function (THREE, UmbraRunti
   const canvas = document.querySelector('#c')
   let renderer = new THREE.WebGLRenderer({ canvas })
 
-  let init = UmbraRuntime.initWithThreeJS(renderer)
+  let init = UmbraRuntime.initWithThreeJS(renderer, { wasmURL: '/dist/umbra.wasm' })
   let modelInit = init.then(function (Umbra) {
     // Create a 3D model object
     return Umbra.createModel({
