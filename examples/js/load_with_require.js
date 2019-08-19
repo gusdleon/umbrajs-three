@@ -34,7 +34,6 @@ requirejs(['three', '../../dist/umbrajs-three.amd'], function (THREE, UmbraRunti
     scene.add(model)
 
     // Point the camera at the model
-    model.scale.set(1.0, 1.0, -1.0)
     camera.position.set(-0.5, 0.1, 1)
 
     let animate = function () {

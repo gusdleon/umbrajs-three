@@ -12,6 +12,9 @@ function ModelObject (runtime, scene, renderer, platform) {
   this.wireframe = false
   this.freeze = false
 
+  // We need to flip the Z-axis since models are stored in "left-handed Y is up" coordinate system
+  this.scale.set(1.0, 1.0, -1.0)
+
   // Streaming debug info accessible through getInfo()
   this.stats = {
     numVisible: 0,
