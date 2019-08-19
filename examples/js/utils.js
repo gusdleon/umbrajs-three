@@ -54,3 +54,15 @@ function placeCamera (controls, model) {
   controls.object.position.set(p.x, p.y, p.z)
 }
 
+// Sets the camera near and far clip planes to match model scale
+function setCameraRange (camera, model) {
+  const bounds = model.getBounds()
+  const x = bounds.max.x - bounds.min.x
+  const y = bounds.max.y - bounds.min.y
+  const z = bounds.max.z - bounds.min.z
+  const diagonal = Math.sqrt(x * x + y * y + z * z)
+
+  camera.near = Math.max(1e-3, Math.min(0.1, diagonal / 1e4))
+  camera.far = Math.max(100, diagonal * 4)
+  camera.updateProjectionMatrix()
+}

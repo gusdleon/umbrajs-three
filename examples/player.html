@@ -97,6 +97,9 @@
     showNormals: false
   }
 
+  let gridHelper = new THREE.GridHelper(10, 10)
+  gridHelper.visible = false
+  scene.add(gridHelper)
 
   let gui = new dat.GUI()
   gui.close()
@@ -107,6 +110,7 @@
   gui.add(debug, 'streamingEnabled').name('Enable streaming')
   gui.add(model, 'freeze').name('Freeze LOD updates')
   gui.add(debug, 'dumpTextures').name('Dump textures')
+  gui.add(gridHelper, 'visible').name('Show grid')
   gui.add(debug, 'showNormals').name('Show normals').onChange(() => {
     model.opaqueMaterial = debug.showNormals ? normalDebugMaterial : regularMaterial
     model.materialPool.clear()
@@ -118,9 +122,6 @@
   light2.position.set(-1, -1, -1).normalize()
   scene.add(light1)
   scene.add(light2)
-
-  let gridHelper = new THREE.GridHelper(10, 10)
-  scene.add(gridHelper)
 
   // Add Umbra model to the scene
   scene.add(model)
@@ -152,20 +153,11 @@
 
     // Once connected create a bounding box visualization and getter view for the camera
     if (info.connected && !boundingBox) {
-      const bounds = model.getBounds()
-      let x = bounds.max.x - bounds.min.x
-      let y = bounds.max.y - bounds.min.y
-      let z = bounds.max.z - bounds.min.z
-
-      let diagonal = Math.sqrt(x * x + y * y + z * z)
-      camera.far = Math.max(100, diagonal * 4)
-      camera.updateProjectionMatrix()
-
-      boundingBox = makeBoundingBoxMesh(bounds)
+      setCameraRange(camera, model)
+      placeCamera (controls, model)
+      boundingBox = makeBoundingBoxMesh(model.getBounds())
       boundingBox.visible = false
       model.add(boundingBox)
-      controls.target = model.getCenter()
-      controls.object.position.y = bounds.min.y + y * 2
       gui.add(boundingBox, 'visible').name('Show bounds')
     }
 
