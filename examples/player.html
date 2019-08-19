@@ -29,7 +29,7 @@
   let projectID = params.get('project')
   let modelID = params.get('model')
   let quality = params.get('quality')
-  let leftHanded = params.get('leftHanded')
+  let handednessFlip = params.get('handednessFlip')
   let pbr = params.get('pbr')
 
   const canvas = document.querySelector('#c')
@@ -126,8 +126,8 @@
   // Add Umbra model to the scene
   scene.add(model)
 
-  if (leftHanded === '1') {
-    model.scale.set(1.0, 1.0, -1.0)
+  if (handednessFlip === '1') {
+    model.scale.set(1.0, 1.0, 1.0)
   }
 
   let timeToTriangle = 0

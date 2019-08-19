@@ -62,7 +62,7 @@ function setCameraRange (camera, model) {
   const z = bounds.max.z - bounds.min.z
   const diagonal = Math.sqrt(x * x + y * y + z * z)
 
-  camera.near = Math.max(1e-3, Math.min(0.1, diagonal / 1e4))
+  camera.near = Math.max(0.01, Math.min(1.0, diagonal / 1e4))
   camera.far = Math.max(100, diagonal * 4)
   camera.updateProjectionMatrix()
 }
