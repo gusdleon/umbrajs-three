@@ -1,4 +1,4 @@
-import { UnsignedByteType, RGBAFormat, UnsignedShort565Type, RGBFormat, LuminanceAlphaFormat, HalfFloatType, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT5_Format, RGB_ETC1_Format, RGBA_ASTC_4x4_Format, RGB_PVRTC_4BPPV1_Format, Object3D, Box3, Vector3, TangentSpaceNormalMap, Mesh, REVISION, MeshBasicMaterial, Matrix4, CompressedTexture, DataTexture, LinearFilter, LinearEncoding, sRGBEncoding, BufferGeometry, Sphere, Float32BufferAttribute } from 'three';
+import { UnsignedByteType, RGBAFormat, UnsignedShort565Type, RGBFormat, LuminanceAlphaFormat, HalfFloatType, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT5_Format, RGB_ETC1_Format, RGBA_ASTC_4x4_Format, RGB_PVRTC_4BPPV1_Format, Object3D, Box3, Vector3, TangentSpaceNormalMap, Mesh, MeshBasicMaterial, Matrix4, REVISION, CompressedTexture, DataTexture, LinearFilter, LinearEncoding, sRGBEncoding, BufferGeometry, Sphere, Float32BufferAttribute } from 'three';
 
 var UmbraNativeAPI = (function() {
   var _scriptDir = import.meta.url;
@@ -1216,6 +1216,23 @@ let UmbraLibrary = function (config) {
   })
 };
 
+function makeFormat (format, type, compressed) {
+  return { format, type, compressed }
+}
+
+const ThreeFormats = {
+  rgb24: makeFormat(RGBFormat, UnsignedByteType, false),
+  rgba32: makeFormat(RGBAFormat, UnsignedByteType, false),
+  rgb565: makeFormat(RGBFormat, UnsignedShort565Type, false),
+  rg8: makeFormat(LuminanceAlphaFormat, UnsignedByteType, false),
+  rg16f: makeFormat(LuminanceAlphaFormat, HalfFloatType, false),
+  bc1: makeFormat(RGBA_S3TC_DXT1_Format, UnsignedByteType, true),
+  bc3: makeFormat(RGBA_S3TC_DXT5_Format, UnsignedByteType, true),
+  etc1_rgb: makeFormat(RGB_ETC1_Format, UnsignedByteType, true),
+  astc_4x4: makeFormat(RGBA_ASTC_4x4_Format, UnsignedByteType, true),
+  pvrtc1_rgb4: makeFormat(RGB_PVRTC_4BPPV1_Format, UnsignedByteType, true)
+};
+
 const normalmapChunk = `
 #ifdef USE_NORMALMAP
 #ifdef USE_TANGENT
@@ -1310,23 +1327,6 @@ class ShaderPatcher {
   }
 }
 
-function makeFormat (format, type, compressed) {
-  return { format, type, compressed }
-}
-
-const ThreeFormats = {
-  rgb24: makeFormat(RGBFormat, UnsignedByteType, false),
-  rgba32: makeFormat(RGBAFormat, UnsignedByteType, false),
-  rgb565: makeFormat(RGBFormat, UnsignedShort565Type, false),
-  rg8: makeFormat(LuminanceAlphaFormat, UnsignedByteType, false),
-  rg16f: makeFormat(LuminanceAlphaFormat, HalfFloatType, false),
-  bc1: makeFormat(RGBA_S3TC_DXT1_Format, UnsignedByteType, true),
-  bc3: makeFormat(RGBA_S3TC_DXT5_Format, UnsignedByteType, true),
-  etc1_rgb: makeFormat(RGB_ETC1_Format, UnsignedByteType, true),
-  astc_4x4: makeFormat(RGBA_ASTC_4x4_Format, UnsignedByteType, true),
-  pvrtc1_rgb4: makeFormat(RGB_PVRTC_4BPPV1_Format, UnsignedByteType, true)
-};
-
 class ObjectPool {
   constructor () {
     this.usedList = [];
@@ -1361,16 +1361,6 @@ class ObjectPool {
   }
 }
 
-/**
- * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
- * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
- * THREE.Material instance using the textures and transparency flag in 'materialDesc'
- */
-function MeshDescriptor (geometry, materialDesc) {
-  this.geometry = geometry;
-  this.materialDesc = materialDesc;
-}
-
 function ModelObject (runtime, scene, renderer, platform) {
   Object3D.call(this);
 
@@ -1379,6 +1369,9 @@ function ModelObject (runtime, scene, renderer, platform) {
   this.opaqueMaterial = new MeshBasicMaterial();
   this.wireframe = false;
   this.freeze = false;
+
+  // We need to flip the Z-axis since models are stored in "left-handed Y is up" coordinate system
+  this.scale.set(1.0, 1.0, -1.0);
 
   // Streaming debug info accessible through getInfo()
   this.stats = {
@@ -1710,6 +1703,16 @@ ModelObject.prototype.dispose = function () {
   this.umbra.runtime.destroyScene(this.umbra.scene);
   // Runtime must be manually freed by the user with .dispose() of the API object
 };
+
+/**
+ * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
+ * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
+ * THREE.Material instance using the textures and transparency flag in 'materialDesc'
+ */
+function MeshDescriptor (geometry, materialDesc) {
+  this.geometry = geometry;
+  this.materialDesc = materialDesc;
+}
 
 function makeBoundingSphere (aabb) {
   const min = aabb[0];

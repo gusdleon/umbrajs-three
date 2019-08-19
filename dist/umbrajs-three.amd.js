@@ -1216,6 +1216,23 @@ define(['module', 'exports', 'three'], function (module, exports, THREE) { 'use 
     })
   };
 
+  function makeFormat (format, type, compressed) {
+    return { format, type, compressed }
+  }
+
+  const ThreeFormats = {
+    rgb24: makeFormat(THREE.RGBFormat, THREE.UnsignedByteType, false),
+    rgba32: makeFormat(THREE.RGBAFormat, THREE.UnsignedByteType, false),
+    rgb565: makeFormat(THREE.RGBFormat, THREE.UnsignedShort565Type, false),
+    rg8: makeFormat(THREE.LuminanceAlphaFormat, THREE.UnsignedByteType, false),
+    rg16f: makeFormat(THREE.LuminanceAlphaFormat, THREE.HalfFloatType, false),
+    bc1: makeFormat(THREE.RGBA_S3TC_DXT1_Format, THREE.UnsignedByteType, true),
+    bc3: makeFormat(THREE.RGBA_S3TC_DXT5_Format, THREE.UnsignedByteType, true),
+    etc1_rgb: makeFormat(THREE.RGB_ETC1_Format, THREE.UnsignedByteType, true),
+    astc_4x4: makeFormat(THREE.RGBA_ASTC_4x4_Format, THREE.UnsignedByteType, true),
+    pvrtc1_rgb4: makeFormat(THREE.RGB_PVRTC_4BPPV1_Format, THREE.UnsignedByteType, true)
+  };
+
   const normalmapChunk = `
 #ifdef USE_NORMALMAP
 #ifdef USE_TANGENT
@@ -1310,23 +1327,6 @@ roughnessFactor *= roughness;
     }
   }
 
-  function makeFormat (format, type, compressed) {
-    return { format, type, compressed }
-  }
-
-  const ThreeFormats = {
-    rgb24: makeFormat(THREE.RGBFormat, THREE.UnsignedByteType, false),
-    rgba32: makeFormat(THREE.RGBAFormat, THREE.UnsignedByteType, false),
-    rgb565: makeFormat(THREE.RGBFormat, THREE.UnsignedShort565Type, false),
-    rg8: makeFormat(THREE.LuminanceAlphaFormat, THREE.UnsignedByteType, false),
-    rg16f: makeFormat(THREE.LuminanceAlphaFormat, THREE.HalfFloatType, false),
-    bc1: makeFormat(THREE.RGBA_S3TC_DXT1_Format, THREE.UnsignedByteType, true),
-    bc3: makeFormat(THREE.RGBA_S3TC_DXT5_Format, THREE.UnsignedByteType, true),
-    etc1_rgb: makeFormat(THREE.RGB_ETC1_Format, THREE.UnsignedByteType, true),
-    astc_4x4: makeFormat(THREE.RGBA_ASTC_4x4_Format, THREE.UnsignedByteType, true),
-    pvrtc1_rgb4: makeFormat(THREE.RGB_PVRTC_4BPPV1_Format, THREE.UnsignedByteType, true)
-  };
-
   class ObjectPool {
     constructor () {
       this.usedList = [];
@@ -1361,16 +1361,6 @@ roughnessFactor *= roughness;
     }
   }
 
-  /**
-   * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
-   * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
-   * THREE.Material instance using the textures and transparency flag in 'materialDesc'
-   */
-  function MeshDescriptor (geometry, materialDesc) {
-    this.geometry = geometry;
-    this.materialDesc = materialDesc;
-  }
-
   function ModelObject (runtime, scene, renderer, platform) {
     THREE.Object3D.call(this);
 
@@ -1379,6 +1369,9 @@ roughnessFactor *= roughness;
     this.opaqueMaterial = new THREE.MeshBasicMaterial();
     this.wireframe = false;
     this.freeze = false;
+
+    // We need to flip the Z-axis since models are stored in "left-handed Y is up" coordinate system
+    this.scale.set(1.0, 1.0, -1.0);
 
     // Streaming debug info accessible through getInfo()
     this.stats = {
@@ -1710,6 +1703,16 @@ roughnessFactor *= roughness;
     this.umbra.runtime.destroyScene(this.umbra.scene);
     // Runtime must be manually freed by the user with .dispose() of the API object
   };
+
+  /**
+   * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
+   * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
+   * THREE.Material instance using the textures and transparency flag in 'materialDesc'
+   */
+  function MeshDescriptor (geometry, materialDesc) {
+    this.geometry = geometry;
+    this.materialDesc = materialDesc;
+  }
 
   function makeBoundingSphere (aabb) {
     const min = aabb[0];
