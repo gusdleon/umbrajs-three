@@ -271,6 +271,7 @@ ModelObject.prototype.update = function (camera) {
       // extra allocations and more importantly 'onBeforeCompile' calls.
       const material = this.materialPool.allocate(() => this.opaqueMaterial.clone())
       material.wireframe = this.wireframe
+      material.transparent = materialDesc.transparent
 
       material.onBeforeCompile = (shader, renderer) => {
         /**
