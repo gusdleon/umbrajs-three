@@ -15,8 +15,10 @@
     "url": "git+https://github.com/UmbraSoftware/umbrajs-three"
   },
   "dependencies": {
-    "three": "0.106.2",
     "@umbra3d/umbrajs": "1.6.24-rc2"
+  },
+  "peerDependencies": {
+    "three": "0.106.2"
   },
   "devDependencies": {
     "add": "^2.0.6",
