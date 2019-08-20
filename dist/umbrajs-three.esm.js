@@ -1723,8 +1723,10 @@ function makeBoundingSphere (aabb) {
 }
 
 function initWithThreeJS (renderer, userConfig) {
-  if (REVISION !== '106') {
-    throw new Error(`Only three.js r106 is supported. Got three.js ${REVISION} instead.`)
+  const supportedVersions = ['106', '107'];
+  if (!supportedVersions.includes(REVISION)) {
+    const names = supportedVersions.join(', ');
+    throw new Error(`Only three.js versions ${names} are supported. Got version ${REVISION} instead.`)
   }
 
   if (!renderer) {
@@ -1732,7 +1734,8 @@ function initWithThreeJS (renderer, userConfig) {
   }
 
   return UmbraLibrary(userConfig).then(Umbra => {
-    const features = Umbra.getPlatformFeatures(renderer.context);
+    const context = 'getContext' in renderer ? renderer.getContext() : renderer.context;
+    const features = Umbra.getPlatformFeatures(context);
 
     // Three.js does not support BC5 compressed formats so we manually disable them.
     features.capabilityMask &= ~formats.TextureCapability.BC5;
