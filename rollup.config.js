@@ -38,7 +38,7 @@ const config = [
     output: [
         makeOutput(`dist/umbrajs-three.js`, "umd"),
         makeOutput(`dist/umbrajs-three.amd.js`, "amd"),
-        makeOutput(`dist/umbrajs-three.esm.js`, "es")
+        makeOutput(`dist/umbrajs-three.esm.js`, "esm")
     ],
     external: ["three"],
     plugins: commonPlugins()
@@ -48,7 +48,7 @@ const config = [
     output: [
         makeOutput(`dist/umbrajs-three.min.js`, "umd"),
         makeOutput(`dist/umbrajs-three.amd.min.js`, "amd"),
-        makeOutput(`dist/umbrajs-three.esm.min.js`, "es")
+        makeOutput(`dist/umbrajs-three.esm.min.js`, "esm")
     ],
     external: ["three"],
     plugins: [

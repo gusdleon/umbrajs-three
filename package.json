@@ -2,7 +2,7 @@
   "name": "@umbra3d/umbrajs-three",
   "version": "0.1.8",
   "description": "",
-  "browser": "dist/umbrajs-three.js",
+  "main": "dist/umbrajs-three.js",
   "module": "dist/umbrajs-three.esm.js",
   "scripts": {
     "build": "rollup -c"
