@@ -57,7 +57,11 @@ export function initWithThreeJS (renderer, userConfig) {
           } else {
             return Umbra.getIDs(cloudArgs).then(
               IDs => {
-                scene.connect(cloudArgs.token, IDs.project, IDs.model)
+                if ('apiURL' in cloudArgs) {
+                  scene.connectToCustomAPI(cloudArgs.token, IDs.project, IDs.model, cloudArgs.apiURL)
+                } else {
+                  scene.connect(cloudArgs.token, IDs.project, IDs.model)
+                }
                 resolve(new ModelObject(runtime, scene, renderer, { features }))
               },
               () => {
