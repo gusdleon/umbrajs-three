@@ -70,7 +70,6 @@ function setCameraRange (camera, model) {
 function makeDebugMaterial(config, glslExpression) {
   let material = new THREE.MeshPhysicalMaterial(config)
   material.onBeforeCompile = (shader, renderer) => {
-    console.log(shader.fragmentShader)
     shader.fragmentShader = shader.fragmentShader.replace(/}$/, `gl_FragColor = vec4(${glslExpression}, 1.);\n}`)
   }
   return material
