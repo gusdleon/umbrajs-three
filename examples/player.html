@@ -73,10 +73,6 @@
     scene.background = new THREE.Color(0x222222)
   }
 
-  // The user can switch between this using the 'Show normals' toggle
-  let regularMaterial = model.opaqueMaterial
-  let normalDebugMaterial = new THREE.MeshNormalMaterial()
-
   let camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.01, 1000)
   let controls = new THREE.OrbitControls(camera, renderer.domElement)
 
@@ -86,6 +82,18 @@
   stats.showPanel(0) // Show FPS by default
   document.body.appendChild(stats.dom)
 
+  let materials = {
+    'Default': model.opaqueMaterial,
+    'Normal': new THREE.MeshNormalMaterial(),
+    'Tangent': makeDebugMaterial({}, 'vec3(0.5)+tangent.xyz*0.5'),
+    'Roughness map': makeDebugMaterial({}, 'vec3(roughnessFactor)'),
+    'Metalness map': makeDebugMaterial({}, 'vec3(metalnessFactor)'),
+    'Albedo map': makeDebugMaterial({}, 'diffuseColor.rgb'),
+    'Alpha map': makeDebugMaterial({}, 'vec3(diffuseColor.a)'),
+    'Diffuse lighting': makeDebugMaterial({}, 'reflectedLight.directDiffuse + reflectedLight.indirectDiffuse'),
+    'Specular lighting': makeDebugMaterial({}, 'reflectedLight.directSpecular + reflectedLight.indirectSpecular')
+  }
+
   let debug = {
     streamingInfo: false,
     modelInfo: false,
@@ -94,7 +102,7 @@
       let textures = Array.from(Umbra.runtime.assets.values()).filter(x => x.isTexture)
       console.log(textures)
     },
-    showNormals: false
+    materialName: 'Default'
   }
 
   let gridHelper = new THREE.GridHelper(10, 10)
@@ -111,9 +119,19 @@
   gui.add(model, 'freeze').name('Freeze LOD updates')
   gui.add(debug, 'dumpTextures').name('Dump textures')
   gui.add(gridHelper, 'visible').name('Show grid')
-  gui.add(debug, 'showNormals').name('Show normals').onChange(() => {
-    model.opaqueMaterial = debug.showNormals ? normalDebugMaterial : regularMaterial
+  gui.add(debug, 'materialName', Object.keys(materials)).name('Material').onChange(() => {
+    model.opaqueMaterial = materials[debug.materialName]
     model.materialPool.clear()
+    /**
+     * HACK: We force three.js to recompile all shaders because otherwise
+     * different debug materials would always use the same shader. The
+     * reason is that three.js reads the onBeforeCompile function code
+     * to decide when to recompile a shader. For debug materials this
+     * code is always the same which is why we force a recompile.
+     *
+     * This leaks all GL shader and program handles.
+     */
+    renderer.info.programs.length = 0
   })
 
   let light1 = new THREE.DirectionalLight(0xffffff, 1.0)
