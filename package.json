@@ -18,7 +18,7 @@
     "@umbra3d/umbrajs": "1.6.24-rc3"
   },
   "peerDependencies": {
-    "three": "0.107.0"
+    "three": "0.106.2 || 0.107.0"
   },
   "devDependencies": {
     "add": "^2.0.6",
