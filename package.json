@@ -1,6 +1,6 @@
 {
   "name": "@umbra3d/umbrajs-three",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "",
   "main": "dist/umbrajs-three.js",
   "module": "dist/umbrajs-three.esm.js",
@@ -15,7 +15,7 @@
     "url": "git+https://github.com/UmbraSoftware/umbrajs-three"
   },
   "dependencies": {
-    "@umbra3d/umbrajs": "1.6.24-rc3"
+    "@umbra3d/umbrajs": "1.6.24-rc4"
   },
   "peerDependencies": {
     "three": "0.106.2 || 0.107.0"

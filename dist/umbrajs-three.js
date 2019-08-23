@@ -412,6 +412,32 @@
         Module.sceneConnect(this.ptr, this.creds, token, projectID, modelID);
       }
 
+      connectToCustomAPI (token, projectID, modelID, apiURL) {
+        if (typeof token !== 'string') {
+          throw new TypeError('token should be a string')
+        }
+        if (typeof projectID !== 'string') {
+          throw new TypeError('projectID should be a string')
+        }
+        if (typeof modelID !== 'string') {
+          throw new TypeError('modelID should be a string')
+        }
+        if (typeof apiURL !== 'string') {
+          throw new TypeError('apiURL should be a string')
+        }
+
+        if (token.indexOf('#') !== -1) {
+          throw new Error('Use the "apiURL" argument instead of a magic token.')
+        }
+
+        if (apiURL.length > 0 && apiURL[apiURL.length - 1] !== '/') {
+          apiURL = apiURL + '/';
+        }
+
+        const magicToken = `${apiURL}#token`;
+        Module.sceneConnect(this.ptr, this.creds, magicToken, projectID, modelID);
+      }
+
       connectWithURL (url) {
         if (typeof url !== 'string') {
           throw new TypeError('URL should be a string')
@@ -1633,6 +1659,7 @@ roughnessFactor *= roughness;
         // extra allocations and more importantly 'onBeforeCompile' calls.
         const material = this.materialPool.allocate(() => this.opaqueMaterial.clone());
         material.wireframe = this.wireframe;
+        material.transparent = materialDesc.transparent;
 
         material.onBeforeCompile = (shader, renderer) => {
           /**
@@ -1762,7 +1789,11 @@ roughnessFactor *= roughness;
             } else {
               return Umbra.getIDs(cloudArgs).then(
                 IDs => {
-                  scene.connect(cloudArgs.token, IDs.project, IDs.model);
+                  if ('apiURL' in cloudArgs) {
+                    scene.connectToCustomAPI(cloudArgs.token, IDs.project, IDs.model, cloudArgs.apiURL);
+                  } else {
+                    scene.connect(cloudArgs.token, IDs.project, IDs.model);
+                  }
                   resolve(new ModelObject(runtime, scene, renderer, { features }));
                 },
                 () => {
