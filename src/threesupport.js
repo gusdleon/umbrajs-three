@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { UmbraLibrary, Formats } from '@umbra3d/umbrajs'
+import { initUmbra, Formats } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats.js'
 import { ModelObject } from './ModelObject.js'
 
@@ -32,14 +32,14 @@ export function initWithThreeJS (renderer, userConfig) {
     throw new TypeError('"renderer" should be of type THREE.WebGLRenderer')
   }
 
-  return UmbraLibrary(userConfig).then(Umbra => {
+  return initUmbra(userConfig).then(Umbra => {
     const context = 'getContext' in renderer ? renderer.getContext() : renderer.context
     const features = Umbra.getPlatformFeatures(context)
 
     // Three.js does not support BC5 compressed formats so we manually disable them.
     features.capabilityMask &= ~Formats.TextureCapability.BC5
 
-    let runtime = new Umbra.wrappers.Runtime(new Umbra.wrappers.Client(), features)
+    let runtime = Umbra.createRuntime(features)
 
     /**
      * Creating a model is an asynchronous operation because we might need to query the Project API
