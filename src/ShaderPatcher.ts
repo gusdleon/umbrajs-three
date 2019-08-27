@@ -55,7 +55,10 @@ roughnessFactor *= roughness;
  * custom shaders allows the application to use its own materials with Umbrafied models.
  */
 class ShaderPatcher {
-  constructor (formats) {
+  flipTangent: boolean
+  defines: string
+
+  constructor (formats: string[]) {
     /*
      * World space transform can swap handedness which isn't handled by three.js in tangent space
      * normal maps so we need to be able to flip them ourselves.
@@ -65,18 +68,18 @@ class ShaderPatcher {
     // Texture format feature flags
     this.defines = ''
 
-    if (formats.formats.indexOf('bc3') > -1) {
+    if (formats.indexOf('bc3') > -1) {
       this.defines += '#define UMBRA_TEXTURE_SUPPORT_BC3\n'
     }
-    if (formats.formats.indexOf('bc5') > -1) {
+    if (formats.indexOf('bc5') > -1) {
       this.defines += '#define UMBRA_TEXTURE_SUPPORT_BC5\n'
     }
-    if (formats.formats.indexOf('astc_4x4') > -1) {
+    if (formats.indexOf('astc_4x4') > -1) {
       this.defines += '#define UMBRA_TEXTURE_SUPPORT_ASTC\n'
     }
   }
 
-  process (shader, renderer) {
+  process (shader: THREE.Shader, renderer: THREE.WebGLRenderer) {
     let frag = shader.fragmentShader
 
     if (this.flipTangent) {

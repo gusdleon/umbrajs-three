@@ -1,3 +1,5 @@
+/* eslint  @typescript-eslint/camelcase: 0 */
+
 import * as THREE from 'three'
 
 function makeFormat (format, type, compressed) {

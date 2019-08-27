@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import { initUmbra, Formats } from '@umbra3d/umbrajs'
-import { ThreeFormats } from './ThreeFormats.js'
-import { ModelObject } from './ModelObject.js'
+import { initUmbra, Formats, Math, ConnectionArgs, AssetJob } from '@umbra3d/umbrajs'
+import { ThreeFormats } from './ThreeFormats'
+import { ModelObject } from './ModelObject'
 
 /**
  * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
@@ -13,7 +13,7 @@ function MeshDescriptor (geometry, materialDesc) {
   this.materialDesc = materialDesc
 }
 
-function makeBoundingSphere (aabb) {
+function makeBoundingSphere (aabb: Math.BoundingBox) {
   const min = aabb[0]
   const max = aabb[1]
   const size = new THREE.Vector3(max[0] - min[0], max[1] - min[1], max[2] - min[2])
@@ -21,7 +21,7 @@ function makeBoundingSphere (aabb) {
   return new THREE.Sphere(pos, size.length())
 }
 
-export function initWithThreeJS (renderer, userConfig) {
+export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {wasmURL?: string}) {
   const supportedVersions = ['106', '107']
   if (!supportedVersions.includes(THREE.REVISION)) {
     const names = supportedVersions.join(', ')
@@ -33,7 +33,13 @@ export function initWithThreeJS (renderer, userConfig) {
   }
 
   return initUmbra(userConfig).then(Umbra => {
-    const context = 'getContext' in renderer ? renderer.getContext() : renderer.context
+    let context: WebGLRenderingContext
+    // three.js r106 has no 'getContext'
+    if ('getContext' in renderer) {
+      context = renderer.getContext()
+    } else {
+      context = (renderer as any).context
+    }
     const features = Umbra.getPlatformFeatures(context)
 
     // Three.js does not support BC5 compressed formats so we manually disable them.
@@ -46,28 +52,32 @@ export function initWithThreeJS (renderer, userConfig) {
      * to map the given string names into numeric IDs. If IDs or URL are used then the promise will
      * resolve immediately.
      */
-    let createModel = cloudArgs => {
+    const createModel = (cloudArgs: (ConnectionArgs & { apiURL?: string }) | { url: string }) => {
       const scene = runtime.createScene()
 
       return new Promise((resolve, reject) => {
         try {
           if ('url' in cloudArgs) {
             scene.connectWithURL(cloudArgs.url)
-            resolve(new ModelObject(runtime, scene, renderer, { features }))
-          } else {
+            resolve(new ModelObject(runtime, scene, renderer, features))
+          } else if ('token' in cloudArgs) {
             return Umbra.getIDs(cloudArgs).then(
+              // on resolve
               IDs => {
                 if ('apiURL' in cloudArgs) {
                   scene.connectToCustomAPI(cloudArgs.token, IDs.project, IDs.model, cloudArgs.apiURL)
                 } else {
                   scene.connect(cloudArgs.token, IDs.project, IDs.model)
                 }
-                resolve(new ModelObject(runtime, scene, renderer, { features }))
+                resolve(new ModelObject(runtime, scene, renderer, features))
               },
+              // on reject
               () => {
-                console.log('error')
-                throw new Error(`Couldn't fetch IDs matching names ${cloudArgs.project} and ${cloudArgs.model}`)
+                const args = cloudArgs as any
+                throw new Error(`Couldn't fetch IDs matching arguments ${args.project} and ${args.model}`)
               })
+          } else {
+            throw new Error('Invalid connection arguments')
           }
         } catch (e) {
           runtime.destroyScene(scene)
@@ -80,7 +90,7 @@ export function initWithThreeJS (renderer, userConfig) {
      * This launches new downloads and hands out generated assets to three.js.
      * Should be called at the beginning of a frame.
      */
-    let update = function (timeBudget = 10) {
+    const update = function (timeBudget = 10) {
       const handlers = {
         CreateMaterial: job => {
           runtime.addAsset(job, job.data)
@@ -149,7 +159,7 @@ export function initWithThreeJS (renderer, userConfig) {
           }
           runtime.removeAsset(job, job.data)
         },
-        CreateMesh: job => {
+        CreateMesh: (job: AssetJob.CreateMesh) => {
           /**
            * The mesh creation job gives us all the vertex data in job.data.buffers.
            * The buffers are only valid during this handler, and the memory will be
@@ -158,9 +168,9 @@ export function initWithThreeJS (renderer, userConfig) {
            */
 
           const geometry = new THREE.BufferGeometry()
-          const indexArray = job.data.buffers['index'].getArray()
+          const indexArray = job.data.buffers['index'].getArray() as any
           const indices = Array.from(indexArray)
-          geometry.setIndex(indices)
+          geometry.setIndex(indices as number[])
           geometry.boundingSphere = makeBoundingSphere(job.data.bounds)
 
           const attribs = {

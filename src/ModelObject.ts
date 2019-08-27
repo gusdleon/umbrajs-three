@@ -1,9 +1,11 @@
 import * as THREE from 'three'
-import { Formats } from '@umbra3d/umbrajs'
-import { ShaderPatcher } from './ShaderPatcher.js'
-import { ObjectPool } from './ObjectPool.js'
+import { Formats, PlatformFeatures, Runtime, Scene } from '@umbra3d/umbrajs'
+import { ShaderPatcher } from './ShaderPatcher'
+import { ObjectPool } from './ObjectPool'
 
-function ModelObject (runtime, scene, renderer, platform) {
+type UmbraMesh = THREE.Mesh & { isUmbraMesh: true }
+
+function ModelObject (runtime: Runtime, scene: Scene, renderer: THREE.WebGLRenderer, features: PlatformFeatures) {
   THREE.Object3D.call(this)
 
   // User editable config
@@ -29,8 +31,8 @@ function ModelObject (runtime, scene, renderer, platform) {
   this.renderer = renderer
   this.cameraToView = new Map()
   this.viewLastUsed = new Map()
-  this.materialPool = new ObjectPool()
-  this.shaderPatcher = new ShaderPatcher(platform.features)
+  this.materialPool = new ObjectPool<THREE.Material>()
+  this.shaderPatcher = new ShaderPatcher(features.formats)
   this.name = 'UmbraModel'
 
   // Add API objects under their own object for clarity
@@ -52,7 +54,7 @@ ModelObject.prototype = Object.create(THREE.Object3D.prototype)
 ModelObject.prototype.constructor = THREE.Object3D
 
 ModelObject.prototype.getInfo = function () {
-  let info = { connected: this.umbra.scene.isConnected() }
+  const info = { connected: this.umbra.scene.isConnected() }
   if (info.connected) {
     info['sceneInfo'] = this.umbra.scene.getInfo()
   }
@@ -69,13 +71,13 @@ ModelObject.prototype.getBounds = function () {
   const bounds = info.bounds
   const min = bounds.min
   const max = bounds.max
-  let box = new THREE.Box3(new THREE.Vector3(min[0], min[1], min[2]), new THREE.Vector3(max[0], max[1], max[2]))
+  const box = new THREE.Box3(new THREE.Vector3(min[0], min[1], min[2]), new THREE.Vector3(max[0], max[1], max[2]))
   return box
 }
 
-function findLights (scene) {
+function findLights (scene: THREE.Scene) {
   const lights = []
-  scene.traverseVisible(obj => {
+  scene.traverseVisible((obj: any) => {
     if (obj.isDirectionalLight && obj.castShadow) {
       lights.push(obj)
     }
@@ -87,19 +89,19 @@ function findLights (scene) {
 ModelObject.prototype.getCenter = function () {
   const bounds = this.getBounds()
   bounds.applyMatrix4(this.matrixWorld)
-  let center = new THREE.Vector3()
+  const center = new THREE.Vector3()
   bounds.getCenter(center)
   return center
 }
 
-ModelObject.prototype.pruneOldViews = function (frame) {
+ModelObject.prototype.pruneOldViews = function (frame: number) {
   /**
    * We get no notification when cameras are removed from the scene graph
    * so we'll go and remove old views.
    */
-  for (let [view, lastUsed] of this.viewLastUsed) {
+  for (const [view, lastUsed] of this.viewLastUsed) {
     if (frame - lastUsed > 1000) {
-      for (let [cam, view2] of this.cameraToView) {
+      for (const [cam, view2] of this.cameraToView) {
         if (view2 === view) {
           this.cameraToView.delete(cam)
           break
@@ -111,7 +113,9 @@ ModelObject.prototype.pruneOldViews = function (frame) {
   }
 }
 
-ModelObject.prototype.update = function (camera) {
+type UmbraCamera = THREE.Camera & { umbraStreamingPosition?: THREE.Vector3 }
+
+ModelObject.prototype.update = function (camera: UmbraCamera) {
   let scene
 
   if (this.freeze) {
@@ -129,7 +133,7 @@ ModelObject.prototype.update = function (camera) {
     return
   }
 
-  let lights = []
+  let lights: THREE.DirectionalLight[] = []
 
   if (this.renderer.shadowMap.enabled) {
     lights = findLights(scene)
@@ -142,7 +146,7 @@ ModelObject.prototype.update = function (camera) {
     this.cameraToView.set(camera, view)
   }
 
-  const frame = this.renderer.info.render.frame
+  const frame: number = this.renderer.info.render.frame
 
   this.viewLastUsed.set(view, frame)
   this.pruneOldViews(frame)
@@ -163,8 +167,8 @@ ModelObject.prototype.update = function (camera) {
   this.matrixWorldInverse.getInverse(camera.matrixWorld)
   this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse)
 
-  let dir = this.dirVector
-  let vector3 = this.tempVector
+  const dir = this.dirVector
+  const vector3 = this.tempVector
 
   const lightDirections = lights.map(light => {
     dir.setFromMatrixPosition(light.target.matrixWorld)
@@ -226,7 +230,7 @@ ModelObject.prototype.update = function (camera) {
    */
 
   // First filter away last frame's meshes
-  let newChildren = []
+  const newChildren = []
   for (let i = 0; i < this.children.length; i++) {
     if (!this.children[i].isUmbraMesh) {
       newChildren.push(this.children[i])
@@ -235,9 +239,9 @@ ModelObject.prototype.update = function (camera) {
 
   this.children = newChildren
 
-  let shadowCasters = []
+  const shadowCasters = []
 
-  let proxy = new THREE.Object3D()
+  const proxy = new THREE.Object3D() as any
   proxy.isLOD = true
   proxy.autoUpdate = true
   proxy.update = cam => {
@@ -313,7 +317,7 @@ ModelObject.prototype.update = function (camera) {
        * gets cleared every frame. However if this still causes too much allocations
        * an object pool could help.
        */
-      const mesh = new THREE.Mesh(geometry, material)
+      const mesh = new THREE.Mesh(geometry, material) as UmbraMesh
       mesh.isUmbraMesh = true
       mesh.matrixWorld.copy(this.matrixWorld)
       mesh.castShadow = this.castShadow

@@ -5,7 +5,11 @@
   "main": "dist/umbrajs-three.js",
   "module": "dist/umbrajs-three.esm.js",
   "scripts": {
-    "build": "rollup -c"
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build:js": "rollup -c",
+    "build:types": "tsc --declaration --emitDeclarationOnly",
+    "build": "npm run build:types && npm run build:js"
   },
   "author": "",
   "license": "MIT",
@@ -21,8 +25,13 @@
     "three": "0.106.2 || 0.107.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
     "add": "^2.0.6",
-    "eslint": "^6.0.1",
+    "eslint": "^6.2.2",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-html": "^6.0.0",
     "eslint-plugin-import": "^2.18.0",
@@ -30,9 +39,11 @@
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-standard": "^4.0.0",
     "rollup": "^1.15.0",
+    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-eslint": "^7.0.0",
-    "rollup-plugin-node-resolve": "^5.0.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.0.0",
-    "terser": "^4.0.0"
+    "terser": "^4.0.0",
+    "typescript": "^3.5.3"
   }
 }
