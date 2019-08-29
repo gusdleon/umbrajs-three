@@ -1,0 +1,101 @@
+<html>
+    <head>
+      <title>Simple Example</title>
+        <link rel="stylesheet" type="text/css" href="samples.css">
+    </head>
+    <body>
+        <span class="message">
+          This is an example of how to deinitialize <a href="https://github.com/UmbraSoftware/umbrajs-three">umbrajs-three</a>.<br>
+        </span>
+        <pre class="message" id="status" style="top:50px;"></pre>
+
+        <canvas id="c"></canvas>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/107/three.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+'use strict';
+
+  function setStatus(msg) {
+    console.log(msg)
+    document.querySelector('#status').innerHTML += msg + '\n'
+  }
+
+  (async function () {
+      // First create a three.js renderer
+      const canvas = document.querySelector('#c')
+      let renderer = new THREE.WebGLRenderer({ canvas })
+
+      setStatus('Initializing Umbra')
+      let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+  
+      // Create a 3D model object
+      let model = await Umbra.createModel({
+        token: 'pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699',
+        projectID: '745415655',
+        modelID: '745415871'
+      })
+
+      setStatus('Setting up scene')
+      // Set up a basic three.js scene
+      let scene = new THREE.Scene()
+      scene.background = new THREE.Color(0x222222)
+      let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000)
+      let controls = new THREE.OrbitControls(camera, canvas)
+
+      renderer.setSize(window.innerWidth, window.innerHeight)
+
+      // Add the 3D model to the scene
+      scene.add(model)
+
+      // Position the model so it's visible
+      model.position.set(0.5, 0.1, -0.1)
+      model.scale.set(1.0, 1.0, -1.0)
+      model.updateMatrix()
+
+      // Point the camera at the model
+      camera.position.set(-0.3878, 2.99, -1.033)
+      controls.update()
+
+      let frame = 0
+
+      setStatus('Running animation')
+      let animate = function () {
+        camera.position.y -= 0.1 * frame/1000
+
+        // Stop after we've been streaming for a while
+        if (renderer.info.render.triangles > 1000 && frame > 200) {
+          setStatus('Animation finished')
+          setStatus('Cleaning up')
+
+          // Dispose must be called for each model
+          model.dispose()
+          // This frees the Emscripten resources
+          Umbra.dispose()
+
+          setStatus('Deinitialization complete')
+          return
+        } else {
+          // Find visible blocks and update streaming
+          Umbra.update()
+
+          // Regular three.js update
+          controls.update()
+          renderer.render(scene, camera)
+          requestAnimationFrame(animate)
+        }
+
+        frame++
+      }
+
+      // Start the animation loop
+      animate()
+    })()
+
+        </script>
+    </body>
+</html>
+
+
