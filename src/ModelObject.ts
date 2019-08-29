@@ -346,7 +346,19 @@ ModelObject.prototype.update = function (camera: UmbraCamera) {
 }
 
 ModelObject.prototype.dispose = function () {
-  this.umbra.runtime.destroyView(this.umbra.view)
+  for (let view of this.cameraToView.values()) {
+    this.umbra.runtime.destroyView(view)
+  }
+  
+  // Remove all Umbra meshes from children
+  const meshes = this.children.filter(x => x.isUmbraMesh)
+  this.children = this.children.filter(x => !x.isUmbraMesh)
+
+  // Dispose all cached materials
+  this.materialPool.freeAll(mat => mat.dispose())
+
+  // We don't dispose mesh geometries here because they are managed by the Runtime
+
   this.umbra.runtime.destroyScene(this.umbra.scene)
   // Runtime must be manually freed by the user with .dispose() of the API object
 }

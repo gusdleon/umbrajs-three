@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { initUmbra, Formats, Math, ConnectionArgs, AssetJob } from '@umbra3d/umbrajs'
+import { initUmbra, deinitUmbra, Formats, Math, ConnectionArgs, AssetJob } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
 import { ModelObject } from './ModelObject'
 
@@ -228,8 +228,19 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
       getStats,
       update: update,
       dispose: () => {
+        runtime.assets.forEach((asset, userPtr) => {
+          // TODO: Use separate types for assets instead
+          if ('geometry' in asset) {
+            asset.geometry.dispose()
+          }
+          if ('dispose' in asset) {
+            asset.dispose()
+          }
+        })
         runtime.destroy()
         runtime = undefined
+
+        deinitUmbra(Umbra)
       },
       lib: Umbra,
       runtime: runtime
