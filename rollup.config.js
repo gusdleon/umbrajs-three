@@ -39,7 +39,7 @@ const makeOutput = (name, format) => ({
 
 const config = [
   {
-    input: 'src/Addon.ts',
+    input: 'src/index.ts',
     output: [
         makeOutput(`dist/umbrajs-three.js`, 'umd'),
         makeOutput(`dist/umbrajs-three.amd.js`, 'amd'),
@@ -49,7 +49,7 @@ const config = [
     plugins: commonPlugins()
   },
   {
-    input: 'src/Addon.ts',
+    input: 'src/index.ts',
     output: [
         makeOutput(`dist/umbrajs-three.min.js`, 'umd'),
         makeOutput(`dist/umbrajs-three.amd.min.js`, 'amd'),
