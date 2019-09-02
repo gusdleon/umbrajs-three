@@ -8,7 +8,7 @@ import {
   AssetJob,
 } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
-import { ModelObject, MeshDescriptor } from './ModelObject'
+import { Model, MeshDescriptor } from './Model'
 
 function makeBoundingSphere(aabb: Math.BoundingBox) {
   const min = aabb[0]
@@ -64,14 +64,14 @@ export function initWithThreeJS(
      */
     const createModel = (
       cloudArgs: (ConnectionArgs & { apiURL?: string }) | { url: string },
-    ): Promise<ModelObject> => {
+    ): Promise<Model> => {
       const scene = runtime.createScene()
 
       return new Promise((resolve, reject) => {
         try {
           if ('url' in cloudArgs) {
             scene.connectWithURL(cloudArgs.url)
-            resolve(new ModelObject(runtime, scene, renderer, features))
+            resolve(new Model(runtime, scene, renderer, features))
           } else if ('token' in cloudArgs) {
             return Umbra.getIDs(cloudArgs).then(
               // on resolve
@@ -86,7 +86,7 @@ export function initWithThreeJS(
                 } else {
                   scene.connect(cloudArgs.token, IDs.project, IDs.model)
                 }
-                resolve(new ModelObject(runtime, scene, renderer, features))
+                resolve(new Model(runtime, scene, renderer, features))
               },
               // on reject
               () => {
@@ -138,7 +138,7 @@ export function initWithThreeJS(
           // eslint-disable-next-line new-cap
           const pixelData = new buffer.type(buffer.getArray().slice())
 
-          let tex
+          let tex: THREE.CompressedTexture | THREE.DataTexture
           if (glformat.compressed) {
             const mip = {
               width: info.width,

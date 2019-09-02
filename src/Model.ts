@@ -22,7 +22,7 @@ export interface MeshDescriptor {
   materialDesc
 }
 
-export class ModelObject extends THREE.Object3D {
+export class Model extends THREE.Object3D {
   // User editable config
   quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
   opaqueMaterial = new THREE.MeshBasicMaterial()
@@ -30,18 +30,17 @@ export class ModelObject extends THREE.Object3D {
   freeze = false
 
   // We need to present ourselves as a LOD object to get the update() call
-  isLOD = true
-  autoUpdate = true
-  materialPool = new ObjectPool<THREE.Material>()
-  name = 'UmbraModel'
+  readonly isLOD = true
+  readonly autoUpdate = true
+  readonly name = 'UmbraModel'
 
   private renderer: THREE.WebGLRenderer
 
+  private materialPool = new ObjectPool<THREE.Material>()
   private cameraToView = new Map<THREE.Camera, View>()
   private viewLastUsed = new Map<View, number>()
   private shaderPatcher: ShaderPatcher
 
-  // Streaming debug info accessible through getInfo()
   private stats = {
     numVisible: 0,
     numShadowCasters: 0,
@@ -115,7 +114,7 @@ export class ModelObject extends THREE.Object3D {
     return center
   }
 
-  pruneOldViews(frame: number) {
+  private pruneOldViews(frame: number): void {
     /**
      * We get no notification when cameras are removed from the scene graph
      * so we'll go and remove old views.
@@ -396,7 +395,6 @@ export class ModelObject extends THREE.Object3D {
     }
 
     // Remove all Umbra meshes from children
-    const meshes = this.children.filter((x: UmbraMesh) => x.isUmbraMesh)
     this.children = this.children.filter((x: UmbraMesh) => !x.isUmbraMesh)
 
     // Dispose all cached materials
