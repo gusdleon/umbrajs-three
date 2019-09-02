@@ -11,10 +11,19 @@
     <script>
 'use strict';
 
+function write(message) {
+  let info = document.getElementById('info')
+  info.textContent += 'Invalid token'
+}
+
 (async function () {
   let token = new URL(window.location.href).searchParams.get('key')
 
-  let info = document.getElementById('info')
+  if (!token) {
+      write('Invalid token. Set "key" URL parameter to view projects.')
+      return
+  }
+
   info.textContent = 'Fetching projects...\n'
 
   var renderer = new THREE.WebGLRenderer()
@@ -24,21 +33,21 @@
     // Call the low-level umbrajs lib directly
     let projects = await Umbra.lib.getProjects(token)
 
-    info.textContent += `Found ${projects.length} projects:\n`
+    write(`Found ${projects.length} projects:\n`)
 
     // Print out project infos
     for (let i = 0; i < projects.length; i++) {
       const p = projects[i]
-      info.textContent += `${p.name} (${p.id}) (${p.organizationName})\n`
+      write(`${p.name} (${p.id}) (${p.organizationName})\n`)
       console.log(projects[i])
       for (let j = 0; j < p.models.length; j++) {
         const m = p.models[j]
         const isPublic = m.publicShare ? 'public' : 'private'
-        info.textContent += `    ${m.name} ${m.id} ${isPublic}\n`
+        write(`    ${m.name} ${m.id} ${isPublic}\n`)
       }
     }
   } catch (e) {
-    info.textContent += `Failed: ${e}`
+    write(`Failed: ${e}`)
   }
 })()
     </script>
