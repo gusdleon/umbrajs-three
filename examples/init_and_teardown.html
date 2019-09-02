@@ -1,6 +1,6 @@
 <html>
     <head>
-      <title>Simple Example</title>
+      <title>Init & deinit example</title>
         <link rel="stylesheet" type="text/css" href="samples.css">
     </head>
     <body>
@@ -65,7 +65,8 @@
       let animate = function () {
         camera.position.y -= 0.1 * frame/1000
 
-        // Stop after we've been streaming for a while
+        // Stop after we've been streaming for a while.
+        // We must do this before we've called Umbra.update() on this frame.
         if (renderer.info.render.triangles > 1000 && frame > 200) {
           setStatus('Animation finished')
           setStatus('Cleaning up')
