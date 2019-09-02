@@ -2,7 +2,7 @@
 
 import * as THREE from 'three'
 
-function makeFormat (format, type, compressed) {
+function makeFormat(format, type, compressed) {
   return { format, type, compressed }
 }
 
@@ -15,8 +15,16 @@ const ThreeFormats = {
   bc1: makeFormat(THREE.RGBA_S3TC_DXT1_Format, THREE.UnsignedByteType, true),
   bc3: makeFormat(THREE.RGBA_S3TC_DXT5_Format, THREE.UnsignedByteType, true),
   etc1_rgb: makeFormat(THREE.RGB_ETC1_Format, THREE.UnsignedByteType, true),
-  astc_4x4: makeFormat(THREE.RGBA_ASTC_4x4_Format, THREE.UnsignedByteType, true),
-  pvrtc1_rgb4: makeFormat(THREE.RGB_PVRTC_4BPPV1_Format, THREE.UnsignedByteType, true)
+  astc_4x4: makeFormat(
+    THREE.RGBA_ASTC_4x4_Format,
+    THREE.UnsignedByteType,
+    true,
+  ),
+  pvrtc1_rgb4: makeFormat(
+    THREE.RGB_PVRTC_4BPPV1_Format,
+    THREE.UnsignedByteType,
+    true,
+  ),
 }
 
 export { ThreeFormats }

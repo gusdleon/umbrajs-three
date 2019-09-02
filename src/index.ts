@@ -1,31 +1,41 @@
 import * as THREE from 'three'
-import { initUmbra, deinitUmbra, Formats, Math, ConnectionArgs, AssetJob } from '@umbra3d/umbrajs'
+import {
+  initUmbra,
+  deinitUmbra,
+  Formats,
+  Math,
+  ConnectionArgs,
+  AssetJob,
+} from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
-import { ModelObject } from './ModelObject'
+import { ModelObject, MeshDescriptor } from './ModelObject'
 
-/**
- * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
- * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
- * THREE.Material instance using the textures and transparency flag in 'materialDesc'
- */
-function MeshDescriptor (geometry, materialDesc) {
-  this.geometry = geometry
-  this.materialDesc = materialDesc
-}
-
-function makeBoundingSphere (aabb: Math.BoundingBox) {
+function makeBoundingSphere(aabb: Math.BoundingBox) {
   const min = aabb[0]
   const max = aabb[1]
-  const size = new THREE.Vector3(max[0] - min[0], max[1] - min[1], max[2] - min[2])
-  const pos = new THREE.Vector3(min[0] + size.x * 0.5, min[1] + size.y * 0.5, min[2] + size.z * 0.5)
+  const size = new THREE.Vector3(
+    max[0] - min[0],
+    max[1] - min[1],
+    max[2] - min[2],
+  )
+  const pos = new THREE.Vector3(
+    min[0] + size.x * 0.5,
+    min[1] + size.y * 0.5,
+    min[2] + size.z * 0.5,
+  )
   return new THREE.Sphere(pos, size.length())
 }
 
-export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {wasmURL?: string}) {
+export function initWithThreeJS(
+  renderer: THREE.WebGLRenderer,
+  userConfig: { wasmURL?: string },
+) {
   const supportedVersions = ['106', '107']
   if (!supportedVersions.includes(THREE.REVISION)) {
     const names = supportedVersions.join(', ')
-    throw new Error(`Only three.js versions ${names} are supported. Got version ${THREE.REVISION} instead.`)
+    throw new Error(
+      `Only three.js versions ${names} are supported. Got version ${THREE.REVISION} instead.`,
+    )
   }
 
   if (!renderer) {
@@ -52,7 +62,9 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
      * to map the given string names into numeric IDs. If IDs or URL are used then the promise will
      * resolve immediately.
      */
-    const createModel = (cloudArgs: (ConnectionArgs & { apiURL?: string }) | { url: string }) => {
+    const createModel = (
+      cloudArgs: (ConnectionArgs & { apiURL?: string }) | { url: string },
+    ): Promise<ModelObject> => {
       const scene = runtime.createScene()
 
       return new Promise((resolve, reject) => {
@@ -65,7 +77,12 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
               // on resolve
               IDs => {
                 if ('apiURL' in cloudArgs) {
-                  scene.connectToCustomAPI(cloudArgs.token, IDs.project, IDs.model, cloudArgs.apiURL)
+                  scene.connectToCustomAPI(
+                    cloudArgs.token,
+                    IDs.project,
+                    IDs.model,
+                    cloudArgs.apiURL,
+                  )
                 } else {
                   scene.connect(cloudArgs.token, IDs.project, IDs.model)
                 }
@@ -74,8 +91,11 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
               // on reject
               () => {
                 const args = cloudArgs as any
-                throw new Error(`Couldn't fetch IDs matching arguments ${args.project} and ${args.model}`)
-              })
+                throw new Error(
+                  `Couldn't fetch IDs matching arguments ${args.project} and ${args.model}`,
+                )
+              },
+            )
           } else {
             throw new Error('Invalid connection arguments')
           }
@@ -90,7 +110,7 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
      * This launches new downloads and hands out generated assets to three.js.
      * Should be called at the beginning of a frame.
      */
-    const update = function (timeBudget = 10) {
+    const update = function(timeBudget = 10) {
       const handlers = {
         CreateMaterial: job => {
           runtime.addAsset(job, job.data)
@@ -123,7 +143,7 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
             const mip = {
               width: info.width,
               height: info.height,
-              data: pixelData
+              data: pixelData,
             }
             tex = new THREE.CompressedTexture([mip], info.width, info.height)
           } else {
@@ -138,21 +158,24 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
 
           /**
            * A workaround for the case where we directly output colors in gamma space.
-           * We make all textures linear to avoid gamma expansion at texture fetch time.
+           * We make diffuse textures linear to avoid gamma expansion at texture fetch time.
            * This is slightly wrong because texture filtering and shading will be done
            * in gamma space, but this behavior is what people usually expect.
            */
           if (info.textureType === 'diffuse' && !renderer.gammaOutput) {
             tex.encoding = THREE.LinearEncoding
           } else {
-            tex.encoding = info.colorSpace === 'linear' ? THREE.LinearEncoding : THREE.sRGBEncoding
+            tex.encoding =
+              info.colorSpace === 'linear'
+                ? THREE.LinearEncoding
+                : THREE.sRGBEncoding
           }
 
           tex.needsUpdate = true
 
           runtime.addAsset(job, tex)
         },
-        DestroyTexture: job => {
+        DestroyTexture: (job: AssetJob.DestroyTexture) => {
           // Free texture data only if it's not a dummy texture
           if (job.data.isTexture) {
             job.data.dispose()
@@ -177,7 +200,7 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
             position: { components: 3 },
             normal: { components: 3 },
             uv: { components: 2 },
-            tangent: { components: 3 }
+            tangent: { components: 3 },
           }
 
           Object.keys(attribs).forEach(name => {
@@ -185,12 +208,18 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
 
             if (buffer) {
               const array = buffer.getArray()
-              const attrib = new THREE.Float32BufferAttribute(array.slice(), attribs[name].components)
+              const attrib = new THREE.Float32BufferAttribute(
+                array.slice(),
+                attribs[name].components,
+              )
               geometry.addAttribute(name, attrib)
             }
           })
 
-          const meshDescriptor = new MeshDescriptor(geometry, job.data.material)
+          const meshDescriptor: MeshDescriptor = {
+            geometry: geometry,
+            materialDesc: job.data.material,
+          }
           runtime.addAsset(job, meshDescriptor)
         },
         DestroyMesh: job => {
@@ -199,7 +228,7 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
           runtime.removeAsset(job, meshDesc)
           // Release three.js's resources
           meshDesc.geometry.dispose()
-        }
+        },
       }
 
       runtime.handleJobs(handlers, timeBudget)
@@ -216,10 +245,10 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
      *  'minBytesDownloaded' is the corresponding lower limit assuming all duplicates came from cache.
      *
      */
-    function getStats () {
+    function getStats() {
       return {
         maxBytesDownloaded: Umbra.nativeModule.maxBytesDownloaded,
-        minBytesDownloaded: Umbra.nativeModule.minBytesDownloaded
+        minBytesDownloaded: Umbra.nativeModule.minBytesDownloaded,
       }
     }
 
@@ -243,7 +272,7 @@ export function initWithThreeJS (renderer: THREE.WebGLRenderer, userConfig: {was
         deinitUmbra(Umbra)
       },
       lib: Umbra,
-      runtime: runtime
+      runtime: runtime,
     }
   })
 }

@@ -2,12 +2,12 @@ export class ObjectPool<T> {
   usedList: Array<T>
   freeList: Array<T>
 
-  constructor () {
+  constructor() {
     this.usedList = []
     this.freeList = []
   }
 
-  allocate (makeFunc: () => T) {
+  allocate(makeFunc: () => T) {
     let obj: T
     if (this.freeList.length > 0) {
       obj = this.freeList.pop()
@@ -19,7 +19,7 @@ export class ObjectPool<T> {
     return obj
   }
 
-  freeAll (clearFunc?: (obj: T) => void) {
+  freeAll(clearFunc?: (obj: T) => void) {
     for (let i = 0; i < this.usedList.length; i++) {
       if (clearFunc) {
         clearFunc(this.usedList[i])
@@ -29,7 +29,7 @@ export class ObjectPool<T> {
     this.usedList.length = 0
   }
 
-  clear () {
+  clear() {
     this.usedList.length = 0
     this.freeList.length = 0
   }

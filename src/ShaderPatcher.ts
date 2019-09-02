@@ -58,7 +58,7 @@ class ShaderPatcher {
   flipTangent: boolean
   defines: string
 
-  constructor (formats: string[]) {
+  constructor(formats: string[]) {
     /*
      * World space transform can swap handedness which isn't handled by three.js in tangent space
      * normal maps so we need to be able to flip them ourselves.
@@ -79,7 +79,7 @@ class ShaderPatcher {
     }
   }
 
-  process (shader: THREE.Shader, renderer: THREE.WebGLRenderer) {
+  process(shader: THREE.Shader, renderer: THREE.WebGLRenderer) {
     let frag = shader.fragmentShader
 
     if (this.flipTangent) {
