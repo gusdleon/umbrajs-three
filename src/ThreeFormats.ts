@@ -1,6 +1,6 @@
 /* eslint  @typescript-eslint/camelcase: 0 */
 
-import * as THREE from 'three'
+import * as THREE from './ThreeWrapper'
 
 function makeFormat(format, type, compressed) {
   return { format, type, compressed }

@@ -1,4 +1,5 @@
-import * as THREE from 'three'
+import * as THREE from './ThreeWrapper'
+
 import {
   Formats,
   PlatformFeatures,

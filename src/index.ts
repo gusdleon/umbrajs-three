@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import * as THREE from './ThreeWrapper'
 import {
   initUmbra,
   deinitUmbra,
@@ -30,14 +30,6 @@ export function initWithThreeJS(
   renderer: THREE.WebGLRenderer,
   userConfig: { wasmURL?: string },
 ) {
-  const supportedVersions = ['106', '107']
-  if (!supportedVersions.includes(THREE.REVISION)) {
-    const names = supportedVersions.join(', ')
-    throw new Error(
-      `Only three.js versions ${names} are supported. Got version ${THREE.REVISION} instead.`,
-    )
-  }
-
   if (!renderer) {
     throw new TypeError('"renderer" should be of type THREE.WebGLRenderer')
   }
