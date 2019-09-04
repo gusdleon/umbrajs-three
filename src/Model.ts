@@ -13,6 +13,15 @@ import { ObjectPool } from './ObjectPool'
 type UmbraMesh = THREE.Mesh & { isUmbraMesh: true }
 type UmbraCamera = THREE.Camera & { umbraStreamingPosition?: THREE.Vector3 }
 
+interface ModelStats {
+  connected: boolean
+  sceneInfo?
+  numVisible: number
+  numShadowCasters: number
+  numCachedMaterials: number
+  numAssets: number
+}
+
 /**
  * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
  * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
@@ -83,13 +92,13 @@ export class Model extends THREE.Object3D {
     }
   }
 
-  getInfo() {
+  getInfo(): ModelStats {
     const info = { connected: this.umbra.scene.isConnected() }
     if (info.connected) {
       info['sceneInfo'] = this.umbra.scene.getInfo()
     }
     Object.assign(info, this.stats)
-    return info
+    return info as ModelStats
   }
 
   getBounds(): THREE.Box3 {
