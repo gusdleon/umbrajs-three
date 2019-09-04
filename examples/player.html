@@ -185,9 +185,9 @@
     if (debug.streamingInfo) {
       let debugString = `Connected: ${info.connected}\nVisible meshes: ${info.numVisible}\nTime-to-triangle: ${Math.floor(timeToTriangle)} ms\n`
       debugString += Umbra.runtime.getDebugInfo()
-      let minMegs = Umbra.getStats().minBytesDownloaded / (1024*1024);
-      let maxMegs = Umbra.getStats().maxBytesDownloaded / (1024*1024);
-      debugString += `Downloaded: ${minMegs.toFixed(1)}-${maxMegs.toFixed(1)} MiB`
+      let minMegs = Umbra.getStats().minBytesDownloaded / (1024*1024)
+      let maxMegs = Umbra.getStats().maxBytesDownloaded / (1024*1024)
+      debugString += `Downloaded: ${minMegs.toFixed(1)}-${maxMegs.toFixed(1)} MiB\n`
       document.getElementById('info').textContent = debugString
     } else {
       document.getElementById('info').textContent = ''
@@ -203,7 +203,12 @@
       let supported = JSON.stringify(Umbra.runtime.debug.platformFeatures)
 
       message += `\n\nTexture formats used: ${used}\n`
-      message += `Texture formats supported: ${supported}`
+      message += `Texture formats supported: ${supported}\n`
+
+      let textureMegs = Umbra.getStats().textureMemoryUsed / (1024*1024)
+      let meshMegs = Umbra.getStats().meshMemoryUsed / (1024*1024)
+      message += `Texture memory use: ${textureMegs.toFixed(1)} MiB\n`
+      message += `Mesh memory use: ${meshMegs.toFixed(1)} MiB\n`
 
       document.getElementById('modelInfo').textContent = message
     } else {

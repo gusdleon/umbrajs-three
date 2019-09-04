@@ -98,6 +98,10 @@ export function initWithThreeJS(
       })
     }
 
+    const assetSizes = new Map<any, number>()
+    let textureMemoryUsed = 0
+    let meshMemoryUsed = 0
+
     /*
      * This launches new downloads and hands out generated assets to three.js.
      * Should be called at the beginning of a frame.
@@ -165,6 +169,8 @@ export function initWithThreeJS(
 
           tex.needsUpdate = true
 
+          textureMemoryUsed += buffer.size
+          assetSizes.set(tex, buffer.size)
           runtime.addAsset(job, tex)
         },
         DestroyTexture: (job: AssetJob.DestroyTexture) => {
@@ -172,6 +178,12 @@ export function initWithThreeJS(
           if (job.data.isTexture) {
             job.data.dispose()
           }
+
+          if (assetSizes.has(job.data)) {
+            textureMemoryUsed -= assetSizes.get(job.data)
+            assetSizes.delete(job.data)
+          }
+
           runtime.removeAsset(job, job.data)
         },
         CreateMesh: (job: AssetJob.CreateMesh) => {
@@ -195,6 +207,8 @@ export function initWithThreeJS(
             tangent: { components: 3 },
           }
 
+          let totalSize = 0
+
           Object.keys(attribs).forEach(name => {
             const buffer = job.data.buffers[name]
 
@@ -205,6 +219,7 @@ export function initWithThreeJS(
                 attribs[name].components,
               )
               geometry.addAttribute(name, attrib)
+              totalSize += buffer.size
             }
           })
 
@@ -212,10 +227,17 @@ export function initWithThreeJS(
             geometry: geometry,
             materialDesc: job.data.material,
           }
+
+          meshMemoryUsed += totalSize
+          assetSizes.set(meshDescriptor, totalSize)
           runtime.addAsset(job, meshDescriptor)
         },
         DestroyMesh: job => {
           const meshDesc = job.data
+          if (assetSizes.has(job.data)) {
+            meshMemoryUsed -= assetSizes.get(job.data)
+            assetSizes.delete(job.data)
+          }
           // Tell Umbra's runtime that this asset doesn't exist anymore and finish the job
           runtime.removeAsset(job, meshDesc)
           // Release three.js's resources
@@ -233,14 +255,18 @@ export function initWithThreeJS(
      *
      * The returned object has the following fields:
      *
-     *  'maxBytesDownloaded' is an upper limit assuming no file was cached,
-     *  'minBytesDownloaded' is the corresponding lower limit assuming all duplicates came from cache.
+     *  'maxBytesDownloaded' an upper limit assuming no file was cached,
+     *  'minBytesDownloaded' the corresponding lower limit assuming all duplicates came from cache.
+     *  'textureMemoryUse' the number of bytes used by texture assets
+     *  'meshMemoryUse' the number of bytes used by mesh assets
      *
      */
     function getStats() {
       return {
-        maxBytesDownloaded: Umbra.nativeModule.maxBytesDownloaded,
-        minBytesDownloaded: Umbra.nativeModule.minBytesDownloaded,
+        maxBytesDownloaded: Umbra.nativeModule.maxBytesDownloaded as number,
+        minBytesDownloaded: Umbra.nativeModule.minBytesDownloaded as number,
+        textureMemoryUsed,
+        meshMemoryUsed,
       }
     }
 
@@ -258,6 +284,11 @@ export function initWithThreeJS(
             asset.dispose()
           }
         })
+
+        assetSizes.clear()
+        textureMemoryUsed = 0
+        meshMemoryUsed = 0
+
         runtime.destroy()
         runtime = undefined
 
