@@ -3961,6 +3961,7 @@ class Model extends Object3D {
   // Streaming model quality. Ranges from 0 to 1.
   // We need to present ourselves as a LOD object to get the update() call
   // Temporary values we don't want to reallocate every frame
+  // Model should be instantiated using Umbra.createModel()
   constructor(runtime, _scene, _renderer, features) {
     super();
     this.quality = 0.5;
@@ -4582,5 +4583,5 @@ function initWithThreeJS(renderer, userConfig) {
   });
 }
 
-export { initWithThreeJS };
+export { Model, initWithThreeJS };
 //# sourceMappingURL=umbrajs-three.esm.js.map

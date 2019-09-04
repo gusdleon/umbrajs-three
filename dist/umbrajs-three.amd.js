@@ -3961,6 +3961,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     // Streaming model quality. Ranges from 0 to 1.
     // We need to present ourselves as a LOD object to get the update() call
     // Temporary values we don't want to reallocate every frame
+    // Model should be instantiated using Umbra.createModel()
     constructor(runtime, _scene, _renderer, features) {
       super();
       this.quality = 0.5;
@@ -4582,6 +4583,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     });
   }
 
+  exports.Model = Model;
   exports.initWithThreeJS = initWithThreeJS;
 
   Object.defineProperty(exports, '__esModule', { value: true });

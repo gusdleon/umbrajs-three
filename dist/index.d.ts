@@ -27,3 +27,4 @@ export declare function initWithThreeJS(renderer: THREE.WebGLRenderer, userConfi
     lib: import("@umbra3d/umbrajs").UmbraInstance;
     runtime: import("@umbra3d/umbrajs").Runtime;
 }>;
+export { Model };
