@@ -2,7 +2,7 @@ requirejs.config({
   appDir: '.',
   baseUrl: 'js',
   paths: {
-    'three': ['//cdnjs.cloudflare.com/ajax/libs/three.js/107/three.min']
+    'three': ['//cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min']
   }
 })
 
