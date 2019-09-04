@@ -268,3 +268,5 @@ export function initWithThreeJS(
     }
   })
 }
+
+export { Model }

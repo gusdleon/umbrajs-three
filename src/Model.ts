@@ -61,6 +61,7 @@ export class Model extends THREE.Object3D {
   private tempVector = new THREE.Vector3()
   private dirVector = new THREE.Vector3()
 
+  // Model should be instantiated using Umbra.createModel()
   constructor(
     runtime: Runtime,
     scene: Scene,
