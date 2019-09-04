@@ -12,6 +12,7 @@ import {
 import { ThreeFormats } from './ThreeFormats'
 import { Model, MeshDescriptor } from './Model'
 import { WebGLRenderer } from 'three'
+import { HeapBufferView } from '@umbra3d/umbrajs/dist/Heap'
 
 function makeBoundingSphere(aabb: Math.BoundingBox) {
   const min = aabb[0]
@@ -144,6 +145,35 @@ class ThreejsIntegration {
     )
   }
 
+  private makeTexture(
+    info,
+    buffer,
+    glformat,
+  ): THREE.CompressedTexture | THREE.DataTexture {
+    // eslint-disable-next-line new-cap
+    const pixelData = new buffer.type(buffer.getArray().slice())
+
+    let tex
+    if (glformat.compressed) {
+      const mip = {
+        width: info.width,
+        height: info.height,
+        data: pixelData,
+      }
+      tex = new THREE.CompressedTexture([mip], info.width, info.height)
+    } else {
+      tex = new THREE.DataTexture(pixelData, info.width, info.height)
+    }
+
+    tex.format = glformat.format
+    tex.type = glformat.type
+    tex.magFilter = THREE.LinearFilter
+    tex.minFilter = THREE.LinearFilter
+    tex.anisotropy = 0
+
+    return tex
+  }
+
   // AssetJob handlers that create and remove materials, textures, and meshes
   private handlers = {
     CreateMaterial: job => {
@@ -175,26 +205,7 @@ class ThreejsIntegration {
         return
       }
 
-      // eslint-disable-next-line new-cap
-      const pixelData = new buffer.type(buffer.getArray().slice())
-
-      let tex: THREE.CompressedTexture | THREE.DataTexture
-      if (glformat.compressed) {
-        const mip = {
-          width: info.width,
-          height: info.height,
-          data: pixelData,
-        }
-        tex = new THREE.CompressedTexture([mip], info.width, info.height)
-      } else {
-        tex = new THREE.DataTexture(pixelData, info.width, info.height)
-      }
-
-      tex.format = glformat.format
-      tex.type = glformat.type
-      tex.magFilter = THREE.LinearFilter
-      tex.minFilter = THREE.LinearFilter
-      tex.anisotropy = 0
+      const tex = this.makeTexture(info, buffer, glformat)
 
       /**
        * A workaround for the case where we directly output colors in gamma space.
@@ -212,6 +223,16 @@ class ThreejsIntegration {
       }
 
       tex.needsUpdate = true
+
+      // We set this callback outside makeTexture() to avoid referencing the array buffer in a closure
+      // so the garbage collector can free 'tex.mipmaps'
+      tex.onUpdate = () => {
+        // Workaround for three.js texture upload behavior: After we know the pixels
+        // have been copied to the GPU, we can go and delete references to the CPU side buffer.
+        // This means we can't recover the textures after GL context loss, but it frees up
+        // a large amount of memory.
+        delete tex.mipmaps
+      }
 
       this.textureMemoryUsed += buffer.size
       this.assetSizes.set(tex, buffer.size)

@@ -23,7 +23,12 @@ export {
   Float32BufferAttribute,
 } from 'three'
 
-export { LinearFilter, LinearEncoding, sRGBEncoding } from 'three'
+export {
+  LinearFilter,
+  LinearEncoding,
+  sRGBEncoding,
+  TextureDataType,
+} from 'three'
 
 export {
   RGBFormat,
