@@ -20,6 +20,7 @@ export {
   CompressedTexture,
   DataTexture,
   BufferGeometry,
+  TypedArray,
   Float32BufferAttribute,
 } from 'three'
 

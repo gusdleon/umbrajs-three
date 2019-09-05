@@ -145,24 +145,24 @@ class ThreejsIntegration {
     )
   }
 
+  // Converts a texture descriptor and a pixel buffer to a three.js compatible texture
   private makeTexture(
     info,
-    buffer,
+    buffer: HeapBufferView,
     glformat,
   ): THREE.CompressedTexture | THREE.DataTexture {
-    // eslint-disable-next-line new-cap
-    const pixelData = new buffer.type(buffer.getArray().slice())
+    const pixelData = buffer.getArray().slice() as THREE.TypedArray
 
     let tex
     if (glformat.compressed) {
       const mip = {
         width: info.width,
         height: info.height,
-        data: pixelData,
+        data: pixelData as Uint8ClampedArray,
       }
       tex = new THREE.CompressedTexture([mip], info.width, info.height)
     } else {
-      tex = new THREE.DataTexture(pixelData, info.width, info.height)
+      tex = new THREE.DataTexture(pixelData , info.width, info.height)
     }
 
     tex.format = glformat.format
@@ -223,16 +223,6 @@ class ThreejsIntegration {
       }
 
       tex.needsUpdate = true
-
-      // We set this callback outside makeTexture() to avoid referencing the array buffer in a closure
-      // so the garbage collector can free 'tex.mipmaps'
-      tex.onUpdate = () => {
-        // Workaround for three.js texture upload behavior: After we know the pixels
-        // have been copied to the GPU, we can go and delete references to the CPU side buffer.
-        // This means we can't recover the textures after GL context loss, but it frees up
-        // a large amount of memory.
-        delete tex.mipmaps
-      }
 
       this.textureMemoryUsed += buffer.size
       this.assetSizes.set(tex, buffer.size)
