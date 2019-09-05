@@ -162,7 +162,7 @@ class ThreejsIntegration {
       }
       tex = new THREE.CompressedTexture([mip], info.width, info.height)
     } else {
-      tex = new THREE.DataTexture(pixelData , info.width, info.height)
+      tex = new THREE.DataTexture(pixelData, info.width, info.height)
     }
 
     tex.format = glformat.format
