@@ -31,7 +31,7 @@ First create a three.js renderer and then initialize Umbra and and pass in a thr
 ```javascript
 let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 let model = Umbra.createModel({
-  token: 'my-own-api-key',
+  token: 'pubk-my-own-public-key',
   projectID: '1005906',
   modelID: '699980469', })
 ```
