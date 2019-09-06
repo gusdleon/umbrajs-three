@@ -6,6 +6,7 @@ import {
   Runtime,
   Scene,
   View,
+  Renderable,
 } from '@umbra3d/umbrajs'
 import { ShaderPatcher } from './ShaderPatcher'
 import { ObjectPool } from './ObjectPool'
@@ -38,6 +39,12 @@ export class Model extends THREE.Object3D {
   opaqueMaterial = new THREE.MeshBasicMaterial()
   wireframe = false
   freeze = false
+  onConnected: () => void
+  onDisconnected: () => void
+  onConnectionChanged: (connected: boolean) => void
+  onMeshChanged: () => void
+  // onStreamingComplete: () => void
+  // onStreamingProgress: (progress: number) => void
 
   // We need to present ourselves as a LOD object to get the update() call
   readonly isLOD = true
@@ -61,6 +68,12 @@ export class Model extends THREE.Object3D {
   private umbra: {
     runtime: Runtime
     scene: Scene
+  }
+
+  // We need to keep track of changes to emit events
+  private oldState = {
+    connected: false,
+    visibleIDs: new Set<number>(),
   }
 
   // Temporary values we don't want to reallocate every frame
@@ -144,6 +157,42 @@ export class Model extends THREE.Object3D {
     }
   }
 
+  updateEvents(visibleIDs: Set<number>) {
+    const then = this.oldState
+    const now = {
+      connected: this.umbra.scene.isConnected(),
+      visibleIDs,
+    }
+
+    if (then.connected !== now.connected) {
+      if (now && this.onConnected) {
+        this.onConnected()
+      } else if (!now && this.onDisconnected) {
+        this.onDisconnected()
+      }
+
+      if (this.onConnectionChanged) {
+        this.onConnectionChanged(now.connected)
+      }
+    }
+
+    if (this.onMeshChanged) {
+      if (then.visibleIDs.size !== now.visibleIDs.size) {
+        this.onMeshChanged()
+      } else {
+        for (const id of now.visibleIDs) {
+          if (!then.visibleIDs.has(id)) {
+            this.onMeshChanged()
+            break
+          }
+        }
+      }
+    }
+
+    this.oldState.connected = now.connected
+    this.oldState.visibleIDs = visibleIDs
+  }
+
   update = function(camera: UmbraCamera) {
     let scene
 
@@ -179,7 +228,7 @@ export class Model extends THREE.Object3D {
       lights = findLights(scene)
     }
 
-    let view = this.cameraToView.get(camera)
+    let view = this.cameraToView.get(camera) as View
 
     if (!view) {
       view = this.umbra.runtime.createView()
@@ -311,13 +360,15 @@ export class Model extends THREE.Object3D {
     })
 
     const batchSize = 200
-    let visible = []
+    let visible: Renderable[] = []
+    const visibleIDs: Set<number> = new Set()
 
     do {
       visible = view.getVisible(batchSize)
 
       for (let i = 0; i < visible.length; i++) {
         const { materialDesc, geometry } = visible[i].mesh as MeshDescriptor
+        visibleIDs.add(visible[i].id)
 
         // Fetch a new material from the pool if we already have free ones. This avoids
         // extra allocations and more importantly 'onBeforeCompile' calls.
@@ -403,6 +454,8 @@ export class Model extends THREE.Object3D {
     if (shadowCasters.length > 0) {
       this.children.push(proxy)
     }
+
+    this.updateEvents(visibleIDs)
   }
 
   dispose() {

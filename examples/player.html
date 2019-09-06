@@ -155,6 +155,16 @@
 
   controls.update()
 
+  model.onConnected = () => {
+    // Once connected create a bounding box visualization and a getter view for the camera
+    setCameraRange(camera, model)
+    placeCamera (controls, model)
+    boundingBox = makeBoundingBoxMesh(model.getBounds())
+    boundingBox.visible = false
+    model.add(boundingBox)
+    gui.add(boundingBox, 'visible').name('Show bounds')
+  }
+
   let animate = function () {
     stats.begin()
 
@@ -168,16 +178,6 @@
     }
 
     const info = model.getInfo()
-
-    // Once connected create a bounding box visualization and getter view for the camera
-    if (info.connected && !boundingBox) {
-      setCameraRange(camera, model)
-      placeCamera (controls, model)
-      boundingBox = makeBoundingBoxMesh(model.getBounds())
-      boundingBox.visible = false
-      model.add(boundingBox)
-      gui.add(boundingBox, 'visible').name('Show bounds')
-    }
 
     // Visible:          the number of visible meshes
     // Assets:           the total number of resident assets (includes materials, textures, meshes)
