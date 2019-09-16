@@ -4,13 +4,13 @@ import {
   deinitUmbra,
   Math,
   Assets,
-  ConnectionArgs,
   UmbraInstance,
   PlatformFeatures,
   TextureCapability,
   TextureType,
   ColorSpace,
   Runtime,
+  VertexBuffer,
 } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
 import { Model, MeshDescriptor } from './Model'
@@ -163,7 +163,6 @@ class ThreejsIntegration {
       }
 
       if (!this.canFitInMemory(buffer.size)) {
-        // TODO Use a JS enum here instead of Emscripten constant
         job.fail()
         return
       }
@@ -224,7 +223,7 @@ class ThreejsIntegration {
 
       let totalSize = 0
       Object.keys(attribs)
-        .map(name => job.data.buffers[name])
+        .map(name => job.data.buffers[name].data)
         .forEach(buffer => {
           if (buffer) {
             totalSize += buffer.size
@@ -232,6 +231,10 @@ class ThreejsIntegration {
         })
 
       if (!this.canFitInMemory(totalSize)) {
+        const memoryUse = this.textureMemoryUsed + this.meshMemoryUsed
+        console.log(
+          `Could not fit mesh of size ${totalSize} in memory. Total use: ${memoryUse}`,
+        )
         job.finish(Assets.AssetLoadResult.OutOfMemory, 0)
         return
       }
@@ -243,21 +246,21 @@ class ThreejsIntegration {
       geometry.boundingSphere = makeBoundingSphere(job.data.bounds)
 
       Object.keys(attribs).forEach(name => {
-        const buffer = job.data.buffers[name]
+        const buffer = job.data.buffers[name] as VertexBuffer
 
         if (buffer) {
-          const array = buffer.getArray()
+          const view = buffer.data
+          const array = view.getArray()
           const attrib = new THREE.Float32BufferAttribute(
             array.slice(),
             attribs[name].components,
           )
           geometry.addAttribute(name, attrib)
-          totalSize += buffer.size
         }
       })
 
       const meshDescriptor: MeshDescriptor = {
-        geometry: geometry,
+        geometry,
         materialDesc: job.data.material,
       }
 
@@ -289,7 +292,6 @@ class ThreejsIntegration {
 
   dispose() {
     this.runtime.assets.forEach((asset, userPtr) => {
-      // TODO: Use separate types for assets instead
       if ('geometry' in asset) {
         asset.geometry.dispose()
       }

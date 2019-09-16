@@ -121,8 +121,8 @@ export class Model extends THREE.Object3D {
 
     const info = this.umbra.scene.getInfo()
     const bounds = info.bounds
-    const min = bounds.min
-    const max = bounds.max
+    const min = bounds.mn
+    const max = bounds.mx
     const box = new THREE.Box3(
       new THREE.Vector3(min[0], min[1], min[2]),
       new THREE.Vector3(max[0], max[1], max[2]),
