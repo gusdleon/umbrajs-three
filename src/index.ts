@@ -2,12 +2,15 @@ import * as THREE from './ThreeWrapper'
 import {
   initUmbra,
   deinitUmbra,
-  Formats,
   Math,
+  Assets,
   ConnectionArgs,
-  AssetJob,
   UmbraInstance,
   PlatformFeatures,
+  TextureCapability,
+  TextureType,
+  ColorSpace,
+  Runtime,
 } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
 import { Model, MeshDescriptor } from './Model'
@@ -37,7 +40,7 @@ class ThreejsIntegration {
   // An instance of the umbrajs library for debugging
   umbrajs: UmbraInstance
 
-  private runtime
+  private runtime: Runtime
   private features: PlatformFeatures
   private renderer: WebGLRenderer
 
@@ -57,7 +60,7 @@ class ThreejsIntegration {
     const features = umbrajs.getPlatformFeatures(context)
 
     // Three.js does not support BC5 compressed formats so we manually disable them.
-    features.capabilityMask &= ~Formats.TextureCapability.BC5
+    features.capabilityMask &= ~TextureCapability.BC5
 
     this.umbrajs = umbrajs
     this.runtime = umbrajs.createRuntime(features)
@@ -70,50 +73,14 @@ class ThreejsIntegration {
    * to map the given string names into numeric IDs. If IDs or URL are used then the promise will
    * resolve immediately.
    */
-  createModel(
+  /*createModel(
     cloudArgs: (ConnectionArgs & { apiURL?: string }) | { url: string },
-  ): Promise<Model> {
-    const scene = this.runtime.createScene()
+  ): Promise<Model> {*/
 
-    return new Promise((resolve, reject) => {
-      try {
-        if ('url' in cloudArgs) {
-          scene.connectWithURL(cloudArgs.url)
-          resolve(new Model(this.runtime, scene, this.renderer, this.features))
-        } else if ('token' in cloudArgs) {
-          return this.umbrajs.getIDs(cloudArgs).then(
-            // on resolve
-            IDs => {
-              if ('apiURL' in cloudArgs) {
-                scene.connectToCustomAPI(
-                  cloudArgs.token,
-                  IDs.project,
-                  IDs.model,
-                  cloudArgs.apiURL,
-                )
-              } else {
-                scene.connect(cloudArgs.token, IDs.project, IDs.model)
-              }
-              resolve(
-                new Model(this.runtime, scene, this.renderer, this.features),
-              )
-            },
-            // on reject
-            () => {
-              const args = cloudArgs as any
-              throw new Error(
-                `Couldn't fetch IDs matching arguments ${args.project} and ${args.model}`,
-              )
-            },
-          )
-        } else {
-          throw new Error('Invalid connection arguments')
-        }
-      } catch (e) {
-        this.runtime.destroyScene(scene)
-        reject(e)
-      }
-    })
+  createModel(publicKey: string): Model {
+    //const scene = this.runtime.createScene()
+    const scene = this.runtime.connectPublic(publicKey)
+    return new Model(this.runtime, scene, this.renderer, this.features)
   }
 
   /**
@@ -129,14 +96,10 @@ class ThreejsIntegration {
    *
    */
   getStats() {
-    return {
-      maxBytesDownloaded: this.umbrajs.nativeModule
-        .maxBytesDownloaded as number,
-      minBytesDownloaded: this.umbrajs.nativeModule
-        .minBytesDownloaded as number,
+    return Object.assign(this.umbrajs.getStreamingInfo(), {
       textureMemoryUsed: this.textureMemoryUsed,
       meshMemoryUsed: this.meshMemoryUsed,
-    }
+    })
   }
 
   private canFitInMemory(bytes: number) {
@@ -176,13 +139,13 @@ class ThreejsIntegration {
 
   // AssetJob handlers that create and remove materials, textures, and meshes
   private handlers = {
-    CreateMaterial: job => {
+    LoadMaterial: (job: Assets.LoadMaterial) => {
       this.runtime.addAsset(job, job.data)
     },
-    DestroyMaterial: job => {
+    UnloadMaterial: (job: Assets.Unload) => {
       this.runtime.removeAsset(job, job.data)
     },
-    CreateTexture: job => {
+    LoadTexture: (job: Assets.LoadTexture) => {
       const info = job.data.info
       const buffer = job.data.buffer
 
@@ -201,7 +164,7 @@ class ThreejsIntegration {
 
       if (!this.canFitInMemory(buffer.size)) {
         // TODO Use a JS enum here instead of Emscripten constant
-        job.finish(this.umbrajs.nativeModule.JobResult.OutOfMemory, 0)
+        job.fail()
         return
       }
 
@@ -213,11 +176,14 @@ class ThreejsIntegration {
        * This is slightly wrong because texture filtering and shading will be done
        * in gamma space, but this behavior is what people usually expect.
        */
-      if (info.textureType === 'diffuse' && !this.renderer.gammaOutput) {
+      if (
+        info.textureType === TextureType.Diffuse &&
+        !this.renderer.gammaOutput
+      ) {
         tex.encoding = THREE.LinearEncoding
       } else {
         tex.encoding =
-          info.colorSpace === 'linear'
+          info.colorSpace === ColorSpace.Linear
             ? THREE.LinearEncoding
             : THREE.sRGBEncoding
       }
@@ -228,7 +194,7 @@ class ThreejsIntegration {
       this.assetSizes.set(tex, buffer.size)
       this.runtime.addAsset(job, tex)
     },
-    DestroyTexture: (job: AssetJob.DestroyTexture) => {
+    UnloadTexture: (job: Assets.Unload) => {
       // Free texture data only if it's not a dummy texture
       if (job.data.isTexture) {
         job.data.dispose()
@@ -241,7 +207,7 @@ class ThreejsIntegration {
 
       this.runtime.removeAsset(job, job.data)
     },
-    CreateMesh: (job: AssetJob.CreateMesh) => {
+    LoadMesh: (job: Assets.LoadMesh) => {
       /**
        * The mesh creation job gives us all the vertex data in job.data.buffers.
        * The buffers are only valid during this handler, and the memory will be
@@ -266,13 +232,13 @@ class ThreejsIntegration {
         })
 
       if (!this.canFitInMemory(totalSize)) {
-        job.finish(this.umbrajs.nativeModule.JobResult.OutOfMemory, 0)
+        job.finish(Assets.AssetLoadResult.OutOfMemory, 0)
         return
       }
 
       const geometry = new THREE.BufferGeometry()
-      const indexArray = job.data.buffers['index'].getArray() as any
-      const indices = Array.from(indexArray)
+      const indexArray = job.data.buffers['index'].data.getArray()
+      const indices = Array.from(indexArray as any)
       geometry.setIndex(indices as number[])
       geometry.boundingSphere = makeBoundingSphere(job.data.bounds)
 
@@ -299,7 +265,7 @@ class ThreejsIntegration {
       this.assetSizes.set(meshDescriptor, totalSize)
       this.runtime.addAsset(job, meshDescriptor)
     },
-    DestroyMesh: job => {
+    UnloadMesh: (job: Assets.Unload) => {
       const meshDesc = job.data
       if (this.assetSizes.has(job.data)) {
         this.meshMemoryUsed -= this.assetSizes.get(job.data)

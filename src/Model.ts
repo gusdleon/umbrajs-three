@@ -1,7 +1,7 @@
 import * as THREE from './ThreeWrapper'
 
 import {
-  Formats,
+  TextureType,
   PlatformFeatures,
   Runtime,
   Scene,
@@ -66,8 +66,8 @@ export class Model extends THREE.Object3D {
   }
 
   private umbra: {
-    runtime: Runtime
-    scene: Scene
+    runtime: NonNullable<Runtime>
+    scene: NonNullable<Scene>
   }
 
   // We need to keep track of changes to emit events
@@ -151,7 +151,7 @@ export class Model extends THREE.Object3D {
             break
           }
         }
-        this.umbra.runtime.destroyView(view)
+        view.destroy()
         this.viewLastUsed.delete(view)
       }
     }
@@ -240,7 +240,7 @@ export class Model extends THREE.Object3D {
     this.viewLastUsed.set(view, frame)
     this.pruneOldViews(frame)
 
-    this.umbra.scene.update(this.matrixWorld.elements)
+    this.umbra.scene.setTransform(this.matrixWorld.elements)
 
     // If we are using a PBR material then we might need to flip the tangent vector
     if (typeof this.opaqueMaterial.normalMapType !== 'undefined') {
@@ -277,7 +277,7 @@ export class Model extends THREE.Object3D {
     }
 
     const pos = this.cameraWorldPosition
-    view.update(
+    view.setCamera(
       this.projScreenMatrix.elements,
       [pos.x, pos.y, pos.z],
       this.quality,
@@ -399,10 +399,9 @@ export class Model extends THREE.Object3D {
           this.shaderPatcher.process(shader, renderer)
         }
 
-        const diffuseMap = materialDesc.textures[Formats.TextureType.DIFFUSE]
-        const normalMap = materialDesc.textures[Formats.TextureType.NORMAL]
-        const metalglossMap =
-          materialDesc.textures[Formats.TextureType.SPECULAR]
+        const diffuseMap = materialDesc.textures[TextureType.Diffuse]
+        const normalMap = materialDesc.textures[TextureType.Normal]
+        const metalglossMap = materialDesc.textures[TextureType.Specular]
 
         if (diffuseMap && diffuseMap.isTexture) {
           material.map = diffuseMap
@@ -460,7 +459,7 @@ export class Model extends THREE.Object3D {
 
   dispose() {
     for (const view of this.cameraToView.values()) {
-      this.umbra.runtime.destroyView(view)
+      view.destroy()
     }
 
     // Remove all Umbra meshes from children
@@ -471,7 +470,7 @@ export class Model extends THREE.Object3D {
 
     // We don't dispose mesh geometries here because they are managed by the Runtime
 
-    this.umbra.runtime.destroyScene(this.umbra.scene)
+    this.umbra.scene.destroy()
     // Runtime must be manually freed by the user with .dispose() of the API object
   }
 }
