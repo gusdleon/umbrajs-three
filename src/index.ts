@@ -68,18 +68,13 @@ class ThreejsIntegration {
     this.features = features
   }
 
-  /**
-   * Creating a model is an asynchronous operation because we might need to query the Project API
-   * to map the given string names into numeric IDs. If IDs or URL are used then the promise will
-   * resolve immediately.
-   */
-  /*createModel(
-    cloudArgs: (ConnectionArgs & { apiURL?: string }) | { url: string },
-  ): Promise<Model> {*/
-
   createModel(publicKey: string): Model {
-    //const scene = this.runtime.createScene()
     const scene = this.runtime.connectPublic(publicKey)
+    return new Model(this.runtime, scene, this.renderer, this.features)
+  }
+
+  createModelWithURL(url: string): Model {
+    const scene = this.runtime.connectLocal(url)
     return new Model(this.runtime, scene, this.renderer, this.features)
   }
 
