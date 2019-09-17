@@ -234,10 +234,10 @@ class ThreejsIntegration {
 
       let totalSize = 0
       Object.keys(attribs)
-        .map(name => load.data.buffers[name].data)
+        .map(name => load.data.buffers[name])
         .forEach(buffer => {
           if (buffer) {
-            totalSize += buffer.size
+            totalSize += buffer.data.size
           }
         })
 
