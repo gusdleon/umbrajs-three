@@ -10,6 +10,7 @@ import {
   TextureType,
   ColorSpace,
   Runtime,
+  Scene,
   VertexBuffer,
 } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
@@ -31,6 +32,12 @@ function makeBoundingSphere(aabb: Math.BoundingBox) {
     min[2] + size.z * 0.5,
   )
   return new THREE.Sphere(pos, size.length())
+}
+
+export interface PublicLocator {
+  key: string
+  project: string
+  model: string
 }
 
 class ThreejsIntegration {
@@ -68,8 +75,17 @@ class ThreejsIntegration {
     this.features = features
   }
 
-  createModel(publicKey: string): Model {
-    const scene = this.runtime.connectPublic(publicKey)
+  createModel(locator: string | PublicLocator): Model {
+    let url: string
+    if (typeof locator === 'string') {
+      url = locator
+    } else if (typeof locator === 'object') {
+      url = `key=${locator.key}&project=${locator.project}&model=${locator.model}`
+    } else {
+      throw new TypeError('expected either string or an object argument')
+    }
+
+    const scene = this.runtime.connectPublic(url)
     return new Model(this.runtime, scene, this.renderer, this.features)
   }
 
