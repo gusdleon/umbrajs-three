@@ -132,17 +132,17 @@ class ThreejsIntegration {
     return tex
   }
 
-  // AssetJob handlers that create and remove materials, textures, and meshes
+  // AssetLoad handlers that create and remove materials, textures, and meshes
   private handlers = {
-    LoadMaterial: (job: Assets.LoadMaterial) => {
-      this.runtime.addAsset(job, job.data)
+    LoadMaterial: (load: Assets.LoadMaterial) => {
+      this.runtime.addAsset(load, load.data)
     },
-    UnloadMaterial: (job: Assets.Unload) => {
-      this.runtime.removeAsset(job, job.data)
+    UnloadMaterial: (unload: Assets.Unload) => {
+      this.runtime.removeAsset(unload, unload.data)
     },
-    LoadTexture: (job: Assets.LoadTexture) => {
-      const info = job.data.info
-      const buffer = job.data.buffer
+    LoadTexture: (load: Assets.LoadTexture) => {
+      const info = load.data.info
+      const buffer = load.data.buffer
 
       let glformat
 
@@ -153,12 +153,12 @@ class ThreejsIntegration {
       if (!glformat) {
         // Add a dummy object for unknown formats. They will appear as a solid black color.
         console.log('Unknown texture format', info.format)
-        this.runtime.addAsset(job, { isTexture: false })
+        this.runtime.addAsset(load, { isTexture: false })
         return
       }
 
       if (!this.canFitInMemory(buffer.size)) {
-        job.fail()
+        load.fail()
         return
       }
 
@@ -186,24 +186,24 @@ class ThreejsIntegration {
 
       this.textureMemoryUsed += buffer.size
       this.assetSizes.set(tex, buffer.size)
-      this.runtime.addAsset(job, tex)
+      this.runtime.addAsset(load, tex)
     },
-    UnloadTexture: (job: Assets.Unload) => {
+    UnloadTexture: (unload: Assets.Unload) => {
       // Free texture data only if it's not a dummy texture
-      if (job.data.isTexture) {
-        job.data.dispose()
+      if (unload.data.isTexture) {
+        unload.data.dispose()
       }
 
-      if (this.assetSizes.has(job.data)) {
-        this.textureMemoryUsed -= this.assetSizes.get(job.data)
-        this.assetSizes.delete(job.data)
+      if (this.assetSizes.has(unload.data)) {
+        this.textureMemoryUsed -= this.assetSizes.get(unload.data)
+        this.assetSizes.delete(unload.data)
       }
 
-      this.runtime.removeAsset(job, job.data)
+      this.runtime.removeAsset(unload, unload.data)
     },
-    LoadMesh: (job: Assets.LoadMesh) => {
+    LoadMesh: (load: Assets.LoadMesh) => {
       /**
-       * The mesh creation job gives us all the vertex data in job.data.buffers.
+       * The LoadMesh job gives us all the vertex data in job.data.buffers.
        * The buffers are only valid during this handler, and the memory will be
        * reused for other meshes later. Therefore we make copies of the arrays
        * for three.js which is something we would have to do anyway.
@@ -218,7 +218,7 @@ class ThreejsIntegration {
 
       let totalSize = 0
       Object.keys(attribs)
-        .map(name => job.data.buffers[name].data)
+        .map(name => load.data.buffers[name].data)
         .forEach(buffer => {
           if (buffer) {
             totalSize += buffer.size
@@ -230,18 +230,18 @@ class ThreejsIntegration {
         console.log(
           `Could not fit mesh of size ${totalSize} in memory. Total use: ${memoryUse}`,
         )
-        job.finish(Assets.AssetLoadResult.OutOfMemory, 0)
+        load.finish(Assets.AssetLoadResult.OutOfMemory, 0)
         return
       }
 
       const geometry = new THREE.BufferGeometry()
-      const indexArray = job.data.buffers['index'].data.getArray()
+      const indexArray = load.data.buffers['index'].data.getArray()
       const indices = Array.from(indexArray as any)
       geometry.setIndex(indices as number[])
-      geometry.boundingSphere = makeBoundingSphere(job.data.bounds)
+      geometry.boundingSphere = makeBoundingSphere(load.data.bounds)
 
       Object.keys(attribs).forEach(name => {
-        const buffer = job.data.buffers[name] as VertexBuffer
+        const buffer = load.data.buffers[name] as VertexBuffer
 
         if (buffer) {
           const view = buffer.data
@@ -256,21 +256,21 @@ class ThreejsIntegration {
 
       const meshDescriptor: MeshDescriptor = {
         geometry,
-        materialDesc: job.data.material,
+        materialDesc: load.data.material,
       }
 
       this.meshMemoryUsed += totalSize
       this.assetSizes.set(meshDescriptor, totalSize)
-      this.runtime.addAsset(job, meshDescriptor)
+      this.runtime.addAsset(load, meshDescriptor)
     },
-    UnloadMesh: (job: Assets.Unload) => {
-      const meshDesc = job.data
-      if (this.assetSizes.has(job.data)) {
-        this.meshMemoryUsed -= this.assetSizes.get(job.data)
-        this.assetSizes.delete(job.data)
+    UnloadMesh: (unload: Assets.Unload) => {
+      const meshDesc = unload.data
+      if (this.assetSizes.has(unload.data)) {
+        this.meshMemoryUsed -= this.assetSizes.get(unload.data)
+        this.assetSizes.delete(unload.data)
       }
       // Tell Umbra's runtime that this asset doesn't exist anymore and finish the job
-      this.runtime.removeAsset(job, meshDesc)
+      this.runtime.removeAsset(unload, meshDesc)
       // Release three.js's resources
       meshDesc.geometry.dispose()
     },
@@ -281,7 +281,7 @@ class ThreejsIntegration {
    * Should be called at the beginning of a frame.
    */
   update(timeBudget = 10) {
-    this.runtime.handleJobs(this.handlers, timeBudget)
+    this.runtime.loadAssets(this.handlers, timeBudget)
     this.runtime.update()
   }
 
