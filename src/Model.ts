@@ -324,8 +324,13 @@ export class Model extends THREE.Object3D {
         const material = this.materialPool.allocate(() =>
           this.opaqueMaterial.clone(),
         )
+
         material.wireframe = this.wireframe
-        material.transparent = materialDesc.transparent
+        material.transparent =
+          materialDesc.transparent || this.opaqueMaterial.transparent
+        if (material.transparent) {
+          material.opacity = this.opaqueMaterial.opacity
+        }
 
         material.onBeforeCompile = (shader, renderer) => {
           /**
