@@ -151,10 +151,11 @@ class ThreejsIntegration {
   // AssetLoad handlers that create and remove materials, textures, and meshes
   private handlers = {
     LoadMaterial: (load: Assets.LoadMaterial) => {
-      this.runtime.addAsset(load, load.data)
+      load.success(this.runtime.addAsset(load, load.data))
     },
     UnloadMaterial: (unload: Assets.Unload) => {
       this.runtime.removeAsset(unload, unload.data)
+      unload.finish()
     },
     LoadTexture: (load: Assets.LoadTexture) => {
       const info = load.data.info
@@ -174,7 +175,7 @@ class ThreejsIntegration {
       }
 
       if (!this.canFitInMemory(buffer.size)) {
-        load.fail()
+        load.finish(Assets.AssetLoadResult.OutOfMemory, 0)
         return
       }
 
@@ -202,7 +203,7 @@ class ThreejsIntegration {
 
       this.textureMemoryUsed += buffer.size
       this.assetSizes.set(tex, buffer.size)
-      this.runtime.addAsset(load, tex)
+      load.success(this.runtime.addAsset(load, tex))
     },
     UnloadTexture: (unload: Assets.Unload) => {
       // Free texture data only if it's not a dummy texture
@@ -216,6 +217,7 @@ class ThreejsIntegration {
       }
 
       this.runtime.removeAsset(unload, unload.data)
+      unload.finish()
     },
     LoadMesh: (load: Assets.LoadMesh) => {
       /**
@@ -277,7 +279,7 @@ class ThreejsIntegration {
 
       this.meshMemoryUsed += totalSize
       this.assetSizes.set(meshDescriptor, totalSize)
-      this.runtime.addAsset(load, meshDescriptor)
+      load.success(this.runtime.addAsset(load, meshDescriptor))
     },
     UnloadMesh: (unload: Assets.Unload) => {
       const meshDesc = unload.data
@@ -289,6 +291,7 @@ class ThreejsIntegration {
       this.runtime.removeAsset(unload, meshDesc)
       // Release three.js's resources
       meshDesc.geometry.dispose()
+      unload.finish()
     },
   }
 
