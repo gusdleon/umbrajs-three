@@ -4156,7 +4156,11 @@ class Model extends Object3D {
           });
 
           material.wireframe = _this.wireframe;
-          material.transparent = materialDesc.transparent;
+          material.transparent = materialDesc.transparent || _this.opaqueMaterial.transparent;
+
+          if (material.transparent) {
+            material.opacity = _this.opaqueMaterial.opacity;
+          }
 
           material.onBeforeCompile = function (shader, renderer) {
             /**

@@ -1,6 +1,6 @@
 {
   "name": "@umbra3d/umbrajs-three",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "",
   "main": "dist/umbrajs-three.js",
   "module": "dist/umbrajs-three.esm.js",

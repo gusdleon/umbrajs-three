@@ -3,6 +3,14 @@ import { PlatformFeatures, Runtime, Scene } from '@umbra3d/umbrajs';
 declare type UmbraCamera = THREE.Camera & {
     umbraStreamingPosition?: THREE.Vector3;
 };
+interface ModelStats {
+    connected: boolean;
+    sceneInfo?: any;
+    numVisible: number;
+    numShadowCasters: number;
+    numCachedMaterials: number;
+    numAssets: number;
+}
 /**
  * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
  * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
@@ -33,9 +41,7 @@ export declare class Model extends THREE.Object3D {
     private tempVector;
     private dirVector;
     constructor(runtime: Runtime, scene: Scene, renderer: THREE.WebGLRenderer, features: PlatformFeatures);
-    getInfo(): {
-        connected: boolean;
-    };
+    getInfo(): ModelStats;
     getBounds(): THREE.Box3;
     getCenter(): THREE.Vector3;
     private pruneOldViews;
