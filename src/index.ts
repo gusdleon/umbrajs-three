@@ -80,6 +80,11 @@ class ThreejsIntegration {
     if (typeof locator === 'string') {
       url = locator
     } else if (typeof locator === 'object') {
+      if (!('key' in locator && 'project' in locator && 'model' in locator)) {
+        throw new Error(
+          'createModel() expects an object with properties "key", "project", and "model"',
+        )
+      }
       url = `key=${locator.key}&project=${locator.project}&model=${locator.model}`
     } else {
       throw new TypeError('expected either string or an object argument')
