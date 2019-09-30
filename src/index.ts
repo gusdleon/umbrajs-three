@@ -342,11 +342,7 @@ class ThreejsIntegration {
   }
 
   getStreamingProgress(): number {
-    const state = this.runtime.getStreamingState()
-    if (state.numResidentTiles == 0) {
-      return 0.0
-    }
-    return state.numResidentTilesLoaded / state.numResidentTiles
+    return this.runtime.getStreamingProgress()
   }
 
   dispose() {
