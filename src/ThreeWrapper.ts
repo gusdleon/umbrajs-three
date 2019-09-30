@@ -5,7 +5,7 @@
 
 /* eslint  @typescript-eslint/camelcase: 0 */
 
-export { Object3D, Mesh, Camera, DirectionalLight, Scene } from 'three'
+export { Object3D, Mesh, Camera, DirectionalLight, Scene, Loader } from 'three'
 
 export {
   WebGLRenderer,
