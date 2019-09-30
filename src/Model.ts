@@ -36,15 +36,15 @@ export interface MeshDescriptor {
 export class Model extends THREE.Object3D {
   // User editable config
   quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
-  opaqueMaterial = new THREE.MeshBasicMaterial()
+  opaqueMaterial: THREE.Material = new THREE.MeshBasicMaterial()
   wireframe = false
   freeze = false
+
+  // Event callbacks
   onConnected: () => void
   onDisconnected: () => void
   onConnectionChanged: (connected: boolean) => void
   onMeshChanged: () => void
-  // onStreamingComplete: () => void
-  // onStreamingProgress: (progress: number) => void
 
   // We need to present ourselves as a LOD object to get the update() call
   readonly isLOD = true
