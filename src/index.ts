@@ -80,6 +80,15 @@ class ThreejsIntegration {
     if (typeof locator === 'string') {
       url = locator
     } else if (typeof locator === 'object') {
+      if (('token' in locator) as any) {
+        console.warn(
+          'Connection with {token, projectID, modelID} is deprecated. Use {key, project, model} or a string locator instad.',
+        )
+        locator.key = locator['token']
+        locator.project = locator['projectID']
+        locator.model = locator['modelID']
+      }
+
       if (!('key' in locator && 'project' in locator && 'model' in locator)) {
         throw new Error(
           'createModel() expects an object with properties "key", "project", and "model"',
