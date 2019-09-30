@@ -75,7 +75,7 @@
 
   // We must set some options to make the Umbrafied model receive and cast shadows
 
-  model.opaqueMaterial = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
+  model.material = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
 
   model.castShadow = true
   model.receiveShadow = true

@@ -64,7 +64,7 @@
     sun.position.set(-1, 1.5, 1).normalize().multiplyScalar(2.0)
     scene.add(sun)
 
-    model.opaqueMaterial = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
+    model.material = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
     renderer.gammaInput = true
     renderer.gammaOutput = true
   } else {
@@ -81,7 +81,7 @@
   document.body.appendChild(stats.dom)
 
   let materials = {
-    'Default': model.opaqueMaterial,
+    'Default': model.material,
     'Normal': new THREE.MeshNormalMaterial(),
     'Tangent': makeDebugMaterial({}, 'vec3(0.5)+tangent.xyz*0.5'),
     'Roughness map': makeDebugMaterial({}, 'vec3(roughnessFactor)'),
@@ -118,7 +118,7 @@
   gui.add(debug, 'dumpTextures').name('Dump textures')
   gui.add(gridHelper, 'visible').name('Show grid')
   gui.add(debug, 'materialName', Object.keys(materials)).name('Material').onChange(() => {
-    model.opaqueMaterial = materials[debug.materialName]
+    model.material = materials[debug.materialName]
     model.materialPool.clear()
     /**
      * HACK: We force three.js to recompile all shaders because otherwise

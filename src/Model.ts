@@ -36,7 +36,7 @@ export interface MeshDescriptor {
 export class Model extends THREE.Object3D {
   // User editable config
   quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
-  opaqueMaterial: THREE.Material = new THREE.MeshBasicMaterial()
+  material: THREE.Material = new THREE.MeshBasicMaterial()
   wireframe = false
   freeze = false
 
@@ -53,6 +53,7 @@ export class Model extends THREE.Object3D {
 
   readonly troubleshooting = {
     missingNormals: false,
+    deprecatedMaterialProperty: false,
   }
 
   private renderer: THREE.WebGLRenderer
@@ -107,6 +108,25 @@ export class Model extends THREE.Object3D {
       runtime: runtime,
       scene: scene,
     }
+  }
+
+  private reportDeprecatedMaterial() {
+    if (!this.troubleshooting.deprecatedMaterialProperty) {
+      console.warn(
+        'Property model.opaqueMaterial has been deprecated. Use model.material instead.',
+      )
+      this.troubleshooting.deprecatedMaterialProperty = true
+    }
+  }
+
+  get opaqueMaterial() {
+    this.reportDeprecatedMaterial()
+    return this.material
+  }
+
+  set opaqueMaterial(mat) {
+    this.reportDeprecatedMaterial()
+    this.material = mat
   }
 
   getInfo(): ModelStats {
@@ -376,15 +396,13 @@ export class Model extends THREE.Object3D {
 
         // Fetch a new material from the pool if we already have free ones. This avoids
         // extra allocations and more importantly 'onBeforeCompile' calls.
-        const material = this.materialPool.allocate(() =>
-          this.opaqueMaterial.clone(),
-        )
+        const material = this.materialPool.allocate(() => this.material.clone())
 
         material.wireframe = this.wireframe
         material.transparent =
-          materialDesc.transparent || this.opaqueMaterial.transparent
+          materialDesc.transparent || this.material.transparent
         if (material.transparent) {
-          material.opacity = this.opaqueMaterial.opacity
+          material.opacity = this.material.opacity
         }
 
         material.onBeforeCompile = (shader, renderer) => {
@@ -393,11 +411,8 @@ export class Model extends THREE.Object3D {
            * that first. We need to use 'apply' in case the callback uses 'this' reference to
            * access some material properties.
            */
-          if (this.opaqueMaterial.onBeforeCompile) {
-            this.opaqueMaterial.onBeforeCompile.apply(material, [
-              shader,
-              renderer,
-            ])
+          if (this.material.onBeforeCompile) {
+            this.material.onBeforeCompile.apply(material, [shader, renderer])
           }
 
           this.shaderPatcher.process(shader, renderer)
@@ -491,6 +506,6 @@ export class Model extends THREE.Object3D {
   }
 
   private isPBREnabled() {
-    return 'normalMapType' in this.opaqueMaterial
+    return 'normalMapType' in this.material
   }
 }
