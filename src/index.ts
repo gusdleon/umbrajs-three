@@ -49,7 +49,7 @@ class ThreejsIntegration implements ModelFactory {
   private runtime: Runtime
   private features: PlatformFeatures
   private renderer: WebGLRenderer
-  private updateTask: number
+  private updateTask: number = undefined
 
   private assetSizes = new Map<any, number>()
   private textureMemoryUsed = 0
@@ -80,13 +80,24 @@ class ThreejsIntegration implements ModelFactory {
     this.renderer = renderer
     this.features = features
 
-    // TODO Allow suspending the update
+    this.startUpdate(1000 / 60)
+  }
+
+  startUpdate(interval: number) {
+    this.stopUpdate()
     this.updateTask = window.setInterval(() => {
       this.runtime.update()
       this.runtime.loadAssets(this.handlers, this.perFrameBudget)
-      this.updateEvents() // TODO don't call this all the time?
+      this.updateEvents()
       this.models.forEach(m => (m as any).updateNetworkEvents())
-    }, 1000 / 60)
+    }, interval)
+  }
+
+  stopUpdate() {
+    if (typeof this.updateTask !== 'undefined') {
+      window.clearInterval(this.updateTask)
+      delete this.updateTask
+    }
   }
 
   createModel(locator: string | PublicLocator): Model {
