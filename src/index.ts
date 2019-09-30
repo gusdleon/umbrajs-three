@@ -165,7 +165,7 @@ class ThreejsIntegration {
   // AssetLoad handlers that create and remove materials, textures, and meshes
   private handlers = {
     LoadMaterial: (load: Assets.LoadMaterial) => {
-      load.success(this.runtime.addAsset(load, load.data))
+      load.success(this.runtime.addAsset(load.data))
     },
     UnloadMaterial: (unload: Assets.Unload) => {
       this.runtime.removeAsset(unload, unload.data)
@@ -184,7 +184,7 @@ class ThreejsIntegration {
       if (!glformat) {
         // Add a dummy object for unknown formats. They will appear as a solid black color.
         console.log('Unknown texture format', info.format)
-        this.runtime.addAsset(load, { isTexture: false })
+        this.runtime.addAsset({ isTexture: false })
         return
       }
 
@@ -217,7 +217,7 @@ class ThreejsIntegration {
 
       this.textureMemoryUsed += buffer.size
       this.assetSizes.set(tex, buffer.size)
-      load.success(this.runtime.addAsset(load, tex))
+      load.success(this.runtime.addAsset(tex))
     },
     UnloadTexture: (unload: Assets.Unload) => {
       // Free texture data only if it's not a dummy texture
@@ -293,7 +293,7 @@ class ThreejsIntegration {
 
       this.meshMemoryUsed += totalSize
       this.assetSizes.set(meshDescriptor, totalSize)
-      load.success(this.runtime.addAsset(load, meshDescriptor))
+      load.success(this.runtime.addAsset(meshDescriptor))
     },
     UnloadMesh: (unload: Assets.Unload) => {
       const meshDesc = unload.data
