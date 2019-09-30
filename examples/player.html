@@ -25,9 +25,6 @@
   const startTime = performance.now()
 
   let params = new URL(window.location.href).searchParams
-  let token = params.get('key')
-  let projectID = params.get('project')
-  let modelID = params.get('model')
   let quality = params.get('quality')
   let handednessFlip = params.get('handednessFlip')
   let pbr = params.get('pbr')
@@ -39,10 +36,11 @@
 
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
-  let model = await Umbra.createModel({
-    token,
-    projectID,
-    modelID })
+  let model = Umbra.createModel({
+    key: params.get('key'),
+    project: params.get('project'),
+    model: params.get('model')
+  })
 
   if (quality) {
     model.quality = parseFloat(quality)
@@ -183,15 +181,17 @@
     // Assets:           the total number of resident assets (includes materials, textures, meshes)
     // Time-to-triangle: how long it took until a first triangle was shown
     if (debug.streamingInfo) {
+      const state = Umbra.runtime.getStreamingState()
       let debugString = `Connected: ${info.connected}\nVisible meshes: ${info.numVisible}\nTime-to-triangle: ${Math.floor(timeToTriangle)} ms\n`
-      debugString += Umbra.runtime.getDebugInfo()
       let minMegs = Umbra.getStats().minBytesDownloaded / (1024*1024)
       let maxMegs = Umbra.getStats().maxBytesDownloaded / (1024*1024)
       debugString += `Downloaded: ${minMegs.toFixed(1)}-${maxMegs.toFixed(1)} MiB\n`
+      debugString += `Streaming progress: ${(Umbra.getStreamingProgress() * 100).toFixed(2)} %\n`
       document.getElementById('info').textContent = debugString
     } else {
       document.getElementById('info').textContent = ''
     }
+
 
     if (debug.modelInfo && info.connected) {
       let data = Object.assign({}, info)

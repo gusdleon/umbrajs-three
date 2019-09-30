@@ -20,9 +20,6 @@
         <script>
 'use strict';
 (async function () {
-  let token = 'pubk-72475579-2ca4-49da-9ff5-6e4fbf0ba170'
-  let projectID = '1005906'
-  let modelID = '321704672'
   let renderer = new THREE.WebGLRenderer()
 
   // Initialize the library and create a three.js object that contains our model
@@ -30,9 +27,9 @@
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
   let model = await Umbra.createModel({
-    token: token,
-    projectID: projectID,
-    modelID: modelID })
+    key: 'pubk-72475579-2ca4-49da-9ff5-6e4fbf0ba170',
+    project: '1005906',
+    model: '321704672' })
 
   let scene = new THREE.Scene()
   let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)

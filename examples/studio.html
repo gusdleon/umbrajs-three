@@ -36,10 +36,6 @@
         'use strict';
 
         (async function () {
-          let token = 'pubk-831ba3c2-7937-4ecf-8d35-8ccc6b3ce101'
-          let projectID = '1005906'
-          let modelID = '325618543'
-
           let renderer = new THREE.WebGLRenderer({ antialias: false })
 
           let raycaster = new THREE.Raycaster()
@@ -63,11 +59,7 @@
           let scene = new THREE.Scene()
           scene.background = new THREE.Color(0x222222)
 
-          let model = await Umbra.createModel({
-            token: token,
-            projectID: projectID,
-            modelID: modelID
-          })
+          let model = await Umbra.createModel('?key=pubk-831ba3c2-7937-4ecf-8d35-8ccc6b3ce101&project=1005906&model=325618543')
 
           model.position.set(0, 0, 0)
           model.quality = 0.5

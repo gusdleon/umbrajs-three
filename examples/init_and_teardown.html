@@ -32,11 +32,7 @@
       let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
   
       // Create a 3D model object
-      let model = await Umbra.createModel({
-        token: 'pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699',
-        projectID: '745415655',
-        modelID: '745415871'
-      })
+      let model = Umbra.createModel('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
 
       setStatus('Setting up scene')
       // Set up a basic three.js scene

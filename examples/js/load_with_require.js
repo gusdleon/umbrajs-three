@@ -17,9 +17,9 @@ requirejs(['three', '../../dist/umbrajs-three.amd'], function (THREE, UmbraRunti
   let modelInit = init.then(function (Umbra) {
     // Create a 3D model object
     return Umbra.createModel({
-      token: 'pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699',
-      projectID: '745415655',
-      modelID: '745415871' })
+      key: 'pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699',
+      project: '745415655',
+      model: '745415871' })
   })
 
   Promise.all([init, modelInit]).then(function ([Umbra, model]) {
