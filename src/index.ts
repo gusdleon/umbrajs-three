@@ -44,6 +44,9 @@ class ThreejsIntegration {
   // Upper VRAM memory use limit in bytes
   memoryLimit = 500 * 1024 * 1024
 
+  onStreamingUpdate: (progress: number) => void
+  onStreamingComplete: () => void
+
   // An instance of the umbrajs library for debugging
   umbrajs: UmbraInstance
 
@@ -54,6 +57,10 @@ class ThreejsIntegration {
   private assetSizes = new Map<any, number>()
   private textureMemoryUsed = 0
   private meshMemoryUsed = 0
+
+  private oldState = {
+    progress: 0,
+  }
 
   // This class should be instantiated via initUmbra()
   constructor(umbrajs: UmbraInstance, renderer: WebGLRenderer) {
@@ -316,6 +323,21 @@ class ThreejsIntegration {
   update(timeBudget = 10) {
     this.runtime.loadAssets(this.handlers, timeBudget)
     this.runtime.update()
+    this.updateEvents()
+  }
+
+  private updateEvents() {
+    const progress = this.getStreamingProgress()
+    if (this.oldState.progress != progress) {
+      if (this.onStreamingUpdate) {
+        this.onStreamingUpdate(progress)
+      }
+      if (progress === 1.0 && this.onStreamingComplete) {
+        this.onStreamingComplete()
+      }
+    }
+
+    this.oldState.progress = progress
   }
 
   getStreamingProgress(): number {
