@@ -7,9 +7,16 @@ import {
   Scene,
   View,
   Renderable,
+  ConnectionStatus,
 } from '@umbra3d/umbrajs'
+import { PublicLocator } from './Locator'
 import { ShaderPatcher } from './ShaderPatcher'
 import { ObjectPool } from './ObjectPool'
+
+export interface ModelFactory {
+  createModel(locator: string | PublicLocator): Model
+  createModelWithURL(url: string): Model
+}
 
 type UmbraMesh = THREE.Mesh & { isUmbraMesh: true }
 type UmbraCamera = THREE.Camera & { umbraStreamingPosition?: THREE.Vector3 }
@@ -33,6 +40,8 @@ export interface MeshDescriptor {
   materialDesc
 }
 
+type DisposeCallback = (m: Model) => void
+
 export class Model extends THREE.Object3D {
   // User editable config
   quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
@@ -42,8 +51,9 @@ export class Model extends THREE.Object3D {
 
   // Event callbacks
   onConnected: () => void
+  onConnectionError: (error: string) => void
   onDisconnected: () => void
-  onConnectionChanged: (connected: boolean) => void
+  onConnectionChanged: (connected: ConnectionStatus) => void
   onMeshChanged: () => void
 
   // We need to present ourselves as a LOD object to get the update() call
@@ -75,9 +85,11 @@ export class Model extends THREE.Object3D {
     scene: NonNullable<Scene>
   }
 
+  private onDispose: DisposeCallback
+
   // We need to keep track of changes to emit events
   private oldState = {
-    connected: false,
+    status: undefined,
     visibleIDs: new Set<number>(),
   }
 
@@ -94,11 +106,13 @@ export class Model extends THREE.Object3D {
     scene: Scene,
     renderer: THREE.WebGLRenderer,
     features: PlatformFeatures,
+    onDispose: DisposeCallback = undefined,
   ) {
     super()
 
     this.renderer = renderer
     this.shaderPatcher = new ShaderPatcher(features.formats)
+    this.onDispose = onDispose
 
     // We need to flip the Z-axis since models are stored in "left-handed Y is up" coordinate system
     this.scale.set(1.0, 1.0, -1.0)
@@ -181,31 +195,16 @@ export class Model extends THREE.Object3D {
     }
   }
 
-  updateEvents(visibleIDs: Set<number>) {
-    const then = this.oldState
-    const now = {
-      connected: this.umbra.scene.isConnected(),
-      visibleIDs,
-    }
-
-    if (then.connected !== now.connected) {
-      if (now && this.onConnected) {
-        this.onConnected()
-      } else if (!now && this.onDisconnected) {
-        this.onDisconnected()
-      }
-
-      if (this.onConnectionChanged) {
-        this.onConnectionChanged(now.connected)
-      }
-    }
+  private updateStreamingEvents(visibleIDs: Set<number>) {
+    const then = this.oldState.visibleIDs
+    const now = visibleIDs
 
     if (this.onMeshChanged) {
-      if (then.visibleIDs.size !== now.visibleIDs.size) {
+      if (then.size !== now.size) {
         this.onMeshChanged()
       } else {
-        for (const id of now.visibleIDs) {
-          if (!then.visibleIDs.has(id)) {
+        for (const id of now) {
+          if (!then.has(id)) {
             this.onMeshChanged()
             break
           }
@@ -213,8 +212,38 @@ export class Model extends THREE.Object3D {
       }
     }
 
-    this.oldState.connected = now.connected
     this.oldState.visibleIDs = visibleIDs
+  }
+
+  // This gets called by ThreejsIntegration's periodic update handler
+  private updateNetworkEvents() {
+    const status = this.umbra.scene.connectionStatus()
+
+    if (this.oldState.status !== status) {
+      if (this.onConnectionChanged) {
+        this.onConnectionChanged(status)
+      }
+
+      switch (status) {
+        case ConnectionStatus.ConnectionError:
+          if (this.onConnectionError) {
+            this.onConnectionError('Could not connect')
+          }
+          break
+        case ConnectionStatus.Connected:
+          if (this.onConnected) {
+            this.onConnected()
+          }
+          break
+        case ConnectionStatus.Connecting:
+          if (this.onDisconnected) {
+            this.onDisconnected()
+          }
+          break
+      }
+    }
+
+    this.oldState.status = status
   }
 
   update = function(camera: UmbraCamera) {
@@ -485,10 +514,14 @@ export class Model extends THREE.Object3D {
       this.children.push(proxy)
     }
 
-    this.updateEvents(visibleIDs)
+    this.updateStreamingEvents(visibleIDs)
   }
 
   dispose() {
+    if (this.onDispose) {
+      this.onDispose(this)
+    }
+
     for (const view of this.cameraToView.values()) {
       view.destroy()
     }

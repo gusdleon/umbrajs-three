@@ -14,7 +14,8 @@ import {
   VertexBuffer,
 } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
-import { Model, MeshDescriptor } from './Model'
+import { PublicLocator } from './Locator'
+import { Model, ModelFactory, MeshDescriptor } from './Model'
 import { WebGLRenderer } from 'three'
 import { HeapBufferView } from '@umbra3d/umbrajs/dist/Heap'
 
@@ -34,15 +35,10 @@ function makeBoundingSphere(aabb: Math.BoundingBox) {
   return new THREE.Sphere(pos, size.length())
 }
 
-export interface PublicLocator {
-  key: string
-  project: string
-  model: string
-}
-
-class ThreejsIntegration {
+class ThreejsIntegration implements ModelFactory {
   // Upper VRAM memory use limit in bytes
   memoryLimit = 500 * 1024 * 1024
+  perFrameBudget = 10 // In milliseconds
 
   onStreamingUpdate: (progress: number) => void
   onStreamingComplete: () => void
@@ -53,10 +49,13 @@ class ThreejsIntegration {
   private runtime: Runtime
   private features: PlatformFeatures
   private renderer: WebGLRenderer
+  private updateTask: number
 
   private assetSizes = new Map<any, number>()
   private textureMemoryUsed = 0
   private meshMemoryUsed = 0
+
+  private models = new Set<Model>()
 
   private oldState = {
     progress: 0,
@@ -80,6 +79,14 @@ class ThreejsIntegration {
     this.runtime = umbrajs.createRuntime(features)
     this.renderer = renderer
     this.features = features
+
+    // TODO Allow suspending the update
+    this.updateTask = window.setInterval(() => {
+      this.runtime.update()
+      this.runtime.loadAssets(this.handlers, this.perFrameBudget)
+      this.updateEvents() // TODO don't call this all the time?
+      this.models.forEach(m => (m as any).updateNetworkEvents())
+    }, 1000 / 60)
   }
 
   createModel(locator: string | PublicLocator): Model {
@@ -107,12 +114,28 @@ class ThreejsIntegration {
     }
 
     const scene = this.runtime.connectPublic(url)
-    return new Model(this.runtime, scene, this.renderer, this.features)
+    const model = new Model(
+      this.runtime,
+      scene,
+      this.renderer,
+      this.features,
+      m => this.models.delete(m),
+    )
+    this.models.add(model)
+    return model
   }
 
   createModelWithURL(url: string): Model {
     const scene = this.runtime.connectLocal(url)
-    return new Model(this.runtime, scene, this.renderer, this.features)
+    const model = new Model(
+      this.runtime,
+      scene,
+      this.renderer,
+      this.features,
+      m => this.models.delete(m),
+    )
+    this.models.add(model)
+    return model
   }
 
   /**
@@ -317,16 +340,6 @@ class ThreejsIntegration {
     },
   }
 
-  /*
-   * This launches new downloads and hands out generated assets to three.js.
-   * Should be called at the beginning of a frame.
-   */
-  update(timeBudget = 10) {
-    this.runtime.loadAssets(this.handlers, timeBudget)
-    this.runtime.update()
-    this.updateEvents()
-  }
-
   private updateEvents() {
     const progress = this.getStreamingProgress()
     if (this.oldState.progress != progress) {
@@ -346,6 +359,10 @@ class ThreejsIntegration {
   }
 
   dispose() {
+    window.clearInterval(this.updateTask)
+
+    this.models.forEach((m: Model) => m.dispose())
+
     this.runtime.assets.forEach((asset, userPtr) => {
       if ('geometry' in asset) {
         asset.geometry.dispose()
