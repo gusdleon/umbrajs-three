@@ -51,6 +51,10 @@ export class Model extends THREE.Object3D {
   readonly autoUpdate = true
   readonly name = 'UmbraModel'
 
+  readonly troubleshooting = {
+    missingNormals: false,
+  }
+
   private renderer: THREE.WebGLRenderer
 
   private materialPool = new ObjectPool<THREE.Material>()
@@ -243,7 +247,7 @@ export class Model extends THREE.Object3D {
     this.umbra.scene.setTransform(this.matrixWorld.elements)
 
     // If we are using a PBR material then we might need to flip the tangent vector
-    if (typeof this.opaqueMaterial.normalMapType !== 'undefined') {
+    if (this.isPBREnabled()) {
       // TODO(pvaananen): Would be nice to avoid recalculating the determinant every frame.
       const flip = this.matrixWorld.determinant() < 0
 
@@ -446,6 +450,18 @@ export class Model extends THREE.Object3D {
       this.stats.numVisible += visible.length
     } while (visible.length === batchSize)
 
+    // Emit a warning if normals are required but missing
+    if (!this.troubleshooting.missingNormals && this.isPBREnabled()) {
+      for (let i = 0; i < this.children.length; i++) {
+        const mesh = this.children[i]
+        if (mesh.isUmbraMesh && !('normal' in mesh.geometry.attributes)) {
+          console.warn('Model has no normals so it will appear black.')
+          this.troubleshooting.missingNormals = true
+          break
+        }
+      }
+    }
+
     this.stats.numShadowCasters = shadowCasters.length
     this.stats.numCachedMaterials =
       this.materialPool.usedList.length + this.materialPool.freeList.length
@@ -472,5 +488,9 @@ export class Model extends THREE.Object3D {
 
     this.umbra.scene.destroy()
     // Runtime must be manually freed by the user with .dispose() of the API object
+  }
+
+  private isPBREnabled() {
+    return 'normalMapType' in this.opaqueMaterial
   }
 }
