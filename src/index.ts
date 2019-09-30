@@ -196,7 +196,8 @@ class ThreejsIntegration {
       }
 
       if (!this.canFitInMemory(buffer.size)) {
-        load.finish(Assets.AssetLoadResult.OutOfMemory, 0)
+        // TODO Use OutOfMemory here
+        load.finish(Assets.AssetLoadResult.Aborted, 0)
         return
       }
 
@@ -242,7 +243,7 @@ class ThreejsIntegration {
     },
     LoadMesh: (load: Assets.LoadMesh) => {
       /**
-       * The LoadMesh job gives us all the vertex data in job.data.buffers.
+       * LoadMesh gives us all the vertex data in load.data.buffers.
        * The buffers are only valid during this handler, and the memory will be
        * reused for other meshes later. Therefore we make copies of the arrays
        * for three.js which is something we would have to do anyway.
@@ -269,7 +270,7 @@ class ThreejsIntegration {
         console.log(
           `Could not fit mesh of size ${totalSize} in memory. Total use: ${memoryUse}`,
         )
-        load.finish(Assets.AssetLoadResult.OutOfMemory, 0)
+        load.finish(Assets.AssetLoadResult.Aborted, 0)
         return
       }
 

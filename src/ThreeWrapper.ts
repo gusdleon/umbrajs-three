@@ -11,6 +11,7 @@ export {
   WebGLRenderer,
   Material,
   MeshBasicMaterial,
+  MeshPhysicalMaterial,
   TangentSpaceNormalMap,
 } from 'three'
 
