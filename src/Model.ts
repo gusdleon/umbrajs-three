@@ -49,6 +49,13 @@ export class Model extends THREE.Object3D {
   wireframe = false
   freeze = false
 
+  // This gets lowered automatically if memory limit is hit
+  qualityFactor = 1.0
+
+  get adjustedQuality() {
+    return this.quality * this.qualityFactor
+  }
+
   // Event callbacks
   onConnected: () => void
   onConnectionError: (error: string) => void
@@ -337,7 +344,7 @@ export class Model extends THREE.Object3D {
     view.setCamera(
       this.projScreenMatrix.elements,
       [pos.x, pos.y, pos.z],
-      this.quality,
+      this.adjustedQuality,
       lightDirections,
     )
 

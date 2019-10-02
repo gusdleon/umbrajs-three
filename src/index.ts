@@ -2,7 +2,7 @@ import * as THREE from './ThreeWrapper'
 import {
   initUmbra,
   deinitUmbra,
-  Math,
+  Math as UmbraMath,
   Assets,
   UmbraInstance,
   PlatformFeatures,
@@ -19,7 +19,7 @@ import { Model, ModelFactory, MeshDescriptor } from './Model'
 import { WebGLRenderer } from 'three'
 import { HeapBufferView } from '@umbra3d/umbrajs/dist/Heap'
 
-function makeBoundingSphere(aabb: Math.BoundingBox) {
+function makeBoundingSphere(aabb: UmbraMath.BoundingBox) {
   const min = aabb[0]
   const max = aabb[1]
   const size = new THREE.Vector3(
@@ -54,6 +54,11 @@ class ThreejsIntegration implements ModelFactory {
   private assetSizes = new Map<any, number>()
   private textureMemoryUsed = 0
   private meshMemoryUsed = 0
+  private lastQualityLowerFrame = -1
+
+  private get memoryUsed() {
+    return this.textureMemoryUsed + this.meshMemoryUsed
+  }
 
   private models = new Set<Model>()
 
@@ -101,6 +106,10 @@ class ThreejsIntegration implements ModelFactory {
   update() {
     this.runtime.update()
     this.runtime.loadAssets(this.handlers, this.perFrameBudget)
+
+    if (this.memoryUsed / this.memoryLimit < 0.25) {
+      this.adjustQuality(1.1)
+    }
   }
 
   createModel(locator: string | PublicLocator): Model {
@@ -172,9 +181,17 @@ class ThreejsIntegration implements ModelFactory {
   }
 
   private canFitInMemory(bytes: number) {
-    return (
-      this.textureMemoryUsed + this.meshMemoryUsed + bytes < this.memoryLimit
-    )
+    return this.memoryUsed + bytes < this.memoryLimit
+  }
+
+  private adjustQuality(factor: number) {
+    if (this.renderer.info.render.frame == this.lastQualityLowerFrame) {
+      return
+    }
+    this.models.forEach((m: Model) => {
+      m.qualityFactor = Math.min(1, m.qualityFactor * factor)
+    })
+    this.lastQualityLowerFrame = this.renderer.info.render.frame
   }
 
   // Converts a texture descriptor and a pixel buffer to a three.js compatible texture
@@ -233,8 +250,8 @@ class ThreejsIntegration implements ModelFactory {
       }
 
       if (!this.canFitInMemory(buffer.size)) {
-        // TODO Use OutOfMemory here
-        load.finish(Assets.AssetLoadResult.Aborted, 0)
+        load.finish(Assets.AssetLoadResult.OutOfMemory, 0)
+        this.adjustQuality(0.8)
         return
       }
 
@@ -303,11 +320,8 @@ class ThreejsIntegration implements ModelFactory {
         })
 
       if (!this.canFitInMemory(totalSize)) {
-        const memoryUse = this.textureMemoryUsed + this.meshMemoryUsed
-        console.log(
-          `Could not fit mesh of size ${totalSize} in memory. Total use: ${memoryUse}`,
-        )
-        load.finish(Assets.AssetLoadResult.Aborted, 0)
+        load.finish(Assets.AssetLoadResult.OutOfMemory, 0)
+        this.adjustQuality(0.8)
         return
       }
 
