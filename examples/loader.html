@@ -5,7 +5,7 @@
     </head>
     <body>
         <span class="message">
-          This is an example of how to use integrate <a href="https://github.com/UmbraSoftware/umbrajs-three">umbrajs-three</a> with three.js <a href="https://threejs.org/docs/#api/en/loaders/Loader">Loader</a> interface.<br>
+          This is an example of how to use integrate <a href="https://github.com/UmbraSoftware/umbrajs-three">umbrajs-three</a> with the three.js <a href="https://threejs.org/docs/#api/en/loaders/Loader">Loader</a> interface.<br>
           Check out the <a href="https://github.com/UmbraSoftware/umbrajs-three/blob/master/examples/loader.html">source on GitHub</a>.
         </span>
 
@@ -32,11 +32,12 @@
   // Start a new load with a string identifier. We provide only the onLoad callback
   loader.load('?key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871', 
     model => {
-      runAnimation(canvas, renderer, model)
+      runAnimation(renderer, Umbra, model)
     })
 })()
 
-function runAnimation(canvas, renderer, model) {
+function runAnimation(renderer, Umbra, model) {
+  const canvas = document.querySelector('#c')
   // Set up a basic three.js scene
   let scene = new THREE.Scene()
   scene.background = new THREE.Color(0x222222)
@@ -58,6 +59,7 @@ function runAnimation(canvas, renderer, model) {
   controls.update()
 
   let animate = function () {
+    Umbra.update()
     controls.update()
     renderer.render(scene, camera)
     requestAnimationFrame(animate)

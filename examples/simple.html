@@ -18,21 +18,7 @@
         <script>
 'use strict';
 
-(async function () {
-  // First create a three.js renderer
-  const canvas = document.querySelector('#c')
-  let renderer = new THREE.WebGLRenderer({ canvas })
-
-  // Initialize Umbra library with the given renderer
-  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
-
-  // Create a 3D model object
-  let model = await Umbra.createModel('?key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
-      /*{
-    token: 'pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699',
-    projectID: '745415655',
-    modelID: '745415871' })*/
-
+function runAnimation(canvas, renderer, model) {
   // Set up a basic three.js scene
   let scene = new THREE.Scene()
   scene.background = new THREE.Color(0x222222)
@@ -54,10 +40,7 @@
   controls.update()
 
   let animate = function () {
-    // Find visible blocks and update streaming
     Umbra.update()
-
-    // Regular three.js update
     controls.update()
     renderer.render(scene, camera)
     requestAnimationFrame(animate)
@@ -65,6 +48,21 @@
 
   // Start the animation loop
   animate()
+}
+
+(async function () {
+  // First create a three.js renderer
+  const canvas = document.querySelector('#c')
+  let renderer = new THREE.WebGLRenderer({ canvas })
+
+  // Initialize Umbra library with the given renderer
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+  let loader = new UmbraRuntime.Loader(Umbra)
+  loader.load('?key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871', 
+    (model) => {
+      runAnimation(canvas, renderer, model)
+    })
 })()
         </script>
     </body>

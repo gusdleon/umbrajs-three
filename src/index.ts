@@ -80,24 +80,27 @@ class ThreejsIntegration implements ModelFactory {
     this.renderer = renderer
     this.features = features
 
-    this.startUpdate(1000 / 60)
+    this.startEventUpdate(1000 / 60)
   }
 
-  startUpdate(interval: number) {
-    this.stopUpdate()
+  startEventUpdate(interval: number) {
+    this.stopEventUpdate()
     this.updateTask = window.setInterval(() => {
-      this.runtime.update()
-      this.runtime.loadAssets(this.handlers, this.perFrameBudget)
       this.updateEvents()
       this.models.forEach(m => (m as any).updateNetworkEvents())
     }, interval)
   }
 
-  stopUpdate() {
+  stopEventUpdate() {
     if (typeof this.updateTask !== 'undefined') {
       window.clearInterval(this.updateTask)
       delete this.updateTask
     }
+  }
+
+  update() {
+    this.runtime.update()
+    this.runtime.loadAssets(this.handlers, this.perFrameBudget)
   }
 
   createModel(locator: string | PublicLocator): Model {
