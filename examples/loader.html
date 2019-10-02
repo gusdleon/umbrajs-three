@@ -1,0 +1,74 @@
+<html>
+    <head>
+      <title>Loader API Example</title>
+        <link rel="stylesheet" type="text/css" href="samples.css">
+    </head>
+    <body>
+        <span class="message">
+          This is an example of how to use integrate <a href="https://github.com/UmbraSoftware/umbrajs-three">umbrajs-three</a> with three.js <a href="https://threejs.org/docs/#api/en/loaders/Loader">Loader</a> interface.<br>
+          Check out the <a href="https://github.com/UmbraSoftware/umbrajs-three/blob/master/examples/loader.html">source on GitHub</a>.
+        </span>
+
+        <canvas id="c"></canvas>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+'use strict';
+
+(async function () {
+  // First create a three.js renderer
+  const canvas = document.querySelector('#c')
+  let renderer = new THREE.WebGLRenderer({ canvas })
+
+  // Initialize Umbra library with the given renderer
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+  // Create a loader
+  let loader = new UmbraRuntime.Loader(Umbra)
+
+  // Start a new load with a string identifier. We provide only the onLoad callback
+  loader.load('?key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871', 
+    model => {
+      runAnimation(canvas, renderer, model)
+    })
+})()
+
+function runAnimation(canvas, renderer, model) {
+  // Set up a basic three.js scene
+  let scene = new THREE.Scene()
+  scene.background = new THREE.Color(0x222222)
+  let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000)
+  let controls = new THREE.OrbitControls(camera, canvas)
+
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+  // Add the 3D model to the scene
+  scene.add(model)
+
+  // Position the model so it's visible
+  model.position.set(0.5, 0.1, -0.1)
+  model.scale.set(1.0, 1.0, -1.0)
+  model.updateMatrix()
+
+  // Point the camera at the model
+  camera.position.set(-0.3878, 0.99, -1.033)
+  controls.update()
+
+  let animate = function () {
+    controls.update()
+    renderer.render(scene, camera)
+    requestAnimationFrame(animate)
+  }
+
+  // Start the animation loop
+  animate()
+}
+
+        </script>
+    </body>
+</html>
+
+
