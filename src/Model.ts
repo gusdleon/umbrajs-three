@@ -61,11 +61,6 @@ export class Model extends THREE.Object3D {
   readonly autoUpdate = true
   readonly name = 'UmbraModel'
 
-  readonly troubleshooting = {
-    missingNormals: false,
-    deprecatedMaterialProperty: false,
-  }
-
   private renderer: THREE.WebGLRenderer
 
   private materialPool = new ObjectPool<THREE.Material>()
@@ -78,6 +73,24 @@ export class Model extends THREE.Object3D {
     numShadowCasters: 0,
     numCachedMaterials: 0,
     numAssets: 0,
+  }
+
+  private diagnostics = {
+    missingNormals: {
+      checked: false,
+      message:
+        'Property model.opaqueMaterial has been deprecated. Use model.material instead.',
+    },
+    deprecatedMaterial: {
+      checked: false,
+      message: 'Model has no normals so it will appear black.',
+    },
+    report: (field: string) => {
+      if (!this.diagnostics[field].checked) {
+        this.diagnostics[field].checked = true
+        console.warn(this.diagnostics[field].message)
+      }
+    },
   }
 
   private umbra: {
@@ -124,22 +137,13 @@ export class Model extends THREE.Object3D {
     }
   }
 
-  private reportDeprecatedMaterial() {
-    if (!this.troubleshooting.deprecatedMaterialProperty) {
-      console.warn(
-        'Property model.opaqueMaterial has been deprecated. Use model.material instead.',
-      )
-      this.troubleshooting.deprecatedMaterialProperty = true
-    }
-  }
-
   get opaqueMaterial() {
-    this.reportDeprecatedMaterial()
+    this.diagnostics.report('deprecatedMaterial')
     return this.material
   }
 
   set opaqueMaterial(mat) {
-    this.reportDeprecatedMaterial()
+    this.diagnostics.report('deprecatedMaterial')
     this.material = mat
   }
 
@@ -495,12 +499,13 @@ export class Model extends THREE.Object3D {
     } while (visible.length === batchSize)
 
     // Emit a warning if normals are required but missing
-    if (!this.troubleshooting.missingNormals && this.isPBREnabled()) {
+    if (!this.diagnostics.missingNormals.checked && this.isPBREnabled()) {
       for (let i = 0; i < this.children.length; i++) {
-        const mesh = this.children[i]
-        if (mesh.isUmbraMesh && !('normal' in mesh.geometry.attributes)) {
-          console.warn('Model has no normals so it will appear black.')
-          this.troubleshooting.missingNormals = true
+        if (!this.children[i].isUmbraMesh) {
+          continue
+        }
+        if (!('normal' in this.children[i].geometry.attributes)) {
+          this.diagnostics.report('missingNormals')
           break
         }
       }
