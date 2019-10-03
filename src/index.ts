@@ -226,7 +226,8 @@ class ThreejsIntegration implements ModelFactory {
   // AssetLoad handlers that create and remove materials, textures, and meshes
   private handlers = {
     LoadMaterial: (load: Assets.LoadMaterial) => {
-      load.success(this.runtime.addAsset(load.data))
+      load.prepare(this.runtime.addAsset(load.data))
+      load.finish(Assets.AssetLoadResult.Success)
     },
     UnloadMaterial: (unload: Assets.Unload) => {
       this.runtime.removeAsset(unload, unload.data)
@@ -250,7 +251,7 @@ class ThreejsIntegration implements ModelFactory {
       }
 
       if (!this.canFitInMemory(buffer.size)) {
-        load.finish(Assets.AssetLoadResult.OutOfMemory, 0)
+        load.finish(Assets.AssetLoadResult.OutOfMemory)
         this.adjustQuality(0.8)
         return
       }
@@ -279,7 +280,8 @@ class ThreejsIntegration implements ModelFactory {
 
       this.textureMemoryUsed += buffer.size
       this.assetSizes.set(tex, buffer.size)
-      load.success(this.runtime.addAsset(tex))
+      load.prepare(this.runtime.addAsset(tex))
+      load.finish(Assets.AssetLoadResult.Success)
     },
     UnloadTexture: (unload: Assets.Unload) => {
       // Free texture data only if it's not a dummy texture
@@ -320,7 +322,7 @@ class ThreejsIntegration implements ModelFactory {
         })
 
       if (!this.canFitInMemory(totalSize)) {
-        load.finish(Assets.AssetLoadResult.OutOfMemory, 0)
+        load.finish(Assets.AssetLoadResult.OutOfMemory)
         this.adjustQuality(0.8)
         return
       }
@@ -352,7 +354,8 @@ class ThreejsIntegration implements ModelFactory {
 
       this.meshMemoryUsed += totalSize
       this.assetSizes.set(meshDescriptor, totalSize)
-      load.success(this.runtime.addAsset(meshDescriptor))
+      load.prepare(this.runtime.addAsset(meshDescriptor))
+      load.finish(Assets.AssetLoadResult.Success)
     },
     UnloadMesh: (unload: Assets.Unload) => {
       const meshDesc = unload.data
