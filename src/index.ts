@@ -14,7 +14,7 @@ import {
   VertexBuffer,
 } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
-import { PublicLocator } from './Locator'
+import { PublicLink } from './Locator'
 import { Model, ModelFactory, MeshDescriptor } from './Model'
 import { WebGLRenderer } from 'three'
 import { HeapBufferView } from '@umbra3d/umbrajs/dist/Heap'
@@ -112,26 +112,26 @@ class ThreejsIntegration implements ModelFactory {
     }
   }
 
-  createModel(locator: string | PublicLocator): Model {
+  createModel(link: string | PublicLink): Model {
     let url: string
-    if (typeof locator === 'string') {
-      url = locator
-    } else if (typeof locator === 'object') {
-      if (('token' in locator) as any) {
+    if (typeof link === 'string') {
+      url = link
+    } else if (typeof link === 'object') {
+      if (('token' in link) as any) {
         console.warn(
           'Connection with {token, projectID, modelID} is deprecated. Use {key, project, model} or a string locator instad.',
         )
-        locator.key = locator['token']
-        locator.project = locator['projectID']
-        locator.model = locator['modelID']
+        link.key = link['token']
+        link.project = link['projectID']
+        link.model = link['modelID']
       }
 
-      if (!('key' in locator && 'project' in locator && 'model' in locator)) {
+      if (!('key' in link && 'project' in link && 'model' in link)) {
         throw new Error(
           'createModel() expects an object with properties "key", "project", and "model"',
         )
       }
-      url = `key=${locator.key}&project=${locator.project}&model=${locator.model}`
+      url = `key=${link.key}&project=${link.project}&model=${link.model}`
     } else {
       throw new TypeError('expected either string or an object argument')
     }

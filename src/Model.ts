@@ -9,12 +9,12 @@ import {
   Renderable,
   ConnectionStatus,
 } from '@umbra3d/umbrajs'
-import { PublicLocator } from './Locator'
+import { PublicLink } from './Locator'
 import { ShaderPatcher } from './ShaderPatcher'
 import { ObjectPool } from './ObjectPool'
 
 export interface ModelFactory {
-  createModel(locator: string | PublicLocator): Model
+  createModel(link: string | PublicLink): Model
   createModelWithURL(url: string): Model
 }
 
