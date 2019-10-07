@@ -1,7 +1,7 @@
 /**
  * ShaderPatcher is a preprocessor class that replaces the default PBR texture read
  * shader chunks with the correct Umbra versions. Doing it this way instead of completely
- * custom shaders allows the application to use its own materials with Umbrafied models.
+ * custom shaders allows the application to use its own materials with Umbra scenes.
  */
 declare class ShaderPatcher {
     flipTangent: boolean;
