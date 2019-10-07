@@ -19,14 +19,14 @@ requirejs(['three', '../../dist/umbrajs-three.amd'], function(
   let init = UmbraRuntime.initWithThreeJS(renderer, {
     wasmURL: '/dist/umbra.wasm',
   })
-  let modelInit = init.then(function(Umbra) {
-    // Create a 3D model object
-    return Umbra.createModel(
+  let sceneInit = init.then(function(Umbra) {
+    // Create the Umbra scene object
+    return Umbra.createScene(
       'key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871',
     )
   })
 
-  Promise.all([init, modelInit]).then(function([Umbra, model]) {
+  Promise.all([init, sceneInit]).then(function([Umbra, umbraScene]) {
     // Set up a basic three.js scene
     let scene = new THREE.Scene()
     scene.background = new THREE.Color(0x222222)
@@ -39,10 +39,9 @@ requirejs(['three', '../../dist/umbrajs-three.amd'], function(
 
     renderer.setSize(window.innerWidth, window.innerHeight)
 
-    // Add the 3D model to the scene
-    scene.add(model)
+    scene.add(umbraScene)
 
-    // Point the camera at the model
+    // Point the camera at the object
     camera.position.set(-0.5, 0.1, 1)
 
     let animate = function() {

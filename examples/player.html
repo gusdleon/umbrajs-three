@@ -7,7 +7,7 @@
     <body>
         <div class="debug">
         <pre id="info"></pre>
-        <pre id="modelInfo"></pre>
+        <pre id="sceneInfo"></pre>
         </div>
         <canvas id="c"></canvas>
 
@@ -32,18 +32,18 @@
   const canvas = document.querySelector('#c')
   let renderer = new THREE.WebGLRenderer({ canvas })
 
-  // Initialize the library and create a three.js object that contains our model
+  // Initialize the library and create a three.js object that contains our scene
 
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
-  let model = Umbra.createModel({
+  let umbraScene = Umbra.createScene({
     key: params.get('key'),
     project: params.get('project'),
     model: params.get('model')
   })
 
   if (quality) {
-    model.quality = parseFloat(quality)
+    umbraScene.quality = parseFloat(quality)
   }
 
   let scene = new THREE.Scene()
@@ -64,7 +64,7 @@
     sun.position.set(-1, 1.5, 1).normalize().multiplyScalar(2.0)
     scene.add(sun)
 
-    model.material = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
+    umbraScene.material = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
     renderer.gammaInput = true
     renderer.gammaOutput = true
   } else {
@@ -81,7 +81,7 @@
   document.body.appendChild(stats.dom)
 
   let materials = {
-    'Default': model.material,
+    'Default': umbraScene.material,
     'Normal': new THREE.MeshNormalMaterial(),
     'Tangent': makeDebugMaterial({}, 'vec3(0.5)+tangent.xyz*0.5'),
     'Roughness map': makeDebugMaterial({}, 'vec3(roughnessFactor)'),
@@ -94,7 +94,7 @@
 
   let debug = {
     streamingInfo: false,
-    modelInfo: false,
+    sceneInfo: false,
     streamingEnabled: true,
     dumpTextures: () => {
       let textures = Array.from(Umbra.runtime.assets.values()).filter(x => x.isTexture)
@@ -109,17 +109,17 @@
 
   let gui = new dat.GUI()
   gui.close()
-  gui.add(model, 'quality', 0, 1).name('Model quality')
-  gui.add(model, 'wireframe').name('Wireframe')
+  gui.add(umbraScene, 'quality', 0, 1).name('Scene quality')
+  gui.add(umbraScene, 'wireframe').name('Wireframe')
   gui.add(debug, 'streamingInfo').name('Streaming info')
-  gui.add(debug, 'modelInfo').name('Model info')
+  gui.add(debug, 'sceneInfo').name('Scene info')
   gui.add(debug, 'streamingEnabled').name('Enable streaming')
-  gui.add(model, 'freeze').name('Freeze LOD updates')
+  gui.add(umbraScene, 'freeze').name('Freeze LOD updates')
   gui.add(debug, 'dumpTextures').name('Dump textures')
   gui.add(gridHelper, 'visible').name('Show grid')
   gui.add(debug, 'materialName', Object.keys(materials)).name('Material').onChange(() => {
-    model.material = materials[debug.materialName]
-    model.materialPool.clear()
+    umbraScene.material = materials[debug.materialName]
+    umbraScene.materialPool.clear()
     /**
      * HACK: We force three.js to recompile all shaders because otherwise
      * different debug materials would always use the same shader. The
@@ -139,11 +139,10 @@
   scene.add(light1)
   scene.add(light2)
 
-  // Add Umbra model to the scene
-  scene.add(model)
+  scene.add(umbraScene)
 
   if (handednessFlip === '1') {
-    model.scale.set(1.0, 1.0, 1.0)
+    umbraScene.scale.set(1.0, 1.0, 1.0)
   }
 
   let timeToTriangle = 0
@@ -153,13 +152,13 @@
 
   controls.update()
 
-  model.onConnected = () => {
+  umbraScene.onConnected = () => {
     // Once connected create a bounding box visualization and a getter view for the camera
-    setCameraRange(camera, model)
-    placeCamera (controls, model)
-    boundingBox = makeBoundingBoxMesh(model.getBounds())
+    setCameraRange(camera, umbraScene)
+    placeCamera (controls, umbraScene)
+    boundingBox = makeBoundingBoxMesh(umbraScene.getBounds())
     boundingBox.visible = false
-    model.add(boundingBox)
+    umbraScene.add(boundingBox)
     gui.add(boundingBox, 'visible').name('Show bounds')
   }
 
@@ -175,7 +174,7 @@
       timeToTriangle = performance.now() - startTime
     }
 
-    const info = model.getInfo()
+    const info = umbraScene.getInfo()
 
     // Visible:          the number of visible meshes
     // Assets:           the total number of resident assets (includes materials, textures, meshes)
@@ -193,7 +192,7 @@
     }
 
 
-    if (debug.modelInfo && info.connected) {
+    if (debug.sceneInfo && info.connected) {
       let data = Object.assign({}, info)
       delete data.sceneInfo.ecefToLocal
       delete data.sceneInfo.localToEcef
@@ -210,9 +209,9 @@
       message += `Texture memory use: ${textureMegs.toFixed(1)} MiB\n`
       message += `Mesh memory use: ${meshMegs.toFixed(1)} MiB\n`
 
-      document.getElementById('modelInfo').textContent = message
+      document.getElementById('sceneInfo').textContent = message
     } else {
-      document.getElementById('modelInfo').textContent = ''
+      document.getElementById('sceneInfo').textContent = ''
     }
 
     controls.update()

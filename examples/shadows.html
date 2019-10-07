@@ -22,7 +22,7 @@
 
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
-  let model = Umbra.createModel('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
+  let umbraScene = Umbra.createScene('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
 
   let scene = new THREE.Scene()
   let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000)
@@ -70,12 +70,12 @@
   plane.receiveShadow = true
   scene.add(plane)
 
-  // We must set some options to make the Umbrafied model receive and cast shadows
+  // We must set some options to make the Umbra scene receive and cast shadows
 
-  model.material = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
+  umbraScene.material = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
 
-  model.castShadow = true
-  model.receiveShadow = true
+  umbraScene.castShadow = true
+  umbraScene.receiveShadow = true
 
   renderer.gammaInput = true
   renderer.gammaOutput = true
@@ -94,12 +94,11 @@
 
   let tray = new THREE.Object3D()
 
-  // Add the Umbra model to the wrapper
-  tray.add(model)
+  tray.add(umbraScene)
   scene.add(tray)
 
-  model.position.set(0.5, 0.1, -0.1)
-  model.updateMatrix()
+  umbraScene.position.set(0.5, 0.1, -0.1)
+  umbraScene.updateMatrix()
 
   let frame = 0
   camera.position.set(0.3878, 0.89, 1.033)
@@ -112,10 +111,10 @@
     Umbra.update()
 
     let angle = frame * 0.01
-    // Rotate the camera around the model
+    // Rotate the camera around the object
     tray.rotation.y = angle
 
-    const message = `<br>Visible meshes: ${model.stats.numVisible}<br>Shadow only meshes: ${model.stats.numShadowCasters}`
+    const message = `<br>Visible meshes: ${umbraScene.stats.numVisible}<br>Shadow only meshes: ${umbraScene.stats.numShadowCasters}`
     document.querySelector('#counter').innerHTML = message
 
     controls.update()

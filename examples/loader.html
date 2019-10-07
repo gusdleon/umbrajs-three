@@ -31,12 +31,12 @@
 
   // Start a new load with a string identifier. We provide only the onLoad callback
   loader.load('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871', 
-    model => {
-      runAnimation(renderer, Umbra, model)
+    umbraScene => {
+      runAnimation(renderer, Umbra, umbraScene)
     })
 })()
 
-function runAnimation(renderer, Umbra, model) {
+function runAnimation(renderer, Umbra, umbraScene) {
   const canvas = document.querySelector('#c')
   // Set up a basic three.js scene
   let scene = new THREE.Scene()
@@ -46,15 +46,14 @@ function runAnimation(renderer, Umbra, model) {
 
   renderer.setSize(window.innerWidth, window.innerHeight)
 
-  // Add the 3D model to the scene
-  scene.add(model)
+  scene.add(umbraScene)
 
-  // Position the model so it's visible
-  model.position.set(0.5, 0.1, -0.1)
-  model.scale.set(1.0, 1.0, -1.0)
-  model.updateMatrix()
+  // Position the object so it's visible
+  umbraScene.position.set(0.5, 0.1, -0.1)
+  umbraScene.scale.set(1.0, 1.0, -1.0)
+  umbraScene.updateMatrix()
 
-  // Point the camera at the model
+  // Point the camera at the object
   camera.position.set(-0.3878, 0.99, -1.033)
   controls.update()
 

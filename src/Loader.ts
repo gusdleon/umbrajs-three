@@ -1,15 +1,15 @@
 import * as THREE from './ThreeWrapper'
-import { ModelFactory } from './Model'
+import { SceneFactory } from './Scene'
 
-export class ModelLoader extends THREE.Loader {
-  private Umbra: ModelFactory
-  constructor(Umbra: ModelFactory, manager?: THREE.LoadingManager) {
+export class Loader extends THREE.Loader {
+  private Umbra: SceneFactory
+  constructor(Umbra: SceneFactory, manager?: THREE.LoadingManager) {
     super(manager)
     this.Umbra = Umbra
   }
 
   load(url: string, onLoad, onProgress, onError) {
-    const model = this.Umbra.createModel(url)
+    const model = this.Umbra.createScene(url)
 
     if (onError) {
       model.onConnectionError = err => {

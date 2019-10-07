@@ -4,24 +4,24 @@ import {
   TextureType,
   PlatformFeatures,
   Runtime,
-  Scene,
+  NativeScene,
   View,
   Renderable,
   ConnectionStatus,
 } from '@umbra3d/umbrajs'
-import { PublicLink } from './Locator'
+import { PublicLink } from './PublicLink'
 import { ShaderPatcher } from './ShaderPatcher'
 import { ObjectPool } from './ObjectPool'
 
-export interface ModelFactory {
-  createModel(link: string | PublicLink): Model
-  createModelWithURL(url: string): Model
+export interface SceneFactory {
+  createScene(link: string | PublicLink): UmbraScene
+  createSceneWithURL(url: string): UmbraScene
 }
 
 type UmbraMesh = THREE.Mesh & { isUmbraMesh: true }
 type UmbraCamera = THREE.Camera & { umbraStreamingPosition?: THREE.Vector3 }
 
-interface ModelStats {
+interface SceneStatus {
   connected: boolean
   sceneInfo?
   numVisible: number
@@ -31,8 +31,8 @@ interface ModelStats {
 }
 
 /**
- * A wrapper type for mesh geometry and its material. Only the ModelObject instantiates the
- * THREE.Mesh objects that are passed to the renderer. ModelObject also creates the final
+ * A wrapper type for mesh geometry and its material. Only UmbraScene instantiates the
+ * THREE.Mesh objects that are passed to the renderer. UmbraScene also creates the final
  * THREE.Material instance using the textures and transparency flag in 'materialDesc'
  */
 export interface MeshDescriptor {
@@ -40,11 +40,11 @@ export interface MeshDescriptor {
   materialDesc
 }
 
-type DisposeCallback = (m: Model) => void
+type DisposeCallback = (m: UmbraScene) => void
 
-export class Model extends THREE.Object3D {
+export class UmbraScene extends THREE.Object3D {
   // User editable config
-  quality = 0.5 // Streaming model quality. Ranges from 0 to 1.
+  quality = 0.5 // Streaming scene quality. Ranges from 0 to 1.
   material: THREE.Material = new THREE.MeshBasicMaterial()
   wireframe = false
   freeze = false
@@ -66,7 +66,7 @@ export class Model extends THREE.Object3D {
   // We need to present ourselves as a LOD object to get the update() call
   readonly isLOD = true
   readonly autoUpdate = true
-  readonly name = 'UmbraModel'
+  readonly name = 'UmbraScene'
 
   private renderer: THREE.WebGLRenderer
 
@@ -86,11 +86,11 @@ export class Model extends THREE.Object3D {
     missingNormals: {
       checked: false,
       message:
-        'Property model.opaqueMaterial has been deprecated. Use model.material instead.',
+        'Property umbraScene.opaqueMaterial has been deprecated. Use umbraScene.material instead.',
     },
     deprecatedMaterial: {
       checked: false,
-      message: 'Model has no normals so it will appear black.',
+      message: 'UmbraScene has no normals so it will appear black.',
     },
     report: (field: string) => {
       if (!this.diagnostics[field].checked) {
@@ -102,7 +102,7 @@ export class Model extends THREE.Object3D {
 
   private umbra: {
     runtime: NonNullable<Runtime>
-    scene: NonNullable<Scene>
+    nativeScene: NonNullable<NativeScene>
   }
 
   private onDispose: DisposeCallback
@@ -120,10 +120,10 @@ export class Model extends THREE.Object3D {
   private tempVector = new THREE.Vector3()
   private dirVector = new THREE.Vector3()
 
-  // Model should be instantiated using Umbra.createModel()
+  // UmbraScene should be instantiated using Umbra.createScene()
   constructor(
     runtime: Runtime,
-    scene: Scene,
+    scene: NativeScene,
     renderer: THREE.WebGLRenderer,
     features: PlatformFeatures,
     onDispose: DisposeCallback = undefined,
@@ -134,13 +134,13 @@ export class Model extends THREE.Object3D {
     this.shaderPatcher = new ShaderPatcher(features.formats)
     this.onDispose = onDispose
 
-    // We need to flip the Z-axis since models are stored in "left-handed Y is up" coordinate system
+    // We need to flip the Z-axis since scenes are stored in "left-handed Y is up" coordinate system
     this.scale.set(1.0, 1.0, -1.0)
 
     // Add API objects under their own object for clarity
     this.umbra = {
       runtime: runtime,
-      scene: scene,
+      nativeScene: scene,
     }
   }
 
@@ -154,21 +154,21 @@ export class Model extends THREE.Object3D {
     this.material = mat
   }
 
-  getInfo(): ModelStats {
-    const info = { connected: this.umbra.scene.isConnected() }
+  getInfo(): SceneStatus {
+    const info = { connected: this.umbra.nativeScene.isConnected() }
     if (info.connected) {
-      info['sceneInfo'] = this.umbra.scene.getInfo()
+      info['sceneInfo'] = this.umbra.nativeScene.getInfo()
     }
     Object.assign(info, this.stats)
-    return info as ModelStats
+    return info as SceneStatus
   }
 
   getBounds(): THREE.Box3 {
-    if (!this.umbra.scene.isConnected()) {
+    if (!this.umbra.nativeScene.isConnected()) {
       return undefined
     }
 
-    const info = this.umbra.scene.getInfo()
+    const info = this.umbra.nativeScene.getInfo()
     const bounds = info.bounds
     const min = bounds.mn
     const max = bounds.mx
@@ -228,7 +228,7 @@ export class Model extends THREE.Object3D {
 
   // This gets called by ThreejsIntegration's periodic update handler
   private updateNetworkEvents() {
-    const status = this.umbra.scene.connectionStatus()
+    const status = this.umbra.nativeScene.connectionStatus()
 
     if (this.oldState.status !== status) {
       if (this.onConnectionChanged) {
@@ -357,7 +357,7 @@ export class Model extends THREE.Object3D {
      * than in the main camera render pass. This is why 'mesh.castShadow' doesn't help here
      * since it does the exact opposite.
      *
-     * We use a workaround that first adds the common meshes as children of the Umbra model
+     * We use a workaround that first adds the common meshes as children of the Umbra scene
      * object but stashes the shadow caster meshes (visible only from lights) to an extra
      * list 'shadowCasters'.
      *
@@ -369,18 +369,18 @@ export class Model extends THREE.Object3D {
      *
      * In essence, the flow is the following.
      *
-     *    three.js                           model object (this)
+     *    three.js                           scene object (this)
      *    --------                           ------------------
-     *    Starts traversing scene graph
-     *    Calls model.update(cam) ---------> Updates views
+     *    Starts traversing three.js scene graph
+     *    Calls scene.update(cam) ---------> Updates views
      *                                       Fetches a list of renderables
      *                                       Adds common meshes to this.children
-     *    Adds model.children to
+     *    Adds scene.children to
      *      the render list
-     *    Starts rendering model.children
+     *    Starts rendering scene.children
      *    Calls proxy.update(cam) ---------> Proxy goes and adds shadow casters to this.children
      *    Starts the shadow pass
-     *    Adds model.children to shadow
+     *    Adds scene.children to shadow
      *      render list
      *    Renders the shadow pass
      *    Renders the opaque pass
@@ -546,7 +546,7 @@ export class Model extends THREE.Object3D {
 
     // We don't dispose mesh geometries here because they are managed by the Runtime
 
-    this.umbra.scene.destroy()
+    this.umbra.nativeScene.destroy()
     // Runtime must be manually freed by the user with .dispose() of the API object
   }
 

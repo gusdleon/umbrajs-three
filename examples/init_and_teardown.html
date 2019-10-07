@@ -31,8 +31,7 @@
       setStatus('Initializing Umbra')
       let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
   
-      // Create a 3D model object
-      let model = Umbra.createModel('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
+      let umbraScene = Umbra.createScene('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
 
       setStatus('Setting up scene')
       // Set up a basic three.js scene
@@ -43,15 +42,14 @@
 
       renderer.setSize(window.innerWidth, window.innerHeight)
 
-      // Add the 3D model to the scene
-      scene.add(model)
+      scene.add(umbraScene)
 
-      // Position the model so it's visible
-      model.position.set(0.5, 0.1, -0.1)
-      model.scale.set(1.0, 1.0, -1.0)
-      model.updateMatrix()
+      // Position the object so it's visible
+      umbraScene.position.set(0.5, 0.1, -0.1)
+      umbraScene.scale.set(1.0, 1.0, -1.0)
+      umbraScene.updateMatrix()
 
-      // Point the camera at the model
+      // Point the camera at it
       camera.position.set(-0.3878, 2.99, -1.033)
       controls.update()
 
@@ -67,8 +65,8 @@
           setStatus('Animation finished')
           setStatus('Cleaning up')
 
-          // Dispose must be called for each model
-          model.dispose()
+          // Dispose must be called for each UmbraScene
+          umbraScene.dispose()
           // This frees the Emscripten resources
           Umbra.dispose()
 

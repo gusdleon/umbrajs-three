@@ -10,12 +10,12 @@ import {
   TextureType,
   ColorSpace,
   Runtime,
-  Scene,
+  NativeScene,
   VertexBuffer,
 } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
-import { PublicLink } from './Locator'
-import { Model, ModelFactory, MeshDescriptor } from './Model'
+import { PublicLink } from './PublicLink'
+import { UmbraScene, SceneFactory, MeshDescriptor } from './Scene'
 import { WebGLRenderer } from 'three'
 import { HeapBufferView } from '@umbra3d/umbrajs/dist/Heap'
 
@@ -35,7 +35,7 @@ function makeBoundingSphere(aabb: UmbraMath.BoundingBox) {
   return new THREE.Sphere(pos, size.length())
 }
 
-class ThreejsIntegration implements ModelFactory {
+class ThreejsIntegration implements SceneFactory {
   // Upper VRAM memory use limit in bytes
   memoryLimit = 500 * 1024 * 1024
   // Upper total download size limit in bytes. Turned off by default.
@@ -63,7 +63,7 @@ class ThreejsIntegration implements ModelFactory {
     return this.textureMemoryUsed + this.meshMemoryUsed
   }
 
-  private models = new Set<Model>()
+  private umbraScenes = new Set<UmbraScene>()
 
   private oldState = {
     progress: 0,
@@ -96,7 +96,7 @@ class ThreejsIntegration implements ModelFactory {
     this.stopEventUpdate()
     this.updateTask = window.setInterval(() => {
       this.updateEvents()
-      this.models.forEach(m => (m as any).updateNetworkEvents())
+      this.umbraScenes.forEach(m => (m as any).updateNetworkEvents())
     }, interval)
   }
 
@@ -130,7 +130,7 @@ class ThreejsIntegration implements ModelFactory {
     }
   }
 
-  createModel(link: string | PublicLink): Model {
+  createScene(link: string | PublicLink): UmbraScene {
     let url: string
     if (typeof link === 'string') {
       url = link
@@ -146,7 +146,7 @@ class ThreejsIntegration implements ModelFactory {
 
       if (!('key' in link && 'project' in link && 'model' in link)) {
         throw new Error(
-          'createModel() expects an object with properties "key", "project", and "model"',
+          'createScene() expects an object with properties "key", "project", and "model"',
         )
       }
       url = `key=${link.key}&project=${link.project}&model=${link.model}`
@@ -154,28 +154,27 @@ class ThreejsIntegration implements ModelFactory {
       throw new TypeError('expected either string or an object argument')
     }
 
-    const scene = this.runtime.connectPublic(url)
-    const model = new Model(
+    const model = new UmbraScene(
       this.runtime,
-      scene,
+      this.runtime.connectPublic(url),
       this.renderer,
       this.features,
-      m => this.models.delete(m),
+      m => this.umbraScenes.delete(m),
     )
-    this.models.add(model)
+    this.umbraScenes.add(model)
     return model
   }
 
-  createModelWithURL(url: string): Model {
+  createSceneWithURL(url: string): UmbraScene {
     const scene = this.runtime.connectLocal(url)
-    const model = new Model(
+    const model = new UmbraScene(
       this.runtime,
       scene,
       this.renderer,
       this.features,
-      m => this.models.delete(m),
+      m => this.umbraScenes.delete(m),
     )
-    this.models.add(model)
+    this.umbraScenes.add(model)
     return model
   }
 
@@ -206,7 +205,7 @@ class ThreejsIntegration implements ModelFactory {
     if (this.renderer.info.render.frame == this.lastQualityLowerFrame) {
       return
     }
-    this.models.forEach((m: Model) => {
+    this.umbraScenes.forEach((m: UmbraScene) => {
       m.qualityFactor = Math.min(1, m.qualityFactor * factor)
     })
     this.lastQualityLowerFrame = this.renderer.info.render.frame
@@ -410,7 +409,7 @@ class ThreejsIntegration implements ModelFactory {
   dispose() {
     window.clearInterval(this.updateTask)
 
-    this.models.forEach((m: Model) => m.dispose())
+    this.umbraScenes.forEach((m: UmbraScene) => m.dispose())
 
     this.runtime.assets.forEach((asset, userPtr) => {
       if ('geometry' in asset) {
@@ -447,5 +446,5 @@ export function initWithThreeJS(
 
 // Hide the library object constructor by wrapping it in an interface
 interface UmbrajsThree extends ThreejsIntegration {}
-export { Model, UmbrajsThree }
-export { ModelLoader as Loader } from './Loader'
+export { UmbraScene as Model, UmbrajsThree }
+export { Loader } from './Loader'

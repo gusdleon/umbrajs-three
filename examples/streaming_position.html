@@ -22,11 +22,11 @@
 (async function () {
   let renderer = new THREE.WebGLRenderer()
 
-  // Initialize the library and create a three.js object that contains our model
+  // Initialize the library and create a three.js object that contains our scene
 
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
-  let model = Umbra.createModel('key=pubk-72475579-2ca4-49da-9ff5-6e4fbf0ba170&project=1005906&model=321704672')
+  let umbraScene = Umbra.createScene('key=pubk-72475579-2ca4-49da-9ff5-6e4fbf0ba170&project=1005906&model=321704672')
 
   let scene = new THREE.Scene()
   let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -39,17 +39,16 @@
   renderer.setSize(window.innerWidth, window.innerHeight)
 
   var gui = new dat.GUI()
-  gui.add(model, 'wireframe').name('Wireframe')
+  gui.add(umbraScene, 'wireframe').name('Wireframe')
 
   let helper = makeSphere(0.3, 0xffcccc)
   scene.add(helper)
 
-  model.position.set(-5, -30, 0)
-  model.quality = 0.1
-  model.material.wireframe = true
+  umbraScene.position.set(-5, -30, 0)
+  umbraScene.quality = 0.1
+  umbraScene.material.wireframe = true
 
-  // Add Umbra model to the scene
-  scene.add(model)
+  scene.add(umbraScene)
 
   let frame = 0
   let target = new THREE.Vector3(-1, 6, 3)

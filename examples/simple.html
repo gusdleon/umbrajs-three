@@ -25,7 +25,7 @@
 
   // Initialize Umbra library with the given renderer
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
-  let model = Umbra.createModel('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
+  let umbraScene = Umbra.createScene('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
 
   // Set up a basic three.js scene
   let scene = new THREE.Scene()
@@ -35,15 +35,14 @@
 
   renderer.setSize(window.innerWidth, window.innerHeight)
 
-  // Add the 3D model to the scene
-  scene.add(model)
+  scene.add(umbraScene)
 
-  // Position the model so it's visible
-  model.position.set(0.5, 0.1, -0.1)
-  model.scale.set(1.0, 1.0, -1.0)
-  model.updateMatrix()
+  // Position the scene so it's visible
+  umbraScene.position.set(0.5, 0.1, -0.1)
+  umbraScene.scale.set(1.0, 1.0, -1.0)
+  umbraScene.updateMatrix()
 
-  // Point the camera at the model
+  // Point the camera at it
   camera.position.set(-0.3878, 0.99, -1.033)
   controls.update()
 
