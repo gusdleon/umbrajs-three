@@ -38,7 +38,10 @@ function makeBoundingSphere(aabb: UmbraMath.BoundingBox) {
 class ThreejsIntegration implements ModelFactory {
   // Upper VRAM memory use limit in bytes
   memoryLimit = 500 * 1024 * 1024
-  perFrameBudget = 10 // In milliseconds
+  // Upper total download size limit in bytes. Turned off by default.
+  downloadLimit = 0
+  // Per frame asset loading time budget in milliseconds
+  perFrameBudget = 10
 
   onStreamingUpdate: (progress: number) => void
   onStreamingComplete: () => void
@@ -64,6 +67,7 @@ class ThreejsIntegration implements ModelFactory {
 
   private oldState = {
     progress: 0,
+    downloadLimitReached: false,
   }
 
   // This class should be instantiated via initUmbra()
@@ -104,8 +108,22 @@ class ThreejsIntegration implements ModelFactory {
   }
 
   update() {
-    this.runtime.update()
-    this.runtime.loadAssets(this.handlers, this.perFrameBudget)
+    const downloadLimitReached =
+      this.downloadLimit !== 0 &&
+      this.getStats().maxBytesDownloaded >= this.downloadLimit
+
+    // If the limit is reached we freeze all updates. View frustum culling
+    // will still work, but the streaming set is kept static.
+    if (downloadLimitReached) {
+      if (!this.oldState.downloadLimitReached) {
+        this.umbrajs.abortDownloads()
+      }
+    } else {
+      this.runtime.update()
+      this.runtime.loadAssets(this.handlers, this.perFrameBudget)
+    }
+
+    this.oldState.downloadLimitReached = downloadLimitReached
 
     if (this.memoryUsed / this.memoryLimit < 0.25) {
       this.adjustQuality(1.1)
