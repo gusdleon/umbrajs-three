@@ -49,7 +49,6 @@
   Umbra.downloadLimit = 50 * 1024 * 1024
 
   let animate = function () {
-    
     const stats = Umbra.getStats()
     document.querySelector('#status').innerHTML = `${(stats.maxBytesDownloaded/(1024*1024)).toFixed(2)} MiB downloaded`
     Umbra.update()
