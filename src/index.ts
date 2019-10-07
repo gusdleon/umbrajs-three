@@ -40,8 +40,6 @@ class ThreejsIntegration implements SceneFactory {
   memoryLimit = 500 * 1024 * 1024
   // Upper total download size limit in bytes. Turned off by default.
   downloadLimit = 0
-  // Per frame asset loading time budget in milliseconds
-  perFrameBudget = 10
 
   onStreamingUpdate: (progress: number) => void
   onStreamingComplete: () => void
@@ -107,7 +105,7 @@ class ThreejsIntegration implements SceneFactory {
     }
   }
 
-  update() {
+  update(timeBudget = 10) {
     const downloadLimitReached =
       this.downloadLimit !== 0 &&
       this.getStats().maxBytesDownloaded >= this.downloadLimit
@@ -119,8 +117,10 @@ class ThreejsIntegration implements SceneFactory {
         this.umbrajs.abortDownloads()
       }
     } else {
+      const start = performance.now()
       this.runtime.update()
-      this.runtime.loadAssets(this.handlers, this.perFrameBudget)
+      const updateTook = performance.now() - start
+      this.runtime.loadAssets(this.handlers, timeBudget - updateTook)
     }
 
     this.oldState.downloadLimitReached = downloadLimitReached

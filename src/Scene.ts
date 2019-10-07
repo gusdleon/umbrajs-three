@@ -258,7 +258,7 @@ export class UmbraScene extends THREE.Object3D {
   }
 
   update = function(camera: UmbraCamera) {
-    let scene
+    let parentScene
 
     if (this.freeze) {
       return
@@ -266,11 +266,11 @@ export class UmbraScene extends THREE.Object3D {
 
     this.traverseAncestors(obj => {
       if (obj.isScene) {
-        scene = obj
+        parentScene = obj
       }
     })
 
-    if (!scene && !scene.isScene) {
+    if (!parentScene && !parentScene.isScene) {
       console.log('No parent scene found')
       return
     }
@@ -289,7 +289,7 @@ export class UmbraScene extends THREE.Object3D {
     let lights: THREE.DirectionalLight[] = []
 
     if (this.renderer.shadowMap.enabled) {
-      lights = findLights(scene)
+      lights = findLights(parentScene)
     }
 
     let view = this.cameraToView.get(camera) as View
@@ -304,7 +304,7 @@ export class UmbraScene extends THREE.Object3D {
     this.viewLastUsed.set(view, frame)
     this.pruneOldViews(frame)
 
-    this.umbra.scene.setTransform(this.matrixWorld.elements)
+    this.umbra.nativeScene.setTransform(this.matrixWorld.elements)
 
     // If we are using a PBR material then we might need to flip the tangent vector
     if (this.isPBREnabled()) {
