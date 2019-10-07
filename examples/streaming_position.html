@@ -26,10 +26,7 @@
 
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
-  let model = Umbra.createModel({
-    key: 'pubk-72475579-2ca4-49da-9ff5-6e4fbf0ba170',
-    project: '1005906',
-    model: '321704672' })
+  let model = Umbra.createModel('key=pubk-72475579-2ca4-49da-9ff5-6e4fbf0ba170&project=1005906&model=321704672')
 
   let scene = new THREE.Scene()
   let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
