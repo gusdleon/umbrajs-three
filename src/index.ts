@@ -407,8 +407,7 @@ class ThreejsIntegration implements SceneFactory {
   }
 
   dispose() {
-    window.clearInterval(this.updateTask)
-
+    this.stopEventUpdate()
     this.umbraScenes.forEach((m: UmbraScene) => m.dispose())
 
     this.runtime.assets.forEach((asset, userPtr) => {
