@@ -3,7 +3,7 @@ import { UmbraInstance } from '@umbra3d/umbrajs';
 import { PublicLink } from './PublicLink';
 import { UmbraScene, SceneFactory } from './Scene';
 import { WebGLRenderer } from 'three';
-declare class ThreejsIntegration implements SceneFactory {
+declare class UmbrajsThreeInternal implements SceneFactory {
     memoryLimit: number;
     downloadLimit: number;
     onStreamingUpdate: (progress: number) => void;
@@ -55,8 +55,8 @@ declare class ThreejsIntegration implements SceneFactory {
 }
 export declare function initWithThreeJS(renderer: THREE.WebGLRenderer, userConfig: {
     wasmURL?: string;
-}): Promise<ThreejsIntegration>;
-interface UmbrajsThree extends ThreejsIntegration {
+}): Promise<UmbrajsThreeInternal>;
+interface UmbrajsThree extends UmbrajsThreeInternal {
 }
 export { UmbraScene as Model, UmbrajsThree };
 export { Loader } from './Loader';

@@ -348,7 +348,7 @@
         return a;
       }
 
-      var G, D, C, va, wa, w, _H, xa, ya;
+      var G, D, C, va, wa, w, H, xa, ya;
 
       function za() {
         c.HEAP8 = D = new Int8Array(G);
@@ -356,12 +356,12 @@
         c.HEAP32 = w = new Int32Array(G);
         c.HEAPU8 = C = new Uint8Array(G);
         c.HEAPU16 = wa = new Uint16Array(G);
-        c.HEAPU32 = _H = new Uint32Array(G);
+        c.HEAPU32 = H = new Uint32Array(G);
         c.HEAPF32 = xa = new Float32Array(G);
         c.HEAPF64 = ya = new Float64Array(G);
       }
 
-      var ea = 16784,
+      var ea = 16768,
           Aa = c.TOTAL_MEMORY || 134217728;
       5242880 > Aa && v("TOTAL_MEMORY should be larger than TOTAL_STACK, was " + Aa + "! (TOTAL_STACK=5242880)");
       c.wasmMemory ? z = c.wasmMemory : z = new WebAssembly.Memory({
@@ -370,7 +370,7 @@
       z && (G = z.buffer);
       Aa = G.byteLength;
       za();
-      w[ea >> 2] = 5259696;
+      w[ea >> 2] = 5259680;
 
       function Ba(a) {
         for (; 0 < a.length;) {
@@ -581,7 +581,7 @@
       }
 
       function ab(a) {
-        return this.fromWireType(_H[a >> 2]);
+        return this.fromWireType(H[a >> 2]);
       }
 
       var N = {},
@@ -859,7 +859,7 @@
             return d ? function (a) {
               return w[a >> 2];
             } : function (a) {
-              return _H[a >> 2];
+              return H[a >> 2];
             };
 
           default:
@@ -1154,7 +1154,7 @@
         function e() {
           Tb = !1;
           var a = f.parentNode;
-          (document.fullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement || document.webkitCurrentFullScreenElement) === a ? (f.exitFullscreen = ic, fc && f.requestPointerLock(), Tb = !0, gc ? ("undefined" != typeof SDL && (w[SDL.screen >> 2] = _H[SDL.screen >> 2] | 8388608), jc(c.canvas), kc()) : jc(f)) : (a.parentNode.insertBefore(f, a), a.parentNode.removeChild(a), gc ? ("undefined" != typeof SDL && (w[SDL.screen >> 2] = _H[SDL.screen >> 2] & -8388609), jc(c.canvas), kc()) : jc(f));
+          (document.fullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement || document.webkitCurrentFullScreenElement) === a ? (f.exitFullscreen = ic, fc && f.requestPointerLock(), Tb = !0, gc ? ("undefined" != typeof SDL && (w[SDL.screen >> 2] = H[SDL.screen >> 2] | 8388608), jc(c.canvas), kc()) : jc(f)) : (a.parentNode.insertBefore(f, a), a.parentNode.removeChild(a), gc ? ("undefined" != typeof SDL && (w[SDL.screen >> 2] = H[SDL.screen >> 2] & -8388609), jc(c.canvas), kc()) : jc(f));
           if (c.onFullScreen) c.onFullScreen(Tb);
           if (c.onFullscreen) c.onFullscreen(Tb);
         }
@@ -1354,7 +1354,7 @@
       }
 
       c._exit = yc;
-      na("GMT", C, 16688, 4);
+      na("GMT", C, 16672, 4);
 
       function zc() {
         function a(a) {
@@ -1495,7 +1495,7 @@
           c.___errno_location && (w[c.___errno_location() >> 2] = a);
           return a;
         },
-        N: function N(a, b) {
+        M: function M(a, b) {
           _L = b;
 
           try {
@@ -1504,7 +1504,7 @@
             return y(d), -d.Lb;
           }
         },
-        M: function M(a, b) {
+        L: function L(a, b) {
           _L = b;
 
           try {
@@ -1567,11 +1567,11 @@
             return y(g), -g.Lb;
           }
         },
-        L: function L(a, b) {
+        K: function K(a, b) {
           _L = b;
           return 0;
         },
-        K: function K(a, b) {
+        J: function J(a, b) {
           _L = b;
 
           try {
@@ -1581,7 +1581,7 @@
           }
         },
         w: function w() {},
-        J: function J(a) {
+        I: function I(a) {
           var b = Za[a];
           delete Za[a];
           var d = b.bc,
@@ -1689,7 +1689,7 @@
             Jb: null
           });
         },
-        I: function I(a, b, d) {
+        H: function H(a, b, d) {
           d = hb(d);
           b = Q(b);
           P(a, {
@@ -1795,7 +1795,7 @@
         o: function o(a, b, d) {
           function e(a) {
             a >>= 2;
-            var b = _H;
+            var b = H;
             return new f(b.buffer, b[a + 1], b[a]);
           }
 
@@ -1810,13 +1810,13 @@
             Zb: !0
           });
         },
-        H: function H(a, b) {
+        G: function G(a, b) {
           b = Q(b);
           var d = "std::string" === b;
           P(a, {
             name: b,
             fromWireType: function fromWireType(a) {
-              var b = _H[a >> 2];
+              var b = H[a >> 2];
 
               if (d) {
                 var e = C[a + 4 + b],
@@ -1858,7 +1858,7 @@
                 return b.length;
               })(),
                   h = F(4 + f + 1);
-              _H[h >> 2] = f;
+              H[h >> 2] = f;
               if (d && e) na(b, C, h + 4, f + 1);else if (e) for (e = 0; e < f; ++e) {
                 var l = b.charCodeAt(e);
                 255 < l && (V(h), R("String has UTF-16 code units that do not fit in 8 bits"));
@@ -1886,13 +1886,13 @@
 
             var f = 1;
           } else 4 === b && (e = function e() {
-            return _H;
+            return H;
           }, f = 2);
 
           P(a, {
             name: d,
             fromWireType: function fromWireType(a) {
-              for (var b = e(), d = _H[a >> 2], g = Array(d), n = a + 4 >> f, u = 0; u < d; ++u) {
+              for (var b = e(), d = H[a >> 2], g = Array(d), n = a + 4 >> f, u = 0; u < d; ++u) {
                 g[u] = String.fromCharCode(b[n + u]);
               }
 
@@ -1903,7 +1903,7 @@
               var g = e(),
                   k = d.length,
                   n = F(4 + k * b);
-              _H[n >> 2] = k;
+              H[n >> 2] = k;
 
               for (var u = n + 4 >> f, q = 0; q < k; ++q) {
                 g[u + q] = d.charCodeAt(q);
@@ -1919,7 +1919,7 @@
             }
           });
         },
-        G: function G(a, b, d, e, f, g) {
+        F: function F(a, b, d, e, f, g) {
           Za[a] = {
             name: Q(b),
             bc: sb(d, e),
@@ -1995,7 +1995,7 @@
           b = W(b);
           return T(a[b]);
         },
-        F: function F(a) {
+        E: function E(a) {
           4 < a && (S[a].Ob += 1);
         },
         s: function s() {
@@ -2022,34 +2022,34 @@
           a = a.readValueFromPointer(b);
           return T(a);
         },
-        E: function E() {
+        W: function W() {
           c.abort();
         },
         D: function D(a) {
           return Sa[a]();
         },
-        W: function W(a, b, d, e, f, g, k, h, l, n, u, q) {
+        V: function V(a, b, d, e, f, g, k, h, l, n, u, q) {
           return Sa[a](b, d, e, f, g, k, h, l, n, u, q);
         },
         C: function C(a) {
           (a = pc[a]) && a.abort();
         },
-        V: fa,
+        U: fa,
         k: Y,
         B: function B(a, b, d, e, f) {
           wc(E(a), E(b), function (a, b) {
             a ? f && Ic(f, d) : (a = F(b.length), C.set(b, a), Jc(e, d, a, b.length), V(a));
           });
         },
-        U: function U(a, b, d, e, f, g, k) {
+        T: function T(a, b, d, e, f, g, k) {
           xc(E(a), E(b), new Uint8Array(C.subarray(d, d + e)), function (a) {
             a ? k && Ic(k, f) : g && Ic(g, f);
           });
         },
-        T: function T(a, b, d) {
+        S: function S(a, b, d) {
           C.set(C.subarray(b, b + d), a);
         },
-        S: function S(a) {
+        R: function R(a) {
           if (2147418112 < a) return !1;
 
           for (var b = Math.max(fa(), 16777216); b < a;) {
@@ -2060,41 +2060,41 @@
           za();
           return !0;
         },
-        R: yc,
+        Q: yc,
         A: function A() {
           y("trap!");
         },
-        Q: function Q(a) {
+        P: function P(a) {
           zc();
           a = new Date(1E3 * w[a >> 2]);
-          w[4160] = a.getSeconds();
-          w[4161] = a.getMinutes();
-          w[4162] = a.getHours();
-          w[4163] = a.getDate();
-          w[4164] = a.getMonth();
-          w[4165] = a.getFullYear() - 1900;
-          w[4166] = a.getDay();
+          w[4156] = a.getSeconds();
+          w[4157] = a.getMinutes();
+          w[4158] = a.getHours();
+          w[4159] = a.getDate();
+          w[4160] = a.getMonth();
+          w[4161] = a.getFullYear() - 1900;
+          w[4162] = a.getDay();
           var b = new Date(a.getFullYear(), 0, 1);
-          w[4167] = (a.getTime() - b.getTime()) / 864E5 | 0;
-          w[4169] = -(60 * a.getTimezoneOffset());
+          w[4163] = (a.getTime() - b.getTime()) / 864E5 | 0;
+          w[4165] = -(60 * a.getTimezoneOffset());
           var d = new Date(2E3, 6, 1).getTimezoneOffset();
           b = b.getTimezoneOffset();
           a = (d != b && a.getTimezoneOffset() == Math.min(b, d)) | 0;
-          w[4168] = a;
+          w[4164] = a;
           a = w[Ec() + (a ? 4 : 0) >> 2];
-          w[4170] = a;
-          return 16640;
+          w[4166] = a;
+          return 16624;
         },
-        P: function P(a) {
+        O: function O(a) {
           var b = Date.now() / 1E3 | 0;
           a && (w[a >> 2] = b);
           return b;
         },
-        O: function O() {
+        N: function N() {
           y("OOM");
         },
         a: ea,
-        b: 16624
+        b: 16608
       }, G);
       c.asm = Kc;
 
@@ -2106,183 +2106,183 @@
         return c.asm.ga.apply(null, arguments);
       };
 
-      c._UmbraAssetLoadGetMaterialInfo = function () {
+      c._UmbraAssetLoadGetType = function () {
         return c.asm.ha.apply(null, arguments);
       };
 
-      c._UmbraAssetLoadGetMeshData = function () {
+      c._UmbraAssetLoadPrepare = function () {
         return c.asm.ia.apply(null, arguments);
       };
 
-      c._UmbraAssetLoadGetMeshInfo = function () {
+      c._UmbraAssetUnloadFinish = function () {
         return c.asm.ja.apply(null, arguments);
       };
 
-      c._UmbraAssetLoadGetMetaDataLookupTable = function () {
+      c._UmbraAssetUnloadGetType = function () {
         return c.asm.ka.apply(null, arguments);
       };
 
-      c._UmbraAssetLoadGetTextureData = function () {
+      c._UmbraAssetUnloadGetUserPointer = function () {
         return c.asm.la.apply(null, arguments);
       };
 
-      c._UmbraAssetLoadGetTextureInfo = function () {
+      c._UmbraClientCreate = function () {
         return c.asm.ma.apply(null, arguments);
       };
 
-      c._UmbraAssetLoadGetType = function () {
+      c._UmbraClientDestroy = function () {
         return c.asm.na.apply(null, arguments);
       };
 
-      c._UmbraAssetLoadPrepare = function () {
+      c._UmbraConfigInit = function () {
         return c.asm.oa.apply(null, arguments);
       };
 
-      c._UmbraAssetUnloadFinish = function () {
+      c._UmbraEnvironmentInfoDefaults = function () {
         return c.asm.pa.apply(null, arguments);
       };
 
-      c._UmbraAssetUnloadGetType = function () {
+      c._UmbraGetLibraryInfo = function () {
         return c.asm.qa.apply(null, arguments);
       };
 
-      c._UmbraAssetUnloadGetUserPointer = function () {
+      c._UmbraMaterialLoadGetInfo = function () {
         return c.asm.ra.apply(null, arguments);
       };
 
-      c._UmbraClientCreate = function () {
+      c._UmbraMeshLoadGetData = function () {
         return c.asm.sa.apply(null, arguments);
       };
 
-      c._UmbraClientDestroy = function () {
+      c._UmbraMeshLoadGetInfo = function () {
         return c.asm.ta.apply(null, arguments);
       };
 
-      c._UmbraConfigInit = function () {
+      c._UmbraMeshStreamDone = function () {
         return c.asm.ua.apply(null, arguments);
       };
 
-      c._UmbraEnvironmentInfoDefaults = function () {
+      c._UmbraMeshStreamNext = function () {
         return c.asm.va.apply(null, arguments);
       };
 
-      c._UmbraGetClassification = function () {
+      c._UmbraMeshStreamSetBuffers = function () {
         return c.asm.wa.apply(null, arguments);
       };
 
-      c._UmbraGetClassificationAmount = function () {
+      c._UmbraRuntimeCreate = function () {
         return c.asm.xa.apply(null, arguments);
       };
 
-      c._UmbraGetClassificationCount = function () {
+      c._UmbraRuntimeDestroy = function () {
         return c.asm.ya.apply(null, arguments);
       };
 
-      c._UmbraGetLibraryInfo = function () {
+      c._UmbraRuntimeGetStreamingState = function () {
         return c.asm.za.apply(null, arguments);
       };
 
-      c._UmbraGetMipmapLevelByteSize = function () {
+      c._UmbraRuntimeNextAssetLoad = function () {
         return c.asm.Aa.apply(null, arguments);
       };
 
-      c._UmbraGetMipmapLevelOffset = function () {
+      c._UmbraRuntimeNextAssetUnload = function () {
         return c.asm.Ba.apply(null, arguments);
       };
 
-      c._UmbraGetNextAssetLoad = function () {
+      c._UmbraRuntimeUpdate = function () {
         return c.asm.Ca.apply(null, arguments);
       };
 
-      c._UmbraGetNextAssetUnload = function () {
+      c._UmbraSceneCopyCreate = function () {
         return c.asm.Da.apply(null, arguments);
       };
 
-      c._UmbraGetStreamingState = function () {
+      c._UmbraSceneCopyDestroy = function () {
         return c.asm.Ea.apply(null, arguments);
       };
 
-      c._UmbraGetVertexAttributeElementSize = function () {
+      c._UmbraSceneCopyGetError = function () {
         return c.asm.Fa.apply(null, arguments);
       };
 
-      c._UmbraMeshLoadDone = function () {
+      c._UmbraSceneCopyGetStatus = function () {
         return c.asm.Ga.apply(null, arguments);
       };
 
-      c._UmbraMeshLoadNext = function () {
+      c._UmbraSceneCreate = function () {
         return c.asm.Ha.apply(null, arguments);
       };
 
-      c._UmbraMeshLoadSetBuffers = function () {
+      c._UmbraSceneCreateLocal = function () {
         return c.asm.Ia.apply(null, arguments);
       };
 
-      c._UmbraRuntimeCreate = function () {
+      c._UmbraSceneCreatePublic = function () {
         return c.asm.Ja.apply(null, arguments);
       };
 
-      c._UmbraRuntimeDestroy = function () {
+      c._UmbraSceneDestroy = function () {
         return c.asm.Ka.apply(null, arguments);
       };
 
-      c._UmbraRuntimeUpdate = function () {
+      c._UmbraSceneGetConnectionStatus = function () {
         return c.asm.La.apply(null, arguments);
       };
 
-      c._UmbraSceneConnect = function () {
+      c._UmbraSceneGetInfo = function () {
         return c.asm.Ma.apply(null, arguments);
       };
 
-      c._UmbraSceneConnectLocal = function () {
+      c._UmbraSceneSetTransform = function () {
         return c.asm.Na.apply(null, arguments);
       };
 
-      c._UmbraSceneConnectPublic = function () {
+      c._UmbraSetAllocator = function () {
         return c.asm.Oa.apply(null, arguments);
       };
 
-      c._UmbraSceneConnectionStatus = function () {
+      c._UmbraSetHttp = function () {
         return c.asm.Pa.apply(null, arguments);
       };
 
-      c._UmbraSceneCopyDestroy = function () {
+      c._UmbraSetLogger = function () {
         return c.asm.Qa.apply(null, arguments);
       };
 
-      c._UmbraSceneCopyGetError = function () {
+      c._UmbraTextureGetMipmapLevelByteSize = function () {
         return c.asm.Ra.apply(null, arguments);
       };
 
-      c._UmbraSceneCopyGetStatus = function () {
+      c._UmbraTextureGetMipmapLevelOffset = function () {
         return c.asm.Sa.apply(null, arguments);
       };
 
-      c._UmbraSceneDestroy = function () {
+      c._UmbraTextureLoadGetData = function () {
         return c.asm.Ta.apply(null, arguments);
       };
 
-      c._UmbraSceneGetInfo = function () {
+      c._UmbraTextureLoadGetInfo = function () {
         return c.asm.Ua.apply(null, arguments);
       };
 
-      c._UmbraSceneSetTransform = function () {
+      c._UmbraTextureMetaDataGetClassification = function () {
         return c.asm.Va.apply(null, arguments);
       };
 
-      c._UmbraSceneStartCopy = function () {
+      c._UmbraTextureMetaDataGetClassificationAmount = function () {
         return c.asm.Wa.apply(null, arguments);
       };
 
-      c._UmbraSetAllocator = function () {
+      c._UmbraTextureMetaDataGetClassificationCount = function () {
         return c.asm.Xa.apply(null, arguments);
       };
 
-      c._UmbraSetHttp = function () {
+      c._UmbraTextureMetaDataLoadGetData = function () {
         return c.asm.Ya.apply(null, arguments);
       };
 
-      c._UmbraSetLogger = function () {
+      c._UmbraVertexAttributeGetElementByteSize = function () {
         return c.asm.Za.apply(null, arguments);
       };
 
@@ -2290,11 +2290,11 @@
         return c.asm._a.apply(null, arguments);
       };
 
-      c._UmbraViewDataComplete = function () {
+      c._UmbraViewDestroy = function () {
         return c.asm.$a.apply(null, arguments);
       };
 
-      c._UmbraViewDestroy = function () {
+      c._UmbraViewGetCompleted = function () {
         return c.asm.ab.apply(null, arguments);
       };
 
@@ -2306,11 +2306,11 @@
         return c.asm.cb.apply(null, arguments);
       };
 
-      c._UmbraViewSetCamera = function () {
+      c._UmbraViewUpdateFilter = function () {
         return c.asm.db.apply(null, arguments);
       };
 
-      c._UmbraViewSetIntersection = function () {
+      c._UmbraViewUpdateRendering = function () {
         return c.asm.eb.apply(null, arguments);
       };
 
@@ -2552,7 +2552,7 @@
     };
   }();
 
-  // Generated at 2019-10-07 16:41:30
+  // Generated at 2019-10-14 12:10:55
   var MatrixFormat;
 
   (function (MatrixFormat) {
@@ -2687,53 +2687,29 @@
     InvalidUserPointer[InvalidUserPointer["InvalidUserPointer"] = 0] = "InvalidUserPointer";
   })(InvalidUserPointer || (InvalidUserPointer = {}));
 
-  var VertexAttribute;
+  var TextureSupportFlags;
 
-  (function (VertexAttribute) {
-    VertexAttribute[VertexAttribute["Position"] = 0] = "Position";
-    VertexAttribute[VertexAttribute["TextureCoordinate"] = 1] = "TextureCoordinate";
-    VertexAttribute[VertexAttribute["Normal"] = 2] = "Normal";
-    VertexAttribute[VertexAttribute["Tangent"] = 3] = "Tangent";
-    VertexAttribute[VertexAttribute["Count"] = 4] = "Count";
-  })(VertexAttribute || (VertexAttribute = {}));
-
-  var DepthRange;
-
-  (function (DepthRange) {
-    DepthRange[DepthRange["ZeroToOne"] = 0] = "ZeroToOne";
-    DepthRange[DepthRange["MinusOneToOne"] = 1] = "MinusOneToOne";
-    DepthRange[DepthRange["Count"] = 2] = "Count";
-  })(DepthRange || (DepthRange = {}));
-
-  var TextureCapability;
-
-  (function (TextureCapability) {
-    TextureCapability[TextureCapability["None"] = 0] = "None";
-    TextureCapability[TextureCapability["BC1"] = 1] = "BC1";
-    TextureCapability[TextureCapability["BC2"] = 2] = "BC2";
-    TextureCapability[TextureCapability["BC3"] = 4] = "BC3";
-    TextureCapability[TextureCapability["BC4"] = 8] = "BC4";
-    TextureCapability[TextureCapability["BC5"] = 16] = "BC5";
-    TextureCapability[TextureCapability["BC6H"] = 32] = "BC6H";
-    TextureCapability[TextureCapability["BC7"] = 64] = "BC7";
-    TextureCapability[TextureCapability["ASTC"] = 128] = "ASTC";
-    TextureCapability[TextureCapability["ETC1"] = 256] = "ETC1";
-    TextureCapability[TextureCapability["ETC2"] = 512] = "ETC2";
-    TextureCapability[TextureCapability["EAC_R"] = 1024] = "EAC_R";
-    TextureCapability[TextureCapability["EAC_RG"] = 2048] = "EAC_RG";
-    TextureCapability[TextureCapability["PVRTC1"] = 4096] = "PVRTC1";
-    TextureCapability[TextureCapability["PVRTC2"] = 8192] = "PVRTC2";
-    TextureCapability[TextureCapability["ATC"] = 16384] = "ATC";
-    TextureCapability[TextureCapability["HalfFloat"] = 32768] = "HalfFloat";
-    TextureCapability[TextureCapability["Float"] = 65536] = "Float";
-    TextureCapability[TextureCapability["All"] = 4294967295] = "All";
-  })(TextureCapability || (TextureCapability = {}));
-
-  var DataBufferFlags;
-
-  (function (DataBufferFlags) {
-    DataBufferFlags[DataBufferFlags["UncachedMemory"] = 1] = "UncachedMemory";
-  })(DataBufferFlags || (DataBufferFlags = {}));
+  (function (TextureSupportFlags) {
+    TextureSupportFlags[TextureSupportFlags["None"] = 0] = "None";
+    TextureSupportFlags[TextureSupportFlags["BC1"] = 1] = "BC1";
+    TextureSupportFlags[TextureSupportFlags["BC2"] = 2] = "BC2";
+    TextureSupportFlags[TextureSupportFlags["BC3"] = 4] = "BC3";
+    TextureSupportFlags[TextureSupportFlags["BC4"] = 8] = "BC4";
+    TextureSupportFlags[TextureSupportFlags["BC5"] = 16] = "BC5";
+    TextureSupportFlags[TextureSupportFlags["BC6H"] = 32] = "BC6H";
+    TextureSupportFlags[TextureSupportFlags["BC7"] = 64] = "BC7";
+    TextureSupportFlags[TextureSupportFlags["ASTC"] = 128] = "ASTC";
+    TextureSupportFlags[TextureSupportFlags["ETC1"] = 256] = "ETC1";
+    TextureSupportFlags[TextureSupportFlags["ETC2"] = 512] = "ETC2";
+    TextureSupportFlags[TextureSupportFlags["EAC_R"] = 1024] = "EAC_R";
+    TextureSupportFlags[TextureSupportFlags["EAC_RG"] = 2048] = "EAC_RG";
+    TextureSupportFlags[TextureSupportFlags["PVRTC1"] = 4096] = "PVRTC1";
+    TextureSupportFlags[TextureSupportFlags["PVRTC2"] = 8192] = "PVRTC2";
+    TextureSupportFlags[TextureSupportFlags["ATC"] = 16384] = "ATC";
+    TextureSupportFlags[TextureSupportFlags["HalfFloat"] = 32768] = "HalfFloat";
+    TextureSupportFlags[TextureSupportFlags["Float"] = 65536] = "Float";
+    TextureSupportFlags[TextureSupportFlags["All"] = 4294967295] = "All";
+  })(TextureSupportFlags || (TextureSupportFlags = {}));
 
   var RuntimeFlags;
 
@@ -2752,32 +2728,13 @@
     ConnectionStatus[ConnectionStatus["Count"] = 3] = "Count";
   })(ConnectionStatus || (ConnectionStatus = {}));
 
-  var CopyStatus;
+  var DepthRange;
 
-  (function (CopyStatus) {
-    CopyStatus[CopyStatus["Inprogress"] = 0] = "Inprogress";
-    CopyStatus[CopyStatus["Done"] = 1] = "Done";
-    CopyStatus[CopyStatus["Error"] = 2] = "Error";
-    CopyStatus[CopyStatus["Count"] = 3] = "Count";
-  })(CopyStatus || (CopyStatus = {}));
-
-  var SceneCopyDestinationType;
-
-  (function (SceneCopyDestinationType) {
-    SceneCopyDestinationType[SceneCopyDestinationType["File"] = 0] = "File";
-    SceneCopyDestinationType[SceneCopyDestinationType["Folder"] = 1] = "Folder";
-    SceneCopyDestinationType[SceneCopyDestinationType["Cloud"] = 2] = "Cloud";
-    SceneCopyDestinationType[SceneCopyDestinationType["ObjExport"] = 3] = "ObjExport";
-    SceneCopyDestinationType[SceneCopyDestinationType["Count"] = 4] = "Count";
-  })(SceneCopyDestinationType || (SceneCopyDestinationType = {}));
-
-  var SceneCopySourceType;
-
-  (function (SceneCopySourceType) {
-    SceneCopySourceType[SceneCopySourceType["Folder"] = 0] = "Folder";
-    SceneCopySourceType[SceneCopySourceType["Cloud"] = 1] = "Cloud";
-    SceneCopySourceType[SceneCopySourceType["Count"] = 2] = "Count";
-  })(SceneCopySourceType || (SceneCopySourceType = {}));
+  (function (DepthRange) {
+    DepthRange[DepthRange["ZeroToOne"] = 0] = "ZeroToOne";
+    DepthRange[DepthRange["MinusOneToOne"] = 1] = "MinusOneToOne";
+    DepthRange[DepthRange["Count"] = 2] = "Count";
+  })(DepthRange || (DepthRange = {}));
 
   var FilterShapeType;
 
@@ -2787,6 +2744,33 @@
     FilterShapeType[FilterShapeType["Count"] = 2] = "Count";
   })(FilterShapeType || (FilterShapeType = {}));
 
+  var SceneCopyStatus;
+
+  (function (SceneCopyStatus) {
+    SceneCopyStatus[SceneCopyStatus["InProgress"] = 0] = "InProgress";
+    SceneCopyStatus[SceneCopyStatus["Done"] = 1] = "Done";
+    SceneCopyStatus[SceneCopyStatus["Error"] = 2] = "Error";
+    SceneCopyStatus[SceneCopyStatus["Count"] = 3] = "Count";
+  })(SceneCopyStatus || (SceneCopyStatus = {}));
+
+  var SceneCopyDestinationType;
+
+  (function (SceneCopyDestinationType) {
+    SceneCopyDestinationType[SceneCopyDestinationType["File"] = 0] = "File";
+    SceneCopyDestinationType[SceneCopyDestinationType["Directory"] = 1] = "Directory";
+    SceneCopyDestinationType[SceneCopyDestinationType["Cloud"] = 2] = "Cloud";
+    SceneCopyDestinationType[SceneCopyDestinationType["FormatObj"] = 3] = "FormatObj";
+    SceneCopyDestinationType[SceneCopyDestinationType["Count"] = 4] = "Count";
+  })(SceneCopyDestinationType || (SceneCopyDestinationType = {}));
+
+  var SceneCopySourceType;
+
+  (function (SceneCopySourceType) {
+    SceneCopySourceType[SceneCopySourceType["Directory"] = 0] = "Directory";
+    SceneCopySourceType[SceneCopySourceType["Cloud"] = 1] = "Cloud";
+    SceneCopySourceType[SceneCopySourceType["Count"] = 2] = "Count";
+  })(SceneCopySourceType || (SceneCopySourceType = {}));
+
   var AssetType;
 
   (function (AssetType) {
@@ -2795,6 +2779,22 @@
     AssetType[AssetType["Mesh"] = 2] = "Mesh";
     AssetType[AssetType["Count"] = 3] = "Count";
   })(AssetType || (AssetType = {}));
+
+  var BufferFlags;
+
+  (function (BufferFlags) {
+    BufferFlags[BufferFlags["UncachedMemory"] = 1] = "UncachedMemory";
+  })(BufferFlags || (BufferFlags = {}));
+
+  var VertexAttribute;
+
+  (function (VertexAttribute) {
+    VertexAttribute[VertexAttribute["Position"] = 0] = "Position";
+    VertexAttribute[VertexAttribute["TextureCoordinate"] = 1] = "TextureCoordinate";
+    VertexAttribute[VertexAttribute["Normal"] = 2] = "Normal";
+    VertexAttribute[VertexAttribute["Tangent"] = 3] = "Tangent";
+    VertexAttribute[VertexAttribute["Count"] = 4] = "Count";
+  })(VertexAttribute || (VertexAttribute = {}));
 
   var AssetLoadResult;
 
@@ -2969,7 +2969,7 @@
       }
 
       connectionStatus() {
-        return Module.sceneConnectionStatus(this.ptr);
+        return Module.sceneGetConnectionStatus(this.ptr);
       }
 
       getInfo() {
@@ -3066,7 +3066,7 @@
           }
         }
 
-        Module.viewSetCamera(this.ptr, this.matrixBuffer.ofs, this.vectorBuffer.ofs, depthRange, matrixFormat, quality, this.lightBuffer.ofs, lights.length);
+        Module.viewUpdateRendering(this.ptr, this.matrixBuffer.ofs, this.vectorBuffer.ofs, depthRange, matrixFormat, quality, this.lightBuffer.ofs, lights.length);
       }
 
       getVisible(batchSize) {
@@ -3188,75 +3188,75 @@
         this.info = void 0;
         this.vertexBuffers = void 0;
         this.load = load;
-        Module.assetLoadGetMeshInfo(this.load.ptr, Loader.meshInfoBuffer.ofs);
+        Module.meshLoadGetInfo(this.load.ptr, Loader.meshInfoBuffer.ofs);
         this.info = Module.deserializeMeshInfo(Loader.meshInfoBuffer.ofs);
       }
 
       setBuffers(buffers) {
         Loader.structBuffer.bytes().fill(0);
         Loader.tempDataBuffer.bytes().fill(0);
-        Module.serializeDataBuffer(buffers.position.desc, Loader.structBuffer.ofs);
-        Module.serializeDataBuffer(buffers.index.desc, Loader.tempDataBuffer.ofs);
+        Module.serializeElementBuffer(buffers.position.desc, Loader.structBuffer.ofs);
+        Module.serializeElementBuffer(buffers.index.desc, Loader.tempDataBuffer.ofs);
 
         if ('uv' in buffers) {
-          Module.serializeDataBuffer(buffers.uv.desc, Loader.structBuffer.ofs + Module.dataBufferSize * 1);
+          Module.serializeElementBuffer(buffers.uv.desc, Loader.structBuffer.ofs + Module.elementBufferSize * 1);
         }
 
         if ('normal' in buffers) {
-          Module.serializeDataBuffer(buffers.normal.desc, Loader.structBuffer.ofs + Module.dataBufferSize * 2);
+          Module.serializeElementBuffer(buffers.normal.desc, Loader.structBuffer.ofs + Module.elementBufferSize * 2);
         }
 
         if ('tangent' in buffers) {
-          Module.serializeDataBuffer(buffers.tangent.desc, Loader.structBuffer.ofs + Module.dataBufferSize * 3);
+          Module.serializeElementBuffer(buffers.tangent.desc, Loader.structBuffer.ofs + Module.elementBufferSize * 3);
         }
 
-        if (!Module.meshLoadSetBuffers(this.load.ptr, Loader.structBuffer.ofs, Loader.tempDataBuffer.ofs)) {
+        if (!Module.meshStreamSetBuffers(this.load.ptr, Loader.structBuffer.ofs, Loader.tempDataBuffer.ofs)) {
           console.log(buffers);
           throw new Error('setBuffers failed');
         }
       }
 
       loadNext() {
-        return Module.meshLoadNext(this.load.ptr, 0, 0);
+        return Module.meshStreamNext(this.load.ptr, 0, 0);
       }
 
       done() {
-        return Module.meshLoadDone(this.load.ptr);
+        return Module.meshStreamDone(this.load.ptr);
       }
 
       allocateBuffers() {
         var _this = this;
 
-        var indexBytes = this.info.uniqueVertexCount < 1 << 16 ? 2 : 4; // prettier-ignore
+        var indexBytes = this.info.numUniqueVertices < 1 << 16 ? 2 : 4; // prettier-ignore
 
         var attrInfo = {
           position: {
-            elemSize: Module.getVertexAttributeElementSize(VertexAttribute.Position),
-            count: this.info.uniqueVertexCount,
+            elemSize: Module.vertexAttributeGetElementByteSize(VertexAttribute.Position),
+            count: this.info.numUniqueVertices,
             mask: 1 << VertexAttribute.Position,
             type: Float32Array
           },
           uv: {
-            elemSize: Module.getVertexAttributeElementSize(VertexAttribute.TextureCoordinate),
-            count: this.info.uniqueVertexCount,
+            elemSize: Module.vertexAttributeGetElementByteSize(VertexAttribute.TextureCoordinate),
+            count: this.info.numUniqueVertices,
             mask: 1 << VertexAttribute.TextureCoordinate,
             type: Float32Array
           },
           normal: {
-            elemSize: Module.getVertexAttributeElementSize(VertexAttribute.Normal),
-            count: this.info.uniqueVertexCount,
+            elemSize: Module.vertexAttributeGetElementByteSize(VertexAttribute.Normal),
+            count: this.info.numUniqueVertices,
             mask: 1 << VertexAttribute.Normal,
             type: Float32Array
           },
           tangent: {
-            elemSize: Module.getVertexAttributeElementSize(VertexAttribute.Tangent),
-            count: this.info.uniqueVertexCount,
+            elemSize: Module.vertexAttributeGetElementByteSize(VertexAttribute.Tangent),
+            count: this.info.numUniqueVertices,
             mask: 1 << VertexAttribute.Tangent,
             type: Float32Array
           },
           index: {
             elemSize: indexBytes,
-            count: this.info.indexCount,
+            count: this.info.numIndices,
             mask: 0xffffffff,
             type: indexBytes === 2 ? Uint16Array : Uint32Array
           }
@@ -3276,15 +3276,15 @@
 
           var buffer = getBufferForAttribute(name, bufferSizes[name], attrInfo[name].type);
           var desc = {};
-          desc['ptr'] = buffer.ofs; // Emscripten heap offset
+          desc.ptr = buffer.ofs; // Emscripten heap offset
 
-          desc['elemSize'] = attrInfo[name].elemSize; // Size of a single element
+          desc.elementByteSize = attrInfo[name].elemSize; // Size of a single element
 
-          desc['size'] = attrInfo[name].count; // Number of elements
+          desc.elementCapacity = attrInfo[name].count; // Number of elements
 
-          desc['stride'] = attrInfo[name].elemSize; // Distance (in bytes) between consecutive elements
+          desc.elementStride = attrInfo[name].elemSize; // Distance (in bytes) between consecutive elements
 
-          desc['flags'] = 0; // 0: cached memory, 1: uncached memory
+          desc.flags = 0; // 0: cached memory, 1: uncached memory
 
           meshBuffers[name] = {
             data: new BufferView(buffer, 0, bufferSizes[name]),
@@ -3296,9 +3296,9 @@
 
     }
 
-    Loader.structBuffer = new Buffer(Module.dataBufferSize * VertexAttribute.Count, Uint8Array);
+    Loader.structBuffer = new Buffer(Module.elementBufferSize * VertexAttribute.Count, Uint8Array);
     Loader.meshInfoBuffer = new Buffer(Module.meshInfoSize, Uint8Array);
-    Loader.tempDataBuffer = new Buffer(Module.dataBufferSize, Uint8Array);
+    Loader.tempDataBuffer = new Buffer(Module.elementBufferSize, Uint8Array);
 
     class Runtime {
       constructor(client, platformFeatures) {
@@ -3319,24 +3319,25 @@
          * If no normal map formats are supported then force support for
          * BC5 so that textures get transcoded into an uncompressed format.
          */
-        var normalFormats = TextureCapability.ETC1 | TextureCapability.ASTC | TextureCapability.PVRTC1 | TextureCapability.BC5;
-        var capabilityMask = platformFeatures.capabilityMask;
+        var normalFormats = TextureSupportFlags.ETC1 | TextureSupportFlags.ASTC | TextureSupportFlags.PVRTC1 | TextureSupportFlags.BC5;
+        var textureSupportMask = platformFeatures.textureSupportMask;
 
-        if (!(capabilityMask & normalFormats)) {
-          capabilityMask |= TextureCapability.BC5 | TextureCapability.BC4;
+        if (!(textureSupportMask & normalFormats)) {
+          textureSupportMask |= TextureSupportFlags.BC5 | TextureSupportFlags.BC4;
         }
 
         this.client = client;
         var infoPtr = Module.serializeEnvironmentInfo({
-          textureCapabilityFlags: capabilityMask,
-          maxFileCacheBytes: 0
+          textureSupportFlags: textureSupportMask,
+          localCacheDirectory: null,
+          localCacheMaximumByteSize: 0
         }, 0);
-        this.ptr = Module.runtimeCreate(client.ptr, infoPtr, '', runtimeFlags);
+        this.ptr = Module.runtimeCreate(client.ptr, infoPtr, runtimeFlags);
 
         Module._free(infoPtr);
 
         this.platformFeatures = platformFeatures;
-        var size = Math.max(Module.meshInfoSize, Module.materialInfoSize, Module.textureInfoSize, Module.rawDataBufferSize);
+        var size = Math.max(Module.meshInfoSize, Module.materialInfoSize, Module.textureInfoSize, Module.byteBufferSize);
         this.scratch = new Buffer(size, Uint8Array);
         this.debug = {
           textureFormatsInUse: new Set(),
@@ -3352,8 +3353,8 @@
         this.ptr = 0;
       }
 
-      connectPublic(publicKey) {
-        var scenePtr = Module.sceneConnectPublic(this.ptr, publicKey);
+      createScenePublic(publicKey) {
+        var scenePtr = Module.sceneCreatePublic(this.ptr, publicKey);
 
         if (!scenePtr) {
           return undefined;
@@ -3362,8 +3363,8 @@
         return new NativeScene(scenePtr);
       }
 
-      connectLocal(url) {
-        var scenePtr = Module.sceneConnectLocal(this.ptr, url);
+      createSceneLocal(url) {
+        var scenePtr = Module.sceneCreateLocal(this.ptr, url);
 
         if (!scenePtr) {
           return undefined;
@@ -3382,13 +3383,13 @@
       }
 
       *getAssetUnloads() {
-        var p = Module.getNextAssetUnload(this.ptr);
+        var p = Module.runtimeNextAssetUnload(this.ptr);
 
         while (p !== 0) {
           var unload = new AssetUnload(p);
           unload.data = this.assets.get(unload.userPointer);
           yield unload;
-          p = Module.getNextAssetUnload(this.ptr);
+          p = Module.runtimeNextAssetUnload(this.ptr);
         }
       }
 
@@ -3420,7 +3421,7 @@
             }
           }
 
-          var loadPtr = Module.getNextAssetLoad(this.ptr); // Terminate the generator when there are no more jobs to process.
+          var loadPtr = Module.runtimeNextAssetLoad(this.ptr); // Terminate the generator when there are no more jobs to process.
 
           if (loadPtr === 0) {
             return undefined;
@@ -3429,7 +3430,7 @@
           var load = new AssetLoad(loadPtr);
 
           if (load.type === 'LoadMaterial') {
-            Module.assetLoadGetMaterialInfo(load.ptr, this.scratch.ofs);
+            Module.materialLoadGetInfo(load.ptr, this.scratch.ofs);
             var info = Module.deserializeMaterialInfo(this.scratch.ofs);
             var textureObjects = info.textures.filter(function (ptr) {
               return ptr !== Module.INVALID_USERPOINTER;
@@ -3444,21 +3445,21 @@
             yield load;
           } else if (load.type === 'LoadTexture') {
             var infoPtr = this.scratch.ofs;
-            Module.assetLoadGetTextureInfo(load.ptr, infoPtr);
+            Module.textureLoadGetInfo(load.ptr, infoPtr);
             var texture = Module.deserializeTextureInfo(infoPtr);
-            texture['mipByteSizes'] = [Module.getMipmapLevelByteSize(infoPtr, 0)];
-            texture['mipByteOffsets'] = [Module.getMipmapLevelOffset(infoPtr, 0)];
+            texture['mipByteSizes'] = [Module.textureGetMipmapLevelByteSize(infoPtr, 0)];
+            texture['mipByteOffsets'] = [Module.textureGetMipmapLevelOffset(infoPtr, 0)];
             var buffer = this.tempTextureBuffer;
             buffer.ensureSize(texture.dataByteSize);
-            Module.serializeRawDataBuffer({
+            Module.serializeByteBuffer({
               ptr: buffer.ofs,
               byteSize: texture.dataByteSize,
               // The output buffer size must match the texture data size
               flags: 0
             }, this.scratch.ofs);
 
-            if (!Module.assetLoadGetTextureData(load.ptr, this.scratch.ofs)) {
-              throw new Error("assetLoadGetTextureData failed: ".concat(load.ptr, ", ").concat(buffer.ofs, ", ").concat(texture.dataByteSize, "/").concat(buffer.size));
+            if (!Module.textureLoadGetData(load.ptr, this.scratch.ofs)) {
+              throw new Error("textureLoadGetData failed: ".concat(load.ptr, ", ").concat(buffer.ofs, ", ").concat(texture.dataByteSize, "/").concat(buffer.size));
             }
 
             var bufferView = new BufferView(buffer, 0, texture.dataByteSize);
@@ -3553,32 +3554,32 @@
       }
 
       formatNeedsTranscoding(format) {
-        var flags = this.platformFeatures.capabilityMask;
+        var flags = this.platformFeatures.textureSupportMask;
 
         switch (format) {
           case TextureFormat.BC1:
-            if (flags & TextureCapability.BC1) {
+            if (flags & TextureSupportFlags.BC1) {
               return false;
             }
 
             break;
 
           case TextureFormat.BC3:
-            if (flags & TextureCapability.BC3) {
+            if (flags & TextureSupportFlags.BC3) {
               return false;
             }
 
             break;
 
           case TextureFormat.BC4:
-            if (flags & TextureCapability.BC4) {
+            if (flags & TextureSupportFlags.BC4) {
               return false;
             }
 
             break;
 
           case TextureFormat.BC5:
-            if (flags & TextureCapability.BC5) {
+            if (flags & TextureSupportFlags.BC5) {
               return false;
             }
 
@@ -3629,7 +3630,7 @@
       }
 
       getStreamingState() {
-        Module.getStreamingState(this.ptr, this.tempStreamingStateBuffer.ofs);
+        Module.runtimeGetStreamingState(this.ptr, this.tempStreamingStateBuffer.ofs);
         return Module.deserializeStreamingState(this.tempStreamingStateBuffer.ofs);
       }
 
@@ -3653,7 +3654,7 @@
     };
   };
 
-  // Generated at 2019-10-07 16:41:30
+  // Generated at 2019-10-14 12:10:55
   function wrapNativeFunctions(Module) {
     Object.assign(Module, {
       configInit: Module.cwrap('UmbraConfigInit', null, ['number']),
@@ -3661,52 +3662,52 @@
       clientDestroy: Module.cwrap('UmbraClientDestroy', null, ['number']),
       getLibraryInfo: Module.cwrap('UmbraGetLibraryInfo', 'string', ['number']),
       environmentInfoDefaults: Module.cwrap('UmbraEnvironmentInfoDefaults', null, ['number']),
-      assetUnloadGetType: Module.cwrap('UmbraAssetUnloadGetType', 'number', ['number']),
-      assetUnloadGetUserPointer: Module.cwrap('UmbraAssetUnloadGetUserPointer', 'number', ['number']),
-      assetUnloadFinish: Module.cwrap('UmbraAssetUnloadFinish', null, ['number']),
-      assetLoadPrepare: Module.cwrap('UmbraAssetLoadPrepare', null, ['number', 'number']),
-      assetLoadFinish: Module.cwrap('UmbraAssetLoadFinish', null, ['number', 'number']),
-      assetLoadGetType: Module.cwrap('UmbraAssetLoadGetType', 'number', ['number']),
-      assetLoadAbortRequested: Module.cwrap('UmbraAssetLoadAbortRequested', 'number', ['number']),
-      assetLoadGetMeshInfo: Module.cwrap('UmbraAssetLoadGetMeshInfo', null, ['number', 'number']),
-      assetLoadGetMaterialInfo: Module.cwrap('UmbraAssetLoadGetMaterialInfo', null, ['number', 'number']),
-      assetLoadGetTextureInfo: Module.cwrap('UmbraAssetLoadGetTextureInfo', null, ['number', 'number']),
-      getVertexAttributeElementSize: Module.cwrap('UmbraGetVertexAttributeElementSize', 'number', ['number']),
-      assetLoadGetMeshData: Module.cwrap('UmbraAssetLoadGetMeshData', 'number', ['number', 'number', 'number']),
-      meshLoadSetBuffers: Module.cwrap('UmbraMeshLoadSetBuffers', 'number', ['number', 'number', 'number']),
-      meshLoadDone: Module.cwrap('UmbraMeshLoadDone', 'number', ['number']),
-      meshLoadNext: Module.cwrap('UmbraMeshLoadNext', 'number', ['number', 'number', 'number']),
-      getMipmapLevelByteSize: Module.cwrap('UmbraGetMipmapLevelByteSize', 'number', ['number', 'number']),
-      getMipmapLevelOffset: Module.cwrap('UmbraGetMipmapLevelOffset', 'number', ['number', 'number']),
-      assetLoadGetTextureData: Module.cwrap('UmbraAssetLoadGetTextureData', 'number', ['number', 'number']),
-      assetLoadGetMetaDataLookupTable: Module.cwrap('UmbraAssetLoadGetMetaDataLookupTable', 'number', ['number', 'number']),
-      getClassificationCount: Module.cwrap('UmbraGetClassificationCount', 'number', ['number', 'number']),
-      getClassification: Module.cwrap('UmbraGetClassification', 'number', ['number', 'number', 'number']),
-      getClassificationAmount: Module.cwrap('UmbraGetClassificationAmount', 'number', ['number', 'number', 'number']),
-      runtimeCreate: Module.cwrap('UmbraRuntimeCreate', 'number', ['number', 'number', 'string', 'number']),
-      runtimeDestroy: Module.cwrap('UmbraRuntimeDestroy', null, ['number']),
+      runtimeCreate: Module.cwrap('UmbraRuntimeCreate', 'number', ['number', 'number', 'number']),
       runtimeUpdate: Module.cwrap('UmbraRuntimeUpdate', null, ['number']),
-      getStreamingState: Module.cwrap('UmbraGetStreamingState', null, ['number', 'number']),
-      getNextAssetUnload: Module.cwrap('UmbraGetNextAssetUnload', 'number', ['number']),
-      getNextAssetLoad: Module.cwrap('UmbraGetNextAssetLoad', 'number', ['number']),
-      sceneConnect: Module.cwrap('UmbraSceneConnect', 'number', ['number', 'string', 'string']),
-      sceneConnectPublic: Module.cwrap('UmbraSceneConnectPublic', 'number', ['number', 'string']),
-      sceneConnectLocal: Module.cwrap('UmbraSceneConnectLocal', 'number', ['number', 'string']),
-      sceneDestroy: Module.cwrap('UmbraSceneDestroy', null, ['number']),
-      sceneConnectionStatus: Module.cwrap('UmbraSceneConnectionStatus', 'number', ['number']),
+      runtimeGetStreamingState: Module.cwrap('UmbraRuntimeGetStreamingState', null, ['number', 'number']),
+      runtimeDestroy: Module.cwrap('UmbraRuntimeDestroy', null, ['number']),
+      sceneCreate: Module.cwrap('UmbraSceneCreate', 'number', ['number', 'string', 'string']),
+      sceneCreatePublic: Module.cwrap('UmbraSceneCreatePublic', 'number', ['number', 'string']),
+      sceneCreateLocal: Module.cwrap('UmbraSceneCreateLocal', 'number', ['number', 'string']),
+      sceneGetConnectionStatus: Module.cwrap('UmbraSceneGetConnectionStatus', 'number', ['number']),
       sceneGetInfo: Module.cwrap('UmbraSceneGetInfo', 'number', ['number', 'number']),
       sceneSetTransform: Module.cwrap('UmbraSceneSetTransform', null, ['number', 'number']),
-      sceneStartCopy: Module.cwrap('UmbraSceneStartCopy', 'number', ['number', 'number', 'number', 'number', 'number']),
-      sceneCopyDestroy: Module.cwrap('UmbraSceneCopyDestroy', null, ['number']),
+      sceneDestroy: Module.cwrap('UmbraSceneDestroy', null, ['number']),
+      viewCreate: Module.cwrap('UmbraViewCreate', 'number', ['number']),
+      viewUpdateRendering: Module.cwrap('UmbraViewUpdateRendering', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']),
+      viewUpdateFilter: Module.cwrap('UmbraViewUpdateFilter', null, ['number', 'number']),
+      viewGetCompleted: Module.cwrap('UmbraViewGetCompleted', 'number', ['number']),
+      viewNextRenderables: Module.cwrap('UmbraViewNextRenderables', 'number', ['number', 'number', 'number']),
+      viewResetRenderables: Module.cwrap('UmbraViewResetRenderables', null, ['number']),
+      viewDestroy: Module.cwrap('UmbraViewDestroy', null, ['number']),
+      sceneCopyCreate: Module.cwrap('UmbraSceneCopyCreate', 'number', ['number', 'number', 'number', 'number', 'number']),
       sceneCopyGetStatus: Module.cwrap('UmbraSceneCopyGetStatus', 'number', ['number', 'number']),
       sceneCopyGetError: Module.cwrap('UmbraSceneCopyGetError', 'string', ['number']),
-      viewCreate: Module.cwrap('UmbraViewCreate', 'number', ['number']),
-      viewDestroy: Module.cwrap('UmbraViewDestroy', null, ['number']),
-      viewSetCamera: Module.cwrap('UmbraViewSetCamera', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']),
-      viewSetIntersection: Module.cwrap('UmbraViewSetIntersection', null, ['number', 'number']),
-      viewDataComplete: Module.cwrap('UmbraViewDataComplete', 'number', ['number']),
-      viewResetRenderables: Module.cwrap('UmbraViewResetRenderables', null, ['number']),
-      viewNextRenderables: Module.cwrap('UmbraViewNextRenderables', 'number', ['number', 'number', 'number'])
+      sceneCopyDestroy: Module.cwrap('UmbraSceneCopyDestroy', null, ['number']),
+      vertexAttributeGetElementByteSize: Module.cwrap('UmbraVertexAttributeGetElementByteSize', 'number', ['number']),
+      runtimeNextAssetLoad: Module.cwrap('UmbraRuntimeNextAssetLoad', 'number', ['number']),
+      assetLoadGetType: Module.cwrap('UmbraAssetLoadGetType', 'number', ['number']),
+      assetLoadPrepare: Module.cwrap('UmbraAssetLoadPrepare', null, ['number', 'number']),
+      assetLoadAbortRequested: Module.cwrap('UmbraAssetLoadAbortRequested', 'number', ['number']),
+      assetLoadFinish: Module.cwrap('UmbraAssetLoadFinish', null, ['number', 'number']),
+      meshLoadGetInfo: Module.cwrap('UmbraMeshLoadGetInfo', null, ['number', 'number']),
+      meshLoadGetData: Module.cwrap('UmbraMeshLoadGetData', 'number', ['number', 'number', 'number']),
+      meshStreamSetBuffers: Module.cwrap('UmbraMeshStreamSetBuffers', 'number', ['number', 'number', 'number']),
+      meshStreamDone: Module.cwrap('UmbraMeshStreamDone', 'number', ['number']),
+      meshStreamNext: Module.cwrap('UmbraMeshStreamNext', 'number', ['number', 'number', 'number']),
+      textureGetMipmapLevelByteSize: Module.cwrap('UmbraTextureGetMipmapLevelByteSize', 'number', ['number', 'number']),
+      textureGetMipmapLevelOffset: Module.cwrap('UmbraTextureGetMipmapLevelOffset', 'number', ['number', 'number']),
+      textureLoadGetInfo: Module.cwrap('UmbraTextureLoadGetInfo', null, ['number', 'number']),
+      textureLoadGetData: Module.cwrap('UmbraTextureLoadGetData', 'number', ['number', 'number']),
+      textureMetaDataLoadGetData: Module.cwrap('UmbraTextureMetaDataLoadGetData', 'number', ['number', 'number']),
+      textureMetaDataGetClassificationCount: Module.cwrap('UmbraTextureMetaDataGetClassificationCount', 'number', ['number', 'number']),
+      textureMetaDataGetClassification: Module.cwrap('UmbraTextureMetaDataGetClassification', 'number', ['number', 'number', 'number']),
+      textureMetaDataGetClassificationAmount: Module.cwrap('UmbraTextureMetaDataGetClassificationAmount', 'number', ['number', 'number', 'number']),
+      materialLoadGetInfo: Module.cwrap('UmbraMaterialLoadGetInfo', null, ['number', 'number']),
+      runtimeNextAssetUnload: Module.cwrap('UmbraRuntimeNextAssetUnload', 'number', ['number']),
+      assetUnloadGetType: Module.cwrap('UmbraAssetUnloadGetType', 'number', ['number']),
+      assetUnloadGetUserPointer: Module.cwrap('UmbraAssetUnloadGetUserPointer', 'number', ['number']),
+      assetUnloadFinish: Module.cwrap('UmbraAssetUnloadFinish', null, ['number'])
     });
   }
 
@@ -3753,22 +3754,22 @@
       }
 
       var mapping = new Map([['WEBGL_compressed_texture_s3tc', {
-        mask: TextureCapability.BC1 | TextureCapability.BC2 | TextureCapability.BC3,
+        mask: TextureSupportFlags.BC1 | TextureSupportFlags.BC2 | TextureSupportFlags.BC3,
         names: ['bc1', 'bc2', 'bc3']
       }], ['WEBGL_compressed_texture_s3tc_srgb', {
-        mask: TextureCapability.BC1 | TextureCapability.BC2 | TextureCapability.BC3,
+        mask: TextureSupportFlags.BC1 | TextureSupportFlags.BC2 | TextureSupportFlags.BC3,
         names: ['bc1', 'bc2', 'bc3']
       }], ['WEBGL_compressed_texture_rgtc', {
-        mask: TextureCapability.BC4 | TextureCapability.BC5,
+        mask: TextureSupportFlags.BC4 | TextureSupportFlags.BC5,
         names: ['bc4', 'bc5']
       }], ['WEBGL_compressed_texture_pvrtc', {
-        mask: TextureCapability.PVRTC1,
+        mask: TextureSupportFlags.PVRTC1,
         names: ['pvrtc1_rgb4', 'pvrtc1_rgba4']
       }], ['WEBGL_compressed_texture_etc1', {
-        mask: TextureCapability.ETC1,
+        mask: TextureSupportFlags.ETC1,
         names: ['etc1_rgb']
       }], ['WEBGL_compressed_texture_astc', {
-        mask: TextureCapability.ASTC,
+        mask: TextureSupportFlags.ASTC,
         names: ['astc_4x4']
       }]]);
 
@@ -3798,7 +3799,7 @@
       }
 
       return {
-        capabilityMask: flags,
+        textureSupportMask: flags,
         formats: _toConsumableArray(formats),
         srgb: supportsSRGB,
         halfFloat: supportsHalfFloat
@@ -3964,18 +3965,33 @@
 
   class ObjectPool {
     constructor() {
-      this.usedList = void 0;
-      this.freeList = void 0;
       this.usedList = [];
       this.freeList = [];
     }
 
-    allocate(makeFunc) {
+    // Tries to find an object matching "predicate", if any given.
+    // Constructs a new object with "makeFunc" if none were found.
+    allocate(makeFunc, predicate) {
       var obj;
 
       if (this.freeList.length > 0) {
-        obj = this.freeList.pop();
-      } else {
+        // If no predicate given we always take the last one
+        if (typeof predicate === 'undefined') {
+          obj = this.freeList.pop();
+        } else {
+          for (var i = 0; i < this.freeList.length; i++) {
+            var elem = this.freeList[i];
+
+            if (predicate(elem)) {
+              obj = elem;
+              this.freeList.splice(i, 1);
+              break;
+            }
+          }
+        }
+      }
+
+      if (!obj) {
         obj = makeFunc();
       }
 
@@ -4232,19 +4248,19 @@
             var _ref = visible[_i2].mesh,
                 materialDesc = _ref.materialDesc,
                 geometry = _ref.geometry;
-            visibleIDs.add(visible[_i2].id); // Fetch a new material from the pool if we already have free ones. This avoids
+            visibleIDs.add(visible[_i2].id);
+            var isTransparent = materialDesc.transparent || _this2.material.transparent; // Fetch a new material from the pool if we already have free ones. This avoids
             // extra allocations and more importantly 'onBeforeCompile' calls.
 
             var material = _this2.materialPool.allocate(function () {
               return _this2.material.clone();
+            }, function (mat) {
+              return mat.transparent === isTransparent;
             });
 
             material.wireframe = _this2.wireframe;
-            material.transparent = materialDesc.transparent || _this2.material.transparent;
-
-            if (material.transparent) {
-              material.opacity = _this2.material.opacity;
-            }
+            material.opacity = _this2.material.opacity;
+            material.transparent = isTransparent;
 
             material.onBeforeCompile = function (shader, renderer) {
               /**
@@ -4543,7 +4559,7 @@
     return new THREE.Sphere(pos, size.length());
   }
 
-  class ThreejsIntegration {
+  class UmbrajsThreeInternal {
     // Upper VRAM memory use limit in bytes
     // Upper total download size limit in bytes. Turned off by default.
     // An instance of the umbrajs library for debugging
@@ -4585,7 +4601,9 @@
 
           return LoadMaterial;
         }(function (load) {
-          load.prepare(_this.runtime.addAsset(load.data));
+          var material = load.data;
+          material.transparent = load.data.transparent ? true : false;
+          load.prepare(_this.runtime.addAsset(material));
           load.finish(Assets.AssetLoadResult.Success);
         }),
         UnloadMaterial: function UnloadMaterial(unload) {
@@ -4640,7 +4658,7 @@
            */
 
 
-          if (info.textureType === TextureType.Diffuse && !_this.renderer.gammaOutput) {
+          if (info.type === TextureType.Diffuse && !_this.renderer.gammaOutput) {
             tex.encoding = THREE.LinearEncoding;
           } else {
             tex.encoding = info.colorSpace === ColorSpace.Linear ? THREE.LinearEncoding : THREE.sRGBEncoding;
@@ -4771,7 +4789,7 @@
 
       var features = umbrajs.getPlatformFeatures(context); // Three.js does not support BC5 compressed formats so we manually disable them.
 
-      features.capabilityMask &= ~TextureCapability.BC5;
+      features.textureSupportMask &= ~TextureSupportFlags.BC5;
       this.umbrajs = umbrajs;
       this.runtime = umbrajs.createRuntime(features);
       this.renderer = renderer;
@@ -4800,7 +4818,7 @@
     }
 
     update() {
-      var timeBudget = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+      var timeBudget = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 7;
       var downloadLimitReached = this.downloadLimit !== 0 && this.getStats().maxBytesDownloaded >= this.downloadLimit; // If the limit is reached we freeze all updates. View frustum culling
       // will still work, but the streaming set is kept static.
 
@@ -4846,7 +4864,7 @@
         throw new TypeError('expected either string or an object argument');
       }
 
-      var model = new UmbraScene(this.runtime, this.runtime.connectPublic(url), this.renderer, this.features, function (m) {
+      var model = new UmbraScene(this.runtime, this.runtime.createScenePublic(url), this.renderer, this.features, function (m) {
         return _this3.umbraScenes["delete"](m);
       });
       this.umbraScenes.add(model);
@@ -4856,7 +4874,7 @@
     createSceneWithURL(url) {
       var _this4 = this;
 
-      var scene = this.runtime.connectLocal(url);
+      var scene = this.runtime.createSceneLocal(url);
       var model = new UmbraScene(this.runtime, scene, this.renderer, this.features, function (m) {
         return _this4.umbraScenes["delete"](m);
       });
@@ -4974,7 +4992,7 @@
     }
 
     return initUmbra(userConfig).then(function (Umbra) {
-      return new ThreejsIntegration(Umbra, renderer);
+      return new UmbrajsThreeInternal(Umbra, renderer);
     });
   } // Hide the library object constructor by wrapping it in an interface
 
