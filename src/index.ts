@@ -35,7 +35,7 @@ function makeBoundingSphere(aabb: UmbraMath.BoundingBox) {
   return new THREE.Sphere(pos, size.length())
 }
 
-class ThreejsIntegration implements SceneFactory {
+class UmbrajsThreeInternal implements SceneFactory {
   // Upper VRAM memory use limit in bytes
   memoryLimit = 500 * 1024 * 1024
   // Upper total download size limit in bytes. Turned off by default.
@@ -436,11 +436,11 @@ export function initWithThreeJS(
   }
 
   return initUmbra(userConfig).then(Umbra => {
-    return new ThreejsIntegration(Umbra, renderer)
+    return new UmbrajsThreeInternal(Umbra, renderer)
   })
 }
 
 // Hide the library object constructor by wrapping it in an interface
-interface UmbrajsThree extends ThreejsIntegration {}
+interface UmbrajsThree extends UmbrajsThreeInternal {}
 export { UmbraScene as Model, UmbrajsThree }
 export { Loader } from './Loader'
