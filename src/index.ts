@@ -6,7 +6,7 @@ import {
   Assets,
   UmbraInstance,
   PlatformFeatures,
-  TextureCapability,
+  TextureSupportFlags,
   TextureType,
   ColorSpace,
   Runtime,
@@ -80,7 +80,7 @@ class ThreejsIntegration implements SceneFactory {
     const features = umbrajs.getPlatformFeatures(context)
 
     // Three.js does not support BC5 compressed formats so we manually disable them.
-    features.capabilityMask &= ~TextureCapability.BC5
+    features.textureSupportMask &= ~TextureSupportFlags.BC5
 
     this.umbrajs = umbrajs
     this.runtime = umbrajs.createRuntime(features)
@@ -156,7 +156,7 @@ class ThreejsIntegration implements SceneFactory {
 
     const model = new UmbraScene(
       this.runtime,
-      this.runtime.connectPublic(url),
+      this.runtime.createScenePublic(url),
       this.renderer,
       this.features,
       m => this.umbraScenes.delete(m),
@@ -166,7 +166,7 @@ class ThreejsIntegration implements SceneFactory {
   }
 
   createSceneWithURL(url: string): UmbraScene {
-    const scene = this.runtime.connectLocal(url)
+    const scene = this.runtime.createSceneLocal(url)
     const model = new UmbraScene(
       this.runtime,
       scene,
@@ -281,10 +281,7 @@ class ThreejsIntegration implements SceneFactory {
        * This is slightly wrong because texture filtering and shading will be done
        * in gamma space, but this behavior is what people usually expect.
        */
-      if (
-        info.textureType === TextureType.Diffuse &&
-        !this.renderer.gammaOutput
-      ) {
+      if (info.type === TextureType.Diffuse && !this.renderer.gammaOutput) {
         tex.encoding = THREE.LinearEncoding
       } else {
         tex.encoding =
