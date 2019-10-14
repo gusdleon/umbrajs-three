@@ -434,16 +434,21 @@ export class UmbraScene extends THREE.Object3D {
         const { materialDesc, geometry } = visible[i].mesh as MeshDescriptor
         visibleIDs.add(visible[i].id)
 
+        const isTransparent =
+          materialDesc.transparent || this.material.transparent
+
         // Fetch a new material from the pool if we already have free ones. This avoids
         // extra allocations and more importantly 'onBeforeCompile' calls.
-        const material = this.materialPool.allocate(() => this.material.clone())
+        const material = this.materialPool.allocate(
+          () => this.material.clone(),
+          (mat: THREE.Material) => {
+            return mat.transparent === isTransparent
+          },
+        )
 
         material.wireframe = this.wireframe
-        material.transparent =
-          materialDesc.transparent || this.material.transparent
-        if (material.transparent) {
-          material.opacity = this.material.opacity
-        }
+        material.opacity = this.material.opacity
+        material.transparent = isTransparent
 
         material.onBeforeCompile = (shader, renderer) => {
           /**

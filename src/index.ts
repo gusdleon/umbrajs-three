@@ -243,7 +243,9 @@ class UmbrajsThreeInternal implements SceneFactory {
   // AssetLoad handlers that create and remove materials, textures, and meshes
   private handlers = {
     LoadMaterial: (load: Assets.LoadMaterial) => {
-      load.prepare(this.runtime.addAsset(load.data))
+      const material = load.data
+      material.transparent = load.data.transparent ? true : false
+      load.prepare(this.runtime.addAsset(material))
       load.finish(Assets.AssetLoadResult.Success)
     },
     UnloadMaterial: (unload: Assets.Unload) => {
