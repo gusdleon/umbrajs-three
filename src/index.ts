@@ -105,7 +105,7 @@ class ThreejsIntegration implements SceneFactory {
     }
   }
 
-  update(timeBudget = 10) {
+  update(timeBudget = 7) {
     const downloadLimitReached =
       this.downloadLimit !== 0 &&
       this.getStats().maxBytesDownloaded >= this.downloadLimit
