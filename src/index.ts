@@ -444,5 +444,5 @@ export function initWithThreeJS(
 
 // Hide the library object constructor by wrapping it in an interface
 interface UmbrajsThree extends UmbrajsThreeInternal {}
-export { UmbraScene as Model, UmbrajsThree }
+export { UmbraScene as Scene, UmbrajsThree }
 export { Loader } from './Loader'
