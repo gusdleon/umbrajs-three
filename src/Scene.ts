@@ -270,7 +270,7 @@ export class UmbraScene extends THREE.Object3D {
       }
     })
 
-    if (!parentScene && !parentScene.isScene) {
+    if (!parentScene || (parentScene && !parentScene.isScene)) {
       console.log('No parent scene found')
       return
     }
@@ -433,6 +433,9 @@ export class UmbraScene extends THREE.Object3D {
       for (let i = 0; i < visible.length; i++) {
         const { materialDesc, geometry } = visible[i].mesh as MeshDescriptor
         visibleIDs.add(visible[i].id)
+        if (visible[i].scenePtr !== this.umbra.nativeScene.ptr) {
+          continue
+        }
 
         const isTransparent =
           materialDesc.transparent || this.material.transparent
@@ -487,8 +490,7 @@ export class UmbraScene extends THREE.Object3D {
         /**
          * We instatiate new Mesh objects each frame but the constructor is very cheap
          * and the references should live for a very short time since 'this.children'
-         * gets cleared every frame. However if this still causes too much allocations
-         * an object pool could help.
+         * gets cleared every frame.
          */
         const mesh = new THREE.Mesh(geometry, material) as UmbraMesh
         mesh.isUmbraMesh = true
