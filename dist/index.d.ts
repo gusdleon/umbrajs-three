@@ -3,9 +3,14 @@ import { UmbraInstance } from '@umbra3d/umbrajs';
 import { PublicLink } from './PublicLink';
 import { UmbraScene, SceneFactory } from './Scene';
 import { WebGLRenderer } from 'three';
+export declare type UmbraCamera = THREE.Camera & {
+    umbraStreamingPosition?: THREE.Vector3;
+    umbraQuality?: number;
+};
 declare class UmbrajsThreeInternal implements SceneFactory {
     memoryLimit: number;
     downloadLimit: number;
+    qualityFactor: number;
     onStreamingUpdate: (progress: number) => void;
     onStreamingComplete: () => void;
     umbrajs: UmbraInstance;
@@ -20,9 +25,18 @@ declare class UmbrajsThreeInternal implements SceneFactory {
     private readonly memoryUsed;
     private umbraScenes;
     private oldState;
+    private sharedState;
+    private tempVector;
+    private dirVector;
+    private matrixWorldInverse;
+    private projScreenMatrix;
+    private cameraWorldPosition;
     constructor(umbrajs: UmbraInstance, renderer: WebGLRenderer);
     startEventUpdate(interval: number): void;
     stopEventUpdate(): void;
+    private findLights;
+    private pruneOldViews;
+    private updateViews;
     update(timeBudget?: number): void;
     createScene(link: string | PublicLink): UmbraScene;
     createSceneWithURL(url: string): UmbraScene;
@@ -58,5 +72,5 @@ export declare function initWithThreeJS(renderer: THREE.WebGLRenderer, userConfi
 }): Promise<UmbrajsThreeInternal>;
 interface UmbrajsThree extends UmbrajsThreeInternal {
 }
-export { UmbraScene as Model, UmbrajsThree };
+export { UmbraScene as Scene, UmbrajsThree };
 export { Loader } from './Loader';

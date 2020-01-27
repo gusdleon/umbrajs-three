@@ -1,4 +1,4 @@
-import { UnsignedByteType, RGBAFormat, UnsignedShort565Type, RGBFormat, LuminanceAlphaFormat, HalfFloatType, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT5_Format, RGB_ETC1_Format, RGBA_ASTC_4x4_Format, RGB_PVRTC_4BPPV1_Format, Object3D, MeshBasicMaterial, Matrix4, Vector3, Box3, TangentSpaceNormalMap, Mesh, Loader as Loader$1, CompressedTexture, DataTexture, LinearFilter, LinearEncoding, sRGBEncoding, BufferGeometry, Sphere, Float32BufferAttribute } from 'three';
+import { UnsignedByteType, RGBAFormat, UnsignedShort565Type, RGBFormat, LuminanceAlphaFormat, HalfFloatType, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT5_Format, RGB_ETC1_Format, RGBA_ASTC_4x4_Format, RGB_PVRTC_4BPPV1_Format, Object3D, MeshBasicMaterial, Box3, Vector3, TangentSpaceNormalMap, Mesh, Loader as Loader$1, Matrix4, CompressedTexture, DataTexture, LinearFilter, sRGBEncoding, LinearEncoding, BufferGeometry, Sphere, Float32BufferAttribute } from 'three';
 
 function _typeof(obj) {
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -33,8 +33,24 @@ function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
 }
 
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+}
+
 function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
 }
 
 function _iterableToArrayLimit(arr, i) {
@@ -61,6 +77,10 @@ function _iterableToArrayLimit(arr, i) {
   }
 
   return _arr;
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
 }
 
 function _nonIterableRest() {
@@ -101,11 +121,11 @@ function _defineProperty$1(obj, key, value) {
   return obj;
 }
 
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+function _toConsumableArray$1(arr) {
+  return _arrayWithoutHoles$1(arr) || _iterableToArray$1(arr) || _nonIterableSpread$1();
 }
 
-function _arrayWithoutHoles(arr) {
+function _arrayWithoutHoles$1(arr) {
   if (Array.isArray(arr)) {
     for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
 
@@ -113,11 +133,11 @@ function _arrayWithoutHoles(arr) {
   }
 }
 
-function _iterableToArray(iter) {
+function _iterableToArray$1(iter) {
   if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
 }
 
-function _nonIterableSpread() {
+function _nonIterableSpread$1() {
   throw new TypeError("Invalid attempt to spread non-iterable instance");
 }
 
@@ -160,7 +180,7 @@ var UmbraNativeAPI = function () {
     function da(a) {
       var b = w[ea >> 2];
       a = b + a + 15 & -16;
-      a > fa() && y();
+      a > fa() && x();
       w[ea >> 2] = a;
       return b;
     }
@@ -184,7 +204,7 @@ var UmbraNativeAPI = function () {
         A = !1;
 
     function B(a, b) {
-      a || y("Assertion failed: " + b);
+      a || x("Assertion failed: " + b);
     }
 
     function ka(a) {
@@ -222,7 +242,7 @@ var UmbraNativeAPI = function () {
       d = g.apply(null, k);
 
       d = function (a) {
-        return "string" === b ? E(a) : "boolean" === b ? !!a : a;
+        return "string" === b ? _E(a) : "boolean" === b ? !!a : a;
       }(d);
 
       0 !== a && pa(a);
@@ -283,7 +303,7 @@ var UmbraNativeAPI = function () {
       return e;
     }
 
-    function E(a) {
+    function _E(a) {
       return a ? sa(C, a, void 0) : "";
     }
 
@@ -357,7 +377,7 @@ var UmbraNativeAPI = function () {
       c.HEAPF64 = ya = new Float64Array(G);
     }
 
-    var ea = 16768,
+    var ea = 17008,
         Aa = c.TOTAL_MEMORY || 134217728;
     5242880 > Aa && v("TOTAL_MEMORY should be larger than TOTAL_STACK, was " + Aa + "! (TOTAL_STACK=5242880)");
     c.wasmMemory ? z = c.wasmMemory : z = new WebAssembly.Memory({
@@ -366,14 +386,14 @@ var UmbraNativeAPI = function () {
     z && (G = z.buffer);
     Aa = G.byteLength;
     za();
-    w[ea >> 2] = 5259680;
+    w[ea >> 2] = 5259920;
 
     function Ba(a) {
       for (; 0 < a.length;) {
         var b = a.shift();
         if ("function" == typeof b) b();else {
-          var d = b.Nb;
-          "number" === typeof d ? void 0 === b.Kb ? c.dynCall_v(d) : c.dynCall_vi(d, b.Kb) : d(void 0 === b.Kb ? null : b.Kb);
+          var d = b.Qb;
+          "number" === typeof d ? void 0 === b.Nb ? c.dynCall_v(d) : c.dynCall_vi(d, b.Nb) : d(void 0 === b.Nb ? null : b.Nb);
         }
       }
     }
@@ -413,7 +433,7 @@ var UmbraNativeAPI = function () {
         if (c.wasmBinary) return new Uint8Array(c.wasmBinary);
         throw "both async and sync fetching of the wasm failed";
       } catch (a) {
-        y(a);
+        x(a);
       }
     }
 
@@ -447,7 +467,7 @@ var UmbraNativeAPI = function () {
           return WebAssembly.instantiate(a, f);
         }).then(a, function (a) {
           v("failed to asynchronously prepare wasm: " + a);
-          y(a);
+          x(a);
         });
       }
 
@@ -487,8 +507,8 @@ var UmbraNativeAPI = function () {
     c.asm = function (a, b) {
       b.memory = z;
       b.table = new WebAssembly.Table({
-        initial: 376,
-        maximum: 376,
+        initial: 358,
+        maximum: 358,
         element: "anyfunc"
       });
       b.__memory_base = 1024;
@@ -504,17 +524,17 @@ var UmbraNativeAPI = function () {
       alert("Uploads are not supported.");
     }];
     Ea.push({
-      Nb: function Nb() {
+      Qb: function Qb() {
         Ta();
       }
     });
     var K = {};
 
     function Ua(a) {
-      if (Ua.Tb) {
+      if (Ua.Wb) {
         var b = w[a >> 2];
         var d = w[b >> 2];
-      } else Ua.Tb = !0, K.USER = K.LOGNAME = "web_user", K.PATH = "/", K.PWD = "/", K.HOME = "/home/web_user", K.LANG = "C.UTF-8", K.LANG = ("object" === (typeof navigator === "undefined" ? "undefined" : _typeof$1(navigator)) && navigator.languages && navigator.languages[0] || "C").replace("-", "_") + ".UTF-8", K._ = c.thisProgram, d = Ia ? F(1024) : da(1024), b = Ia ? F(256) : da(256), w[b >> 2] = d, w[a >> 2] = b;
+      } else Ua.Wb = !0, K.USER = K.LOGNAME = "web_user", K.PATH = "/", K.PWD = "/", K.HOME = "/home/web_user", K.LANG = "C.UTF-8", K.LANG = ("object" === (typeof navigator === "undefined" ? "undefined" : _typeof$1(navigator)) && navigator.languages && navigator.languages[0] || "C").replace("-", "_") + ".UTF-8", K._ = c.thisProgram, d = Ia ? F(1024) : da(1024), b = Ia ? F(256) : da(256), w[b >> 2] = d, w[a >> 2] = b;
 
       a = [];
       var e = 0,
@@ -547,8 +567,8 @@ var UmbraNativeAPI = function () {
 
     function Va(a, b) {
       Ga.unshift({
-        Nb: a,
-        Kb: b
+        Qb: a,
+        Nb: b
       });
     }
 
@@ -684,7 +704,7 @@ var UmbraNativeAPI = function () {
       a || R('type "' + e + '" must have a positive integer typeid pointer');
 
       if (O.hasOwnProperty(a)) {
-        if (d.Zb) return;
+        if (d.bc) return;
         R("Cannot register type '" + e + "' twice");
       }
 
@@ -707,10 +727,10 @@ var UmbraNativeAPI = function () {
     }];
 
     function lb(a) {
-      4 < a && 0 === --S[a].Ob && (S[a] = void 0, kb.push(a));
+      4 < a && 0 === --S[a].Rb && (S[a] = void 0, kb.push(a));
     }
 
-    function T(a) {
+    function U(a) {
       switch (a) {
         case void 0:
           return 1;
@@ -727,7 +747,7 @@ var UmbraNativeAPI = function () {
         default:
           var b = kb.length ? kb.pop() : S.length;
           S[b] = {
-            Ob: 1,
+            Rb: 1,
             value: a
           };
           return b;
@@ -772,21 +792,21 @@ var UmbraNativeAPI = function () {
     function pb(a, b) {
       var d = c;
 
-      if (void 0 === d[a].Ib) {
+      if (void 0 === d[a].Lb) {
         var e = d[a];
 
         d[a] = function () {
-          d[a].Ib.hasOwnProperty(arguments.length) || R("Function '" + b + "' called with an invalid number of arguments (" + arguments.length + ") - expects one of (" + d[a].Ib + ")!");
-          return d[a].Ib[arguments.length].apply(this, arguments);
+          d[a].Lb.hasOwnProperty(arguments.length) || R("Function '" + b + "' called with an invalid number of arguments (" + arguments.length + ") - expects one of (" + d[a].Lb + ")!");
+          return d[a].Lb[arguments.length].apply(this, arguments);
         };
 
-        d[a].Ib = [];
-        d[a].Ib[e.Sb] = e;
+        d[a].Lb = [];
+        d[a].Lb[e.Vb] = e;
       }
     }
 
     function qb(a, b, d) {
-      c.hasOwnProperty(a) ? ((void 0 === d || void 0 !== c[a].Ib && void 0 !== c[a].Ib[d]) && R("Cannot register public name '" + a + "' twice"), pb(a, a), c.hasOwnProperty(d) && R("Cannot register multiple overloads of a function with the same number of arguments (" + d + ")!"), c[a].Ib[d] = b) : (c[a] = b, void 0 !== d && (c[a].rc = d));
+      c.hasOwnProperty(a) ? ((void 0 === d || void 0 !== c[a].Lb && void 0 !== c[a].Lb[d]) && R("Cannot register public name '" + a + "' twice"), pb(a, a), c.hasOwnProperty(d) && R("Cannot register multiple overloads of a function with the same number of arguments (" + d + ")!"), c[a].Lb[d] = b) : (c[a] = b, void 0 !== d && (c[a].uc = d));
     }
 
     function rb(a, b) {
@@ -927,7 +947,7 @@ var UmbraNativeAPI = function () {
     }
 
     function Y() {
-      y();
+      x();
     }
 
     function Mb(a) {
@@ -947,20 +967,20 @@ var UmbraNativeAPI = function () {
         if (!A) if (0 < Ob.length) {
           var a = Date.now(),
               b = Ob.shift();
-          b.Nb(b.Kb);
+          b.Qb(b.Nb);
 
           if (Pb) {
             var k = Pb,
                 h = 0 == k % 1 ? k - 1 : Math.floor(k);
-            Pb = b.ic ? h : (8 * k + (h + .5)) / 9;
+            Pb = b.lc ? h : (8 * k + (h + .5)) / 9;
           }
 
           console.log('main loop blocker "' + b.name + '" took ' + (Date.now() - a) + " ms");
-          c.setStatus && (a = c.statusMessage || "Please wait...", b = Pb, k = Qb.mc, b ? b < k ? c.setStatus(a + " (" + (k - b) + "/" + k + ")") : c.setStatus(a) : c.setStatus(""));
+          c.setStatus && (a = c.statusMessage || "Please wait...", b = Pb, k = Qb.pc, b ? b < k ? c.setStatus(a + " (" + (k - b) + "/" + k + ")") : c.setStatus(a) : c.setStatus(""));
           e < Z || setTimeout(_Jb, 0);
         } else if (!(e < Z)) if (Rb = Rb + 1 | 0, 1 == Fb && 1 < Gb && 0 != Rb % Gb) X();else {
           0 == Fb && (Ib = Y());
-          "timeout" === Kb && c.Mb && (v("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!"), Kb = "");
+          "timeout" === Kb && c.Pb && (v("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!"), Kb = "");
 
           a: if (!(A || c.preMainLoop && !1 === c.preMainLoop())) {
             try {
@@ -974,7 +994,7 @@ var UmbraNativeAPI = function () {
             c.postMainLoop && c.postMainLoop();
           }
 
-          e < Z || ("object" === (typeof SDL === "undefined" ? "undefined" : _typeof$1(SDL)) && SDL.audio && SDL.audio.ac && SDL.audio.ac(), X());
+          e < Z || ("object" === (typeof SDL === "undefined" ? "undefined" : _typeof$1(SDL)) && SDL.audio && SDL.audio.dc && SDL.audio.dc(), X());
         }
       };
     }
@@ -1014,10 +1034,10 @@ var UmbraNativeAPI = function () {
 
         $b = "undefined" != typeof MozBlobBuilder ? MozBlobBuilder : "undefined" != typeof WebKitBlobBuilder ? WebKitBlobBuilder : Zb ? null : console.log("warning: no BlobBuilder");
         ac = "undefined" != typeof window ? window.URL ? window.URL : window.webkitURL : void 0;
-        c.Rb || "undefined" !== typeof ac || (console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available."), c.Rb = !0);
+        c.Ub || "undefined" !== typeof ac || (console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available."), c.Ub = !0);
         c.preloadPlugins.push({
           canHandle: function canHandle(a) {
-            return !c.Rb && /\.(jpg|jpeg|png|bmp)$/i.test(a);
+            return !c.Ub && /\.(jpg|jpeg|png|bmp)$/i.test(a);
           },
           handle: function handle(a, b, f, g) {
             var d = null;
@@ -1055,7 +1075,7 @@ var UmbraNativeAPI = function () {
         });
         c.preloadPlugins.push({
           canHandle: function canHandle(a) {
-            return !c.qc && a.substr(-4) in {
+            return !c.tc && a.substr(-4) in {
               ".ogg": 1,
               ".wav": 1,
               ".mp3": 1
@@ -1120,23 +1140,23 @@ var UmbraNativeAPI = function () {
     }
 
     function dc(a, b, d, e) {
-      if (b && c.Mb && a == c.canvas) return c.Mb;
+      if (b && c.Pb && a == c.canvas) return c.Pb;
       var f;
 
       if (b) {
         var g = {
           antialias: !1,
           alpha: !1,
-          oc: 1
+          rc: 1
         };
         if (e) for (var k in e) {
           g[k] = e[k];
         }
-        if ("undefined" !== typeof GL && (f = GL.jc(a, g))) var h = GL.getContext(f).hc;
+        if ("undefined" !== typeof GL && (f = GL.mc(a, g))) var h = GL.getContext(f).kc;
       } else h = a.getContext("2d");
 
       if (!h) return null;
-      d && (b || B("undefined" === typeof GLctx, "cannot set in module if GLctx is used, but we are a non-GL context that would replace it"), c.Mb = h, b && GL.pc(f), c.sc = b, Vb.forEach(function (a) {
+      d && (b || B("undefined" === typeof GLctx, "cannot set in module if GLctx is used, but we are a non-GL context that would replace it"), c.Pb = h, b && GL.sc(f), c.vc = b, Vb.forEach(function (a) {
         a();
       }), Xb());
       return h;
@@ -1170,7 +1190,7 @@ var UmbraNativeAPI = function () {
         g.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
       } : null);
       d ? g.requestFullscreen({
-        tc: d
+        wc: d
       }) : g.requestFullscreen();
     }
 
@@ -1231,7 +1251,7 @@ var UmbraNativeAPI = function () {
     }
 
     function jc(a, b, d) {
-      b && d ? (a.gc = b, a.Yb = d) : (b = a.gc, d = a.Yb);
+      b && d ? (a.jc = b, a.ac = d) : (b = a.jc, d = a.ac);
       var e = b,
           f = d;
       c.forcedAspectRatio && 0 < c.forcedAspectRatio && (e / f < c.forcedAspectRatio ? e = Math.round(f * c.forcedAspectRatio) : f = Math.round(e / c.forcedAspectRatio));
@@ -1350,7 +1370,7 @@ var UmbraNativeAPI = function () {
     }
 
     c._exit = yc;
-    na("GMT", C, 16672, 4);
+    na("GMT", C, 16912, 4);
 
     function zc() {
       function a(a) {
@@ -1472,22 +1492,26 @@ var UmbraNativeAPI = function () {
     }
 
     var Kc = c.asm({}, {
-      j: y,
-      z: function z() {},
-      ea: function ea() {
-        v("missing function: _ZN5Umbra18createDirRecursiveEPKc");
-        y(-1);
+      j: x,
+      y: function y() {},
+      fa: function fa() {
+        v("missing function: _ZN5Umbra13MiniSceneCopy7connectERK20UmbraSceneCopySource");
+        x(-1);
       },
-      $: Ua,
-      Y: function Y() {
+      ba: function ba() {
+        v("missing function: _ZN5Umbra13MiniSceneCopy9getStatusEPf");
+        x(-1);
+      },
+      C: function C() {
+        v("missing function: _ZN5Umbra13MiniSceneCopyC1ERNS_11MiniRuntimeERK25UmbraSceneCopyDestinationPK20UmbraEnvironmentInfoRKN5Eigen6MatrixIfLi3ELi1ELi0ELi3ELi1EEEfi");
+        x(-1);
+      },
+      Z: Ua,
+      U: function U() {
         return Va.apply(null, arguments);
       },
-      X: function X() {
-        A = !0;
-        throw "Pure virtual function called!";
-      },
       v: function v() {},
-      y: function y(a) {
+      x: function x(a) {
         c.___errno_location && (w[c.___errno_location() >> 2] = a);
         return a;
       },
@@ -1495,25 +1519,25 @@ var UmbraNativeAPI = function () {
         _L = b;
 
         try {
-          return Ya.Qb(), _M(), _M(), _M(), _M(), 0;
+          return Ya.Tb(), _M(), _M(), _M(), _M(), 0;
         } catch (d) {
-          return y(d), -d.Lb;
+          return x(d), -d.Ob;
         }
       },
       L: function L(a, b) {
         _L = b;
 
         try {
-          var d = Ya.Qb(),
+          var d = Ya.Tb(),
               e = _M(),
               f = _M();
 
-          return Ya.kc(d, e, f);
+          return Ya.nc(d, e, f);
         } catch (g) {
-          return y(g), -g.Lb;
+          return x(g), -g.Ob;
         }
       },
-      x: function x(a, b) {
+      K: function K(a, b) {
         _L = b;
 
         try {
@@ -1531,73 +1555,73 @@ var UmbraNativeAPI = function () {
 
           return a;
         } catch (l) {
-          return y(l), -l.Lb;
+          return x(l), -l.Ob;
         }
+      },
+      ea: function ea(a, b) {
+        _L = b;
+
+        try {
+          var d = _E(_M()),
+              e = _M();
+
+          return Ya.oc((void 0).stat, d, e);
+        } catch (f) {
+          return x(f), -f.Ob;
+        }
+      },
+      J: function J(a, b) {
+        _L = b;
+        return 0;
       },
       da: function da(a, b) {
         _L = b;
 
         try {
-          var d = E(_M()),
-              e = _M();
-
-          return Ya.lc((void 0).stat, d, e);
-        } catch (f) {
-          return y(f), -f.Lb;
-        }
-      },
-      u: function u(a, b) {
-        _L = b;
-        return 0;
-      },
-      ca: function ca(a, b) {
-        _L = b;
-
-        try {
-          var d = E(_M()),
+          var d = _E(_M()),
               e = _M(),
               f = _M();
 
-          return (void 0).open(d, e, f).nc;
+          return (void 0).open(d, e, f).qc;
         } catch (g) {
-          return y(g), -g.Lb;
+          return x(g), -g.Ob;
         }
       },
-      K: function K(a, b) {
+      I: function I(a, b) {
         _L = b;
         return 0;
       },
-      J: function J(a, b) {
+      H: function H(a, b) {
         _L = b;
 
         try {
-          return Ya.Qb(), 0;
+          return Ya.Tb(), 0;
         } catch (d) {
-          return y(d), -d.Lb;
+          return x(d), -d.Ob;
         }
       },
       w: function w() {},
-      I: function I(a) {
+      G: function G(a) {
         var b = Za[a];
         delete Za[a];
-        var d = b.bc,
-            e = b.cc,
-            f = b.Pb,
+        var d = b.ec,
+            e = b.fc,
+            f = b.Sb,
             g = f.map(function (a) {
-          return a.Xb;
+          return a.$b;
         }).concat(f.map(function (a) {
-          return a.ec;
+          return a.hc;
         }));
         gb([a], g, function (a) {
           var g = {};
           f.forEach(function (b, d) {
             var e = a[d],
-                h = b.Vb,
-                k = b.Wb,
+                h = b.Yb,
+                k = b.Zb,
                 l = a[d + f.length],
-                n = b.dc,
-                Da = b.fc;
-            g[b.Ub] = {
+                n = b.gc,
+                Da = b.ic;
+            g[b.Xb] = {
               read: function read(a) {
                 return e.fromWireType(h(k, a));
               },
@@ -1637,11 +1661,11 @@ var UmbraNativeAPI = function () {
             },
             argPackAdvance: 8,
             readValueFromPointer: ab,
-            Jb: e
+            Mb: e
           }];
         });
       },
-      ba: function ba(a, b, d, e, f) {
+      ca: function ca(a, b, d, e, f) {
         var g = hb(d);
         b = Q(b);
         P(a, {
@@ -1657,7 +1681,7 @@ var UmbraNativeAPI = function () {
             if (1 === d) var e = D;else if (2 === d) e = va;else if (4 === d) e = w;else throw new TypeError("Unknown boolean type size: " + b);
             return this.fromWireType(e[a >> g]);
           },
-          Jb: null
+          Mb: null
         });
       },
       p: function p(a, b, d) {
@@ -1678,14 +1702,14 @@ var UmbraNativeAPI = function () {
             return b;
           },
           toWireType: function toWireType(a, b) {
-            return T(b);
+            return U(b);
           },
           argPackAdvance: 8,
           readValueFromPointer: ab,
-          Jb: null
+          Mb: null
         });
       },
-      H: function H(a, b, d) {
+      F: function F(a, b, d) {
         d = hb(d);
         b = Q(b);
         P(a, {
@@ -1699,10 +1723,10 @@ var UmbraNativeAPI = function () {
           },
           argPackAdvance: 8,
           readValueFromPointer: nb(b, d),
-          Jb: null
+          Mb: null
         });
       },
-      l: function l(a, b, d, e, f, g) {
+      k: function k(a, b, d, e, f, g) {
         var k = rb(b, d);
         a = Q(a);
         f = sb(e, f);
@@ -1717,47 +1741,47 @@ var UmbraNativeAPI = function () {
               q = d.length;
           2 > q && R("argTypes array size mismatch! Must at least get return value and 'this' types!");
 
-          for (var t = null !== d[1] && !1, x = !1, p = 1; p < d.length; ++p) {
-            if (null !== d[p] && void 0 === d[p].Jb) {
-              x = !0;
+          for (var t = null !== d[1] && !1, y = !1, p = 1; p < d.length; ++p) {
+            if (null !== d[p] && void 0 === d[p].Mb) {
+              y = !0;
               break;
             }
           }
 
           var Da = "void" !== d[0].name,
-              U = "",
+              T = "",
               ca = "";
 
           for (p = 0; p < q - 2; ++p) {
-            U += (0 !== p ? ", " : "") + "arg" + p, ca += (0 !== p ? ", " : "") + "arg" + p + "Wired";
+            T += (0 !== p ? ", " : "") + "arg" + p, ca += (0 !== p ? ", " : "") + "arg" + p + "Wired";
           }
 
-          h = "return function " + cb(h) + "(" + U + ") {\nif (arguments.length !== " + (q - 2) + ") {\nthrowBindingError('function " + h + " called with ' + arguments.length + ' arguments, expected " + (q - 2) + " args!');\n}\n";
-          x && (h += "var destructors = [];\n");
-          var Wb = x ? "destructors" : "null";
-          U = "throwBindingError invoker fn runDestructors retType classParam".split(" ");
+          h = "return function " + cb(h) + "(" + T + ") {\nif (arguments.length !== " + (q - 2) + ") {\nthrowBindingError('function " + h + " called with ' + arguments.length + ' arguments, expected " + (q - 2) + " args!');\n}\n";
+          y && (h += "var destructors = [];\n");
+          var Wb = y ? "destructors" : "null";
+          T = "throwBindingError invoker fn runDestructors retType classParam".split(" ");
           k = [R, k, g, $a, d[0], d[1]];
           t && (h += "var thisWired = classParam.toWireType(" + Wb + ", this);\n");
 
           for (p = 0; p < q - 2; ++p) {
-            h += "var arg" + p + "Wired = argType" + p + ".toWireType(" + Wb + ", arg" + p + "); // " + d[p + 2].name + "\n", U.push("argType" + p), k.push(d[p + 2]);
+            h += "var arg" + p + "Wired = argType" + p + ".toWireType(" + Wb + ", arg" + p + "); // " + d[p + 2].name + "\n", T.push("argType" + p), k.push(d[p + 2]);
           }
 
           t && (ca = "thisWired" + (0 < ca.length ? ", " : "") + ca);
           h += (Da ? "var rv = " : "") + "invoker(fn" + (0 < ca.length ? ", " : "") + ca + ");\n";
-          if (x) h += "runDestructors(destructors);\n";else for (p = t ? 1 : 2; p < d.length; ++p) {
-            q = 1 === p ? "thisWired" : "arg" + (p - 2) + "Wired", null !== d[p].Jb && (h += q + "_dtor(" + q + "); // " + d[p].name + "\n", U.push(q + "_dtor"), k.push(d[p].Jb));
+          if (y) h += "runDestructors(destructors);\n";else for (p = t ? 1 : 2; p < d.length; ++p) {
+            q = 1 === p ? "thisWired" : "arg" + (p - 2) + "Wired", null !== d[p].Mb && (h += q + "_dtor(" + q + "); // " + d[p].name + "\n", T.push(q + "_dtor"), k.push(d[p].Mb));
           }
           Da && (h += "var ret = retType.fromWireType(rv);\nreturn ret;\n");
-          U.push(h + "}\n");
-          d = ob(U).apply(null, k);
+          T.push(h + "}\n");
+          d = ob(T).apply(null, k);
           p = b - 1;
           if (!c.hasOwnProperty(e)) throw new fb("Replacing nonexistant public symbol");
-          void 0 !== c[e].Ib && void 0 !== p ? c[e].Ib[p] = d : (c[e] = d, c[e].Sb = p);
+          void 0 !== c[e].Lb && void 0 !== p ? c[e].Lb[p] = d : (c[e] = d, c[e].Vb = p);
           return [];
         });
       },
-      r: function r(a, b, d, e, f) {
+      s: function s(a, b, d, e, f) {
         function g(a) {
           return a;
         }
@@ -1785,7 +1809,7 @@ var UmbraNativeAPI = function () {
           },
           argPackAdvance: 8,
           readValueFromPointer: xb(b, k, 0 !== e),
-          Jb: null
+          Mb: null
         });
       },
       o: function o(a, b, d) {
@@ -1803,10 +1827,10 @@ var UmbraNativeAPI = function () {
           argPackAdvance: 8,
           readValueFromPointer: e
         }, {
-          Zb: !0
+          bc: !0
         });
       },
-      G: function G(a, b) {
+      E: function E(a, b) {
         b = Q(b);
         var d = "std::string" === b;
         P(a, {
@@ -1824,7 +1848,7 @@ var UmbraNativeAPI = function () {
                 var l = a + 4 + e;
 
                 if (0 == C[l]) {
-                  h = E(h);
+                  h = _E(h);
                   if (void 0 === n) var n = h;else n += String.fromCharCode(0), n += h;
                   h = l + 1;
                 }
@@ -1867,12 +1891,12 @@ var UmbraNativeAPI = function () {
           },
           argPackAdvance: 8,
           readValueFromPointer: ab,
-          Jb: function Jb(a) {
+          Mb: function Mb(a) {
             V(a);
           }
         });
       },
-      _: function _(a, b, d) {
+      $: function $(a, b, d) {
         d = Q(d);
 
         if (2 === b) {
@@ -1910,34 +1934,34 @@ var UmbraNativeAPI = function () {
           },
           argPackAdvance: 8,
           readValueFromPointer: ab,
-          Jb: function Jb(a) {
+          Mb: function Mb(a) {
             V(a);
           }
         });
       },
-      F: function F(a, b, d, e, f, g) {
+      D: function D(a, b, d, e, f, g) {
         Za[a] = {
           name: Q(b),
-          bc: sb(d, e),
-          cc: sb(f, g),
-          Pb: []
+          ec: sb(d, e),
+          fc: sb(f, g),
+          Sb: []
         };
       },
       t: function t(a, b, d, e, f, g, k, h, l, n) {
-        Za[a].Pb.push({
-          Ub: Q(b),
-          Xb: d,
-          Vb: sb(e, f),
-          Wb: g,
-          ec: k,
-          dc: sb(h, l),
-          fc: n
+        Za[a].Sb.push({
+          Xb: Q(b),
+          $b: d,
+          Yb: sb(e, f),
+          Zb: g,
+          hc: k,
+          gc: sb(h, l),
+          ic: n
         });
       },
-      Z: function Z(a, b) {
+      _: function _(a, b) {
         b = Q(b);
         P(a, {
-          $b: !0,
+          cc: !0,
           name: b,
           argPackAdvance: 0,
           fromWireType: function fromWireType() {},
@@ -1948,18 +1972,18 @@ var UmbraNativeAPI = function () {
         a = W(a);
         b = yb(b, "emval::as");
         var e = [],
-            f = T(e);
+            f = U(e);
         w[d >> 2] = f;
         return b.toWireType(e, a);
       },
-      n: function n(a, b, d, e) {
+      m: function m(a, b, d, e) {
         a = Bb[a];
         b = W(b);
         d = Ab(d);
         a(b, d, null, e);
       },
       c: lb,
-      m: function m(a, b) {
+      l: function l(a, b) {
         b = Db(a, b);
 
         for (var d = b[0], e = d.name + "_$" + b.slice(1).map(function (a) {
@@ -1981,7 +2005,7 @@ var UmbraNativeAPI = function () {
           b[h + 1].deleteObject && (e += "    argType" + h + ".deleteObject(arg" + h + ");\n");
         }
 
-        d.$b || (e += "    return retType.toWireType(destructors, rv);\n");
+        d.cc || (e += "    return retType.toWireType(destructors, rv);\n");
         f.push(e + "};\n");
         a = ob(f).apply(null, g);
         return Cb(a);
@@ -1989,19 +2013,19 @@ var UmbraNativeAPI = function () {
       g: function g(a, b) {
         a = W(a);
         b = W(b);
-        return T(a[b]);
+        return U(a[b]);
       },
-      E: function E(a) {
-        4 < a && (S[a].Ob += 1);
+      u: function u(a) {
+        4 < a && (S[a].Rb += 1);
       },
-      s: function s() {
-        return T([]);
+      r: function r() {
+        return U([]);
       },
-      d: function d(a) {
-        return T(Ab(a));
+      e: function e(a) {
+        return U(Ab(a));
       },
       q: function q() {
-        return T({});
+        return U({});
       },
       h: function h(a) {
         $a(S[a].value);
@@ -2013,39 +2037,39 @@ var UmbraNativeAPI = function () {
         d = W(d);
         a[b] = d;
       },
-      e: function e(a, b) {
+      d: function d(a, b) {
         a = yb(a, "_emval_take_value");
         a = a.readValueFromPointer(b);
-        return T(a);
+        return U(a);
       },
-      W: function W() {
+      Y: function Y() {
         c.abort();
       },
-      D: function D(a) {
+      B: function B(a) {
         return Sa[a]();
       },
-      V: function V(a, b, d, e, f, g, k, h, l, n, u, q) {
+      X: function X(a, b, d, e, f, g, k, h, l, n, u, q) {
         return Sa[a](b, d, e, f, g, k, h, l, n, u, q);
       },
-      C: function C(a) {
+      A: function A(a) {
         (a = pc[a]) && a.abort();
       },
-      U: fa,
-      k: Y,
-      B: function B(a, b, d, e, f) {
-        wc(E(a), E(b), function (a, b) {
+      W: fa,
+      n: Y,
+      z: function z(a, b, d, e, f) {
+        wc(_E(a), _E(b), function (a, b) {
           a ? f && Ic(f, d) : (a = F(b.length), C.set(b, a), Jc(e, d, a, b.length), V(a));
         });
       },
-      T: function T(a, b, d, e, f, g, k) {
-        xc(E(a), E(b), new Uint8Array(C.subarray(d, d + e)), function (a) {
+      V: function V(a, b, d, e, f, g, k) {
+        xc(_E(a), _E(b), new Uint8Array(C.subarray(d, d + e)), function (a) {
           a ? k && Ic(k, f) : g && Ic(g, f);
         });
       },
-      S: function S(a, b, d) {
+      T: function T(a, b, d) {
         C.set(C.subarray(b, b + d), a);
       },
-      R: function R(a) {
+      S: function S(a) {
         if (2147418112 < a) return !1;
 
         for (var b = Math.max(fa(), 16777216); b < a;) {
@@ -2056,30 +2080,30 @@ var UmbraNativeAPI = function () {
         za();
         return !0;
       },
-      Q: yc,
-      A: function A() {
-        y("trap!");
+      R: yc,
+      Q: function Q() {
+        x("trap!");
       },
       P: function P(a) {
         zc();
         a = new Date(1E3 * w[a >> 2]);
-        w[4156] = a.getSeconds();
-        w[4157] = a.getMinutes();
-        w[4158] = a.getHours();
-        w[4159] = a.getDate();
-        w[4160] = a.getMonth();
-        w[4161] = a.getFullYear() - 1900;
-        w[4162] = a.getDay();
+        w[4216] = a.getSeconds();
+        w[4217] = a.getMinutes();
+        w[4218] = a.getHours();
+        w[4219] = a.getDate();
+        w[4220] = a.getMonth();
+        w[4221] = a.getFullYear() - 1900;
+        w[4222] = a.getDay();
         var b = new Date(a.getFullYear(), 0, 1);
-        w[4163] = (a.getTime() - b.getTime()) / 864E5 | 0;
-        w[4165] = -(60 * a.getTimezoneOffset());
+        w[4223] = (a.getTime() - b.getTime()) / 864E5 | 0;
+        w[4225] = -(60 * a.getTimezoneOffset());
         var d = new Date(2E3, 6, 1).getTimezoneOffset();
         b = b.getTimezoneOffset();
         a = (d != b && a.getTimezoneOffset() == Math.min(b, d)) | 0;
-        w[4164] = a;
+        w[4224] = a;
         a = w[Ec() + (a ? 4 : 0) >> 2];
-        w[4166] = a;
-        return 16624;
+        w[4226] = a;
+        return 16864;
       },
       O: function O(a) {
         var b = Date.now() / 1E3 | 0;
@@ -2087,334 +2111,342 @@ var UmbraNativeAPI = function () {
         return b;
       },
       N: function N() {
-        y("OOM");
+        x("OOM");
       },
       a: ea,
-      b: 16608
+      b: 16848
     }, G);
     c.asm = Kc;
 
     c._UmbraAssetLoadAbortRequested = function () {
-      return c.asm.fa.apply(null, arguments);
-    };
-
-    c._UmbraAssetLoadFinish = function () {
       return c.asm.ga.apply(null, arguments);
     };
 
-    c._UmbraAssetLoadGetType = function () {
+    c._UmbraAssetLoadFinish = function () {
       return c.asm.ha.apply(null, arguments);
     };
 
-    c._UmbraAssetLoadPrepare = function () {
+    c._UmbraAssetLoadGetType = function () {
       return c.asm.ia.apply(null, arguments);
     };
 
-    c._UmbraAssetUnloadFinish = function () {
+    c._UmbraAssetLoadPrepare = function () {
       return c.asm.ja.apply(null, arguments);
     };
 
-    c._UmbraAssetUnloadGetType = function () {
+    c._UmbraAssetUnloadFinish = function () {
       return c.asm.ka.apply(null, arguments);
     };
 
-    c._UmbraAssetUnloadGetUserPointer = function () {
+    c._UmbraAssetUnloadGetType = function () {
       return c.asm.la.apply(null, arguments);
     };
 
-    c._UmbraClientCreate = function () {
+    c._UmbraAssetUnloadGetUserPointer = function () {
       return c.asm.ma.apply(null, arguments);
     };
 
-    c._UmbraClientDestroy = function () {
+    c._UmbraClientCreate = function () {
       return c.asm.na.apply(null, arguments);
     };
 
-    c._UmbraConfigInit = function () {
+    c._UmbraClientDestroy = function () {
       return c.asm.oa.apply(null, arguments);
     };
 
-    c._UmbraEnvironmentInfoDefaults = function () {
+    c._UmbraConfigInit = function () {
       return c.asm.pa.apply(null, arguments);
     };
 
-    c._UmbraGetLibraryInfo = function () {
+    c._UmbraEcefToGeodetic = function () {
       return c.asm.qa.apply(null, arguments);
     };
 
-    c._UmbraMaterialLoadGetInfo = function () {
+    c._UmbraEnvironmentInfoDefaults = function () {
       return c.asm.ra.apply(null, arguments);
     };
 
-    c._UmbraMeshLoadGetData = function () {
+    c._UmbraGeodeticToEcef = function () {
       return c.asm.sa.apply(null, arguments);
     };
 
-    c._UmbraMeshLoadGetInfo = function () {
+    c._UmbraGetLibraryInfo = function () {
       return c.asm.ta.apply(null, arguments);
     };
 
-    c._UmbraMeshStreamDone = function () {
+    c._UmbraMaterialLoadGetInfo = function () {
       return c.asm.ua.apply(null, arguments);
     };
 
-    c._UmbraMeshStreamNext = function () {
+    c._UmbraMeshLoadGetData = function () {
       return c.asm.va.apply(null, arguments);
     };
 
-    c._UmbraMeshStreamSetBuffers = function () {
+    c._UmbraMeshLoadGetInfo = function () {
       return c.asm.wa.apply(null, arguments);
     };
 
-    c._UmbraRuntimeCreate = function () {
+    c._UmbraMeshStreamDone = function () {
       return c.asm.xa.apply(null, arguments);
     };
 
-    c._UmbraRuntimeDestroy = function () {
+    c._UmbraMeshStreamNext = function () {
       return c.asm.ya.apply(null, arguments);
     };
 
-    c._UmbraRuntimeGetStreamingState = function () {
+    c._UmbraMeshStreamSetBuffers = function () {
       return c.asm.za.apply(null, arguments);
     };
 
-    c._UmbraRuntimeNextAssetLoad = function () {
+    c._UmbraRuntimeCreate = function () {
       return c.asm.Aa.apply(null, arguments);
     };
 
-    c._UmbraRuntimeNextAssetUnload = function () {
+    c._UmbraRuntimeDestroy = function () {
       return c.asm.Ba.apply(null, arguments);
     };
 
-    c._UmbraRuntimeUpdate = function () {
+    c._UmbraRuntimeGetStreamingState = function () {
       return c.asm.Ca.apply(null, arguments);
     };
 
-    c._UmbraSceneCopyCreate = function () {
+    c._UmbraRuntimeNextAssetLoad = function () {
       return c.asm.Da.apply(null, arguments);
     };
 
-    c._UmbraSceneCopyDestroy = function () {
+    c._UmbraRuntimeNextAssetUnload = function () {
       return c.asm.Ea.apply(null, arguments);
     };
 
-    c._UmbraSceneCopyGetError = function () {
+    c._UmbraRuntimeUpdate = function () {
       return c.asm.Fa.apply(null, arguments);
     };
 
-    c._UmbraSceneCopyGetStatus = function () {
+    c._UmbraSceneCopyCreate = function () {
       return c.asm.Ga.apply(null, arguments);
     };
 
-    c._UmbraSceneCreate = function () {
+    c._UmbraSceneCopyDestroy = function () {
       return c.asm.Ha.apply(null, arguments);
     };
 
-    c._UmbraSceneCreateLocal = function () {
+    c._UmbraSceneCopyGetError = function () {
       return c.asm.Ia.apply(null, arguments);
     };
 
-    c._UmbraSceneCreatePublic = function () {
+    c._UmbraSceneCopyGetStatus = function () {
       return c.asm.Ja.apply(null, arguments);
     };
 
-    c._UmbraSceneDestroy = function () {
+    c._UmbraSceneCreate = function () {
       return c.asm.Ka.apply(null, arguments);
     };
 
-    c._UmbraSceneGetConnectionStatus = function () {
+    c._UmbraSceneCreateLocal = function () {
       return c.asm.La.apply(null, arguments);
     };
 
-    c._UmbraSceneGetInfo = function () {
+    c._UmbraSceneCreatePublic = function () {
       return c.asm.Ma.apply(null, arguments);
     };
 
-    c._UmbraSceneSetTransform = function () {
+    c._UmbraSceneDestroy = function () {
       return c.asm.Na.apply(null, arguments);
     };
 
-    c._UmbraSetAllocator = function () {
+    c._UmbraSceneGetConnectionStatus = function () {
       return c.asm.Oa.apply(null, arguments);
     };
 
-    c._UmbraSetHttp = function () {
+    c._UmbraSceneGetInfo = function () {
       return c.asm.Pa.apply(null, arguments);
     };
 
-    c._UmbraSetLogger = function () {
+    c._UmbraSceneSetTransform = function () {
       return c.asm.Qa.apply(null, arguments);
     };
 
-    c._UmbraTextureGetMipmapLevelByteSize = function () {
+    c._UmbraSetAllocator = function () {
       return c.asm.Ra.apply(null, arguments);
     };
 
-    c._UmbraTextureGetMipmapLevelOffset = function () {
+    c._UmbraSetHttp = function () {
       return c.asm.Sa.apply(null, arguments);
     };
 
-    c._UmbraTextureLoadGetData = function () {
+    c._UmbraSetLogger = function () {
       return c.asm.Ta.apply(null, arguments);
     };
 
-    c._UmbraTextureLoadGetInfo = function () {
+    c._UmbraTextureGetMipmapLevelByteSize = function () {
       return c.asm.Ua.apply(null, arguments);
     };
 
-    c._UmbraTextureMetaDataGetClassification = function () {
+    c._UmbraTextureGetMipmapLevelOffset = function () {
       return c.asm.Va.apply(null, arguments);
     };
 
-    c._UmbraTextureMetaDataGetClassificationAmount = function () {
+    c._UmbraTextureLoadGetData = function () {
       return c.asm.Wa.apply(null, arguments);
     };
 
-    c._UmbraTextureMetaDataGetClassificationCount = function () {
+    c._UmbraTextureLoadGetInfo = function () {
       return c.asm.Xa.apply(null, arguments);
     };
 
-    c._UmbraTextureMetaDataLoadGetData = function () {
+    c._UmbraTextureMetaDataGetClassification = function () {
       return c.asm.Ya.apply(null, arguments);
     };
 
-    c._UmbraVertexAttributeGetElementByteSize = function () {
+    c._UmbraTextureMetaDataGetClassificationAmount = function () {
       return c.asm.Za.apply(null, arguments);
     };
 
-    c._UmbraViewCreate = function () {
+    c._UmbraTextureMetaDataGetClassificationCount = function () {
       return c.asm._a.apply(null, arguments);
     };
 
-    c._UmbraViewDestroy = function () {
+    c._UmbraTextureMetaDataLoadGetData = function () {
       return c.asm.$a.apply(null, arguments);
     };
 
-    c._UmbraViewGetCompleted = function () {
+    c._UmbraVertexAttributeGetElementByteSize = function () {
       return c.asm.ab.apply(null, arguments);
     };
 
-    c._UmbraViewNextRenderables = function () {
+    c._UmbraViewCreate = function () {
       return c.asm.bb.apply(null, arguments);
     };
 
-    c._UmbraViewResetRenderables = function () {
+    c._UmbraViewDestroy = function () {
       return c.asm.cb.apply(null, arguments);
     };
 
-    c._UmbraViewUpdateFilter = function () {
+    c._UmbraViewGetCompleted = function () {
       return c.asm.db.apply(null, arguments);
     };
 
-    c._UmbraViewUpdateRendering = function () {
+    c._UmbraViewNextRenderables = function () {
       return c.asm.eb.apply(null, arguments);
     };
 
-    c.___embind_register_native_and_builtin_types = function () {
+    c._UmbraViewResetRenderables = function () {
       return c.asm.fb.apply(null, arguments);
     };
 
-    var vb = c.___getTypeName = function () {
+    c._UmbraViewUpdateFilter = function () {
       return c.asm.gb.apply(null, arguments);
-    },
-        Cc = c.__get_daylight = function () {
+    };
+
+    c._UmbraViewUpdateRendering = function () {
       return c.asm.hb.apply(null, arguments);
-    },
-        Bc = c.__get_timezone = function () {
+    };
+
+    c.___embind_register_native_and_builtin_types = function () {
       return c.asm.ib.apply(null, arguments);
-    },
-        Ec = c.__get_tzname = function () {
+    };
+
+    var vb = c.___getTypeName = function () {
       return c.asm.jb.apply(null, arguments);
     },
-        V = c._free = function () {
+        Cc = c.__get_daylight = function () {
       return c.asm.kb.apply(null, arguments);
     },
-        F = c._malloc = function () {
+        Bc = c.__get_timezone = function () {
       return c.asm.lb.apply(null, arguments);
     },
+        Ec = c.__get_tzname = function () {
+      return c.asm.mb.apply(null, arguments);
+    },
+        V = c._free = function () {
+      return c.asm.nb.apply(null, arguments);
+    },
+        F = c._malloc = function () {
+      return c.asm.ob.apply(null, arguments);
+    },
         Ta = c.globalCtors = function () {
-      return c.asm.Eb.apply(null, arguments);
+      return c.asm.Hb.apply(null, arguments);
     },
         ma = c.stackAlloc = function () {
-      return c.asm.Fb.apply(null, arguments);
+      return c.asm.Ib.apply(null, arguments);
     },
         pa = c.stackRestore = function () {
-      return c.asm.Gb.apply(null, arguments);
+      return c.asm.Jb.apply(null, arguments);
     },
         oa = c.stackSave = function () {
-      return c.asm.Hb.apply(null, arguments);
+      return c.asm.Kb.apply(null, arguments);
     };
 
     c.dynCall_i = function () {
-      return c.asm.mb.apply(null, arguments);
-    };
-
-    c.dynCall_ii = function () {
-      return c.asm.nb.apply(null, arguments);
-    };
-
-    c.dynCall_iii = function () {
-      return c.asm.ob.apply(null, arguments);
-    };
-
-    c.dynCall_iiii = function () {
       return c.asm.pb.apply(null, arguments);
     };
 
-    c.dynCall_iiiii = function () {
+    c.dynCall_ii = function () {
       return c.asm.qb.apply(null, arguments);
     };
 
-    c.dynCall_iiiiii = function () {
+    c.dynCall_iii = function () {
       return c.asm.rb.apply(null, arguments);
     };
 
-    c.dynCall_iiiiiii = function () {
+    c.dynCall_iiii = function () {
       return c.asm.sb.apply(null, arguments);
     };
 
-    c.dynCall_iiiiiiiiii = function () {
+    c.dynCall_iiiii = function () {
       return c.asm.tb.apply(null, arguments);
     };
 
-    c.dynCall_iiiji = function () {
+    c.dynCall_iiiiii = function () {
       return c.asm.ub.apply(null, arguments);
     };
 
-    c.dynCall_jiji = function () {
+    c.dynCall_iiiiiii = function () {
       return c.asm.vb.apply(null, arguments);
     };
 
-    c.dynCall_v = function () {
+    c.dynCall_iiiiiiiiii = function () {
       return c.asm.wb.apply(null, arguments);
     };
 
-    var Ic = c.dynCall_vi = function () {
+    c.dynCall_iiiji = function () {
       return c.asm.xb.apply(null, arguments);
     };
 
-    c.dynCall_vii = function () {
+    c.dynCall_jiji = function () {
       return c.asm.yb.apply(null, arguments);
     };
 
-    var Jc = c.dynCall_viii = function () {
+    c.dynCall_v = function () {
       return c.asm.zb.apply(null, arguments);
     };
 
-    c.dynCall_viiii = function () {
+    var Ic = c.dynCall_vi = function () {
       return c.asm.Ab.apply(null, arguments);
     };
 
-    c.dynCall_viiiii = function () {
+    c.dynCall_vii = function () {
       return c.asm.Bb.apply(null, arguments);
     };
 
-    c.dynCall_viiiiii = function () {
+    var Jc = c.dynCall_viii = function () {
       return c.asm.Cb.apply(null, arguments);
     };
 
-    c.dynCall_viiiiiiiii = function () {
+    c.dynCall_viiii = function () {
       return c.asm.Db.apply(null, arguments);
+    };
+
+    c.dynCall_viiiii = function () {
+      return c.asm.Eb.apply(null, arguments);
+    };
+
+    c.dynCall_viiiiii = function () {
+      return c.asm.Fb.apply(null, arguments);
+    };
+
+    c.dynCall_viiiiiiiii = function () {
+      return c.asm.Gb.apply(null, arguments);
     };
 
     c.asm = Kc;
@@ -2486,7 +2518,7 @@ var UmbraNativeAPI = function () {
 
     c.run = Mc;
 
-    function y(a) {
+    function x(a) {
       if (c.onAbort) c.onAbort(a);
       ba(a);
       v(a);
@@ -2494,7 +2526,7 @@ var UmbraNativeAPI = function () {
       throw "abort(" + a + "). Build with -s ASSERTIONS=1 for more info.";
     }
 
-    c.abort = y;
+    c.abort = x;
     if (c.preInit) for ("function" == typeof c.preInit && (c.preInit = [c.preInit]); 0 < c.preInit.length;) {
       c.preInit.pop()();
     }
@@ -2505,14 +2537,15 @@ var UmbraNativeAPI = function () {
     c.wgetRequests = pc;
 
     function Ra(a, b, d, e, f, g, k, h, l, n, u) {
-      var q = E(a);
-      b = E(b);
-      g = E(g);
+      var q = _E(a);
+
+      b = _E(b);
+      g = _E(g);
       var t = new XMLHttpRequest();
       t.open(b, q, !0);
       if ("GET" != b || 0 != g.length) t.withCredentials = !0;
       t.responseType = "arraybuffer";
-      var x = rc();
+      var y = rc();
 
       t.onload = function () {
         if (200 == t.status) {
@@ -2520,35 +2553,35 @@ var UmbraNativeAPI = function () {
               g = c.URLsDownloaded;
           c.maxBytesDownloaded += t.response.byteLength;
           g.has(a) || (g.add(a), c.minBytesDownloaded += t.response.byteLength);
-          n ? b.length != u ? c.dynCall_viii(f, x, d, 0) : (C.set(b, n), c.dynCall_viiii(e, x, d, null, 0)) : (g = F(b.length), C.set(b, g), c.dynCall_viiii(e, x, d, g, b.length), V(g));
-        } else c.dynCall_viii(f, x, d, t.status);
+          n ? b.length != u ? c.dynCall_viii(f, y, d, 0) : (C.set(b, n), c.dynCall_viiii(e, y, d, null, 0)) : (g = F(b.length), C.set(b, g), c.dynCall_viiii(e, y, d, g, b.length), V(g));
+        } else c.dynCall_viii(f, y, d, t.status);
 
-        delete pc[x];
+        delete pc[y];
       };
 
       t.onerror = function () {
-        c.dynCall_viii(f, x, d, t.status);
-        delete pc[x];
+        c.dynCall_viii(f, y, d, t.status);
+        delete pc[y];
       };
 
       t.onabort = function () {
-        delete pc[x];
+        delete pc[y];
       };
 
       0 != g.length && t.setRequestHeader("Authorization", "Basic " + btoa(g + ":"));
-      l = E(l).split("\n");
+      l = _E(l).split("\n");
       if (2 <= l.length) for (q = 0; q < l.length; q += 2) {
         t.setRequestHeader(l[q], l[q + 1]);
       }
       "POST" == b ? t.send(D.slice(k, k + h)) : t.send(null);
-      pc[x] = t;
-      return x;
+      pc[y] = t;
+      return y;
     }
     return UmbraNativeAPI;
   };
 }();
 
-// Generated at 2019-10-14 12:10:55
+// Generated at 2020-01-24 17:26:12
 var MatrixFormat;
 
 (function (MatrixFormat) {
@@ -3093,19 +3126,22 @@ var create = function create(Module) {
       var lodLevels = getView(Int32Array, Module.HEAP32, temp.ofs, renderableStructOffsets['lodLevel']);
       var masks = getView(Uint32Array, Module.HEAPU32, temp.ofs, renderableStructOffsets['visibilityMask']); // const transforms = getView(Float32Array, Module.HEAPF32, temp.ofs, offsets['transform'])
 
+      var scenePointers = getView(Uint32Array, Module.HEAPU32, temp.ofs, renderableStructOffsets['scene']);
       var count = Module.viewNextRenderables(this.ptr, temp.ofs, batchSize);
       var output = [];
 
       for (var i = 0; i < count; i++) {
         var id = meshIDs[strideInWords * i];
         var lod = lodLevels[strideInWords * i];
-        var mask = masks[strideInWords * i]; // TODO extract individual transforms too
+        var mask = masks[strideInWords * i];
+        var scenePtr = scenePointers[strideInWords * i]; // TODO extract individual transforms too
 
         output.push({
           id: id,
           mesh: this.runtimeAssets.get(id),
           lod: lod,
-          mask: mask
+          mask: mask,
+          scenePtr: scenePtr
         });
       }
 
@@ -3650,7 +3686,7 @@ var create = function create(Module) {
   };
 };
 
-// Generated at 2019-10-14 12:10:55
+// Generated at 2020-01-24 17:26:12
 function wrapNativeFunctions(Module) {
   Object.assign(Module, {
     configInit: Module.cwrap('UmbraConfigInit', null, ['number']),
@@ -3796,7 +3832,7 @@ function instantiate(Module) {
 
     return {
       textureSupportMask: flags,
-      formats: _toConsumableArray(formats),
+      formats: _toConsumableArray$1(formats),
       srgb: supportsSRGB,
       halfFloat: supportsHalfFloat
     };
@@ -4016,25 +4052,21 @@ class ObjectPool {
 
 class UmbraScene extends Object3D {
   // User editable config
-  // Streaming scene quality. Ranges from 0 to 1.
-  // This gets lowered automatically if memory limit is hit
-  get adjustedQuality() {
-    return this.quality * this.qualityFactor;
-  } // Event callbacks
+  // Event callbacks
+  // We need to present ourselves as a LOD object to get the update() call
+  set quality(value) {
+    console.error("Setting UmbraScene.quality is not supported any more. Set camera.umbraQuality = ".concat(value, " instead."));
+  }
 
-
-  // UmbraScene should be instantiated using Umbra.createScene()
-  constructor(runtime, _scene, _renderer, features) {
+  constructor(runtime, scene, sharedState, _renderer, features) {
     var _this;
 
-    var onDispose = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+    var onDispose = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
     super();
     _this = this;
-    this.quality = 0.5;
     this.material = new MeshBasicMaterial();
     this.wireframe = false;
     this.freeze = false;
-    this.qualityFactor = 1.0;
     this.onConnected = void 0;
     this.onConnectionError = void 0;
     this.onDisconnected = void 0;
@@ -4045,9 +4077,8 @@ class UmbraScene extends Object3D {
     this.name = 'UmbraScene';
     this.renderer = void 0;
     this.materialPool = new ObjectPool();
-    this.cameraToView = new Map();
-    this.viewLastUsed = new Map();
     this.shaderPatcher = void 0;
+    this.sharedState = void 0;
     this.stats = {
       numVisible: 0,
       numShadowCasters: 0,
@@ -4074,61 +4105,25 @@ class UmbraScene extends Object3D {
     this.onDispose = void 0;
     this.oldState = {
       status: undefined,
-      visibleIDs: new Set() // Temporary values we don't want to reallocate every frame
+      visibleIDs: new Set() // UmbraScene should be instantiated using Umbra.createScene()
 
     };
-    this.matrixWorldInverse = new Matrix4();
-    this.projScreenMatrix = new Matrix4();
-    this.cameraWorldPosition = new Vector3();
-    this.tempVector = new Vector3();
-    this.dirVector = new Vector3();
 
     this.update = function (camera) {
       var _this2 = this;
-
-      var parentScene;
 
       if (this.freeze) {
         return;
       }
 
-      this.traverseAncestors(function (obj) {
-        if (obj.isScene) {
-          parentScene = obj;
-        }
-      });
-
-      if (!parentScene && !parentScene.isScene) {
-        console.log('No parent scene found');
-        return;
-      }
-
-      function findLights(scene) {
-        var lights = [];
-        scene.traverseVisible(function (obj) {
-          if (obj.isDirectionalLight && obj.castShadow) {
-            lights.push(obj);
-          }
-        });
-        return lights;
-      }
-
-      var lights = [];
-
-      if (this.renderer.shadowMap.enabled) {
-        lights = findLights(parentScene);
-      }
-
-      var view = this.cameraToView.get(camera);
+      var view = this.sharedState.cameraToView.get(camera);
 
       if (!view) {
         view = this.umbra.runtime.createView();
-        this.cameraToView.set(camera, view);
+        this.sharedState.cameraToView.set(camera, view);
       }
 
-      var frame = this.renderer.info.render.frame;
-      this.viewLastUsed.set(view, frame);
-      this.pruneOldViews(frame);
+      this.sharedState.viewLastUseFrame.set(view, this.renderer.info.render.frame);
       this.umbra.nativeScene.setTransform(this.matrixWorld.elements); // If we are using a PBR material then we might need to flip the tangent vector
 
       if (this.isPBREnabled()) {
@@ -4141,25 +4136,6 @@ class UmbraScene extends Object3D {
         }
       }
 
-      this.matrixWorldInverse.getInverse(camera.matrixWorld);
-      this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse);
-      var dir = this.dirVector;
-      var vector3 = this.tempVector;
-      var lightDirections = lights.map(function (light) {
-        dir.setFromMatrixPosition(light.target.matrixWorld);
-        vector3.setFromMatrixPosition(light.matrixWorld);
-        dir.sub(vector3);
-        return [dir.x, dir.y, dir.z];
-      }, lights); // By default we stream in meshes around the camera, but the user can override it too.
-
-      if (camera.umbraStreamingPosition) {
-        this.cameraWorldPosition.copy(camera.umbraStreamingPosition);
-      } else {
-        camera.getWorldPosition(this.cameraWorldPosition);
-      }
-
-      var pos = this.cameraWorldPosition;
-      view.setCamera(this.projScreenMatrix.elements, [pos.x, pos.y, pos.z], this.adjustedQuality, lightDirections);
       this.stats.numVisible = 0;
       this.stats.numAssets = this.umbra.runtime.assets.size;
       /**
@@ -4233,97 +4209,103 @@ class UmbraScene extends Object3D {
         delete mat.metalnessMap;
         delete mat.roughnessMap;
       });
-      var batchSize = 200;
       var visible = [];
-      var visibleIDs = new Set();
+      var visibleIDs = new Set(); // On the first frame the view didn't yet exist when UmbrajsThreeInternal collected a list of renderables,
+      // so the list in "viewRenderables" may be missing.
 
-      do {
-        visible = view.getVisible(batchSize);
+      if (this.sharedState.viewRenderables.has(view)) {
+        visible = this.sharedState.viewRenderables.get(view);
+      }
 
-        var _loop = function _loop(_i2) {
-          var _ref = visible[_i2].mesh,
-              materialDesc = _ref.materialDesc,
-              geometry = _ref.geometry;
-          visibleIDs.add(visible[_i2].id);
-          var isTransparent = materialDesc.transparent || _this2.material.transparent; // Fetch a new material from the pool if we already have free ones. This avoids
-          // extra allocations and more importantly 'onBeforeCompile' calls.
-
-          var material = _this2.materialPool.allocate(function () {
-            return _this2.material.clone();
-          }, function (mat) {
-            return mat.transparent === isTransparent;
-          });
-
-          material.wireframe = _this2.wireframe;
-          material.opacity = _this2.material.opacity;
-          material.transparent = isTransparent;
-
-          material.onBeforeCompile = function (shader, renderer) {
-            /**
-             * If the original material already had a custom preprocessor callback we need to call
-             * that first. We need to use 'apply' in case the callback uses 'this' reference to
-             * access some material properties.
-             */
-            if (_this2.material.onBeforeCompile) {
-              _this2.material.onBeforeCompile.apply(material, [shader, renderer]);
-            }
-
-            _this2.shaderPatcher.process(shader, renderer);
-          };
-
-          var diffuseMap = materialDesc.textures[TextureType.Diffuse];
-          var normalMap = materialDesc.textures[TextureType.Normal];
-          var metalglossMap = materialDesc.textures[TextureType.Specular];
-
-          if (diffuseMap && diffuseMap.isTexture) {
-            material.map = diffuseMap;
-          }
-
-          if (normalMap && normalMap.isTexture) {
-            material.normalMap = normalMap;
-            material.vertexTangents = true;
-            material.normalMapType = TangentSpaceNormalMap;
-          }
-
-          if (metalglossMap && metalglossMap.isTexture) {
-            material.metalnessMap = metalglossMap;
-            material.metalness = 1.0;
-            material.roughnessMap = metalglossMap;
-            material.roughness = 1.0;
-          }
-          /**
-           * We instatiate new Mesh objects each frame but the constructor is very cheap
-           * and the references should live for a very short time since 'this.children'
-           * gets cleared every frame. However if this still causes too much allocations
-           * an object pool could help.
-           */
-
-
-          var mesh = new Mesh(geometry, material);
-          mesh.isUmbraMesh = true;
-          mesh.matrixWorld.copy(_this2.matrixWorld);
-          mesh.castShadow = _this2.castShadow;
-          mesh.receiveShadow = _this2.receiveShadow;
-          mesh.visible = true;
-
-          _this2.children.push(mesh);
-
-          if ((visible[_i2].mask & 0x01) === 0) {
-            shadowCasters.push(mesh);
-            mesh.frustumCulled = true;
-          } else {
-            _this2.children.push(mesh);
-
-            mesh.frustumCulled = false;
-          }
-        };
-
-        for (var _i2 = 0; _i2 < visible.length; _i2++) {
-          _loop(_i2);
+      var _loop = function _loop(_i2) {
+        // Each view's list includes renderables of all UmbraScenes, so we need to pick only the relevant ones here.
+        if (visible[_i2].scenePtr !== _this2.umbra.nativeScene.ptr) {
+          return "continue";
         }
 
-        this.stats.numVisible += visible.length;
-      } while (visible.length === batchSize); // Emit a warning if normals are required but missing
+        var _ref = visible[_i2].mesh,
+            materialDesc = _ref.materialDesc,
+            geometry = _ref.geometry;
+        visibleIDs.add(visible[_i2].id);
+        _this2.stats.numVisible += 1;
+        var isTransparent = materialDesc.transparent || _this2.material.transparent; // Fetch a new material from the pool if we already have free ones. This avoids
+        // extra allocations and more importantly 'onBeforeCompile' calls.
+
+        var material = _this2.materialPool.allocate(function () {
+          return _this2.material.clone();
+        }, function (mat) {
+          return mat.transparent === isTransparent;
+        });
+
+        material.wireframe = _this2.wireframe;
+        material.opacity = _this2.material.opacity;
+        material.transparent = isTransparent;
+
+        material.onBeforeCompile = function (shader, renderer) {
+          /**
+           * If the original material already had a custom preprocessor callback we need to call
+           * that first. We need to use 'apply' in case the callback uses 'this' reference to
+           * access some material properties.
+           */
+          if (_this2.material.onBeforeCompile) {
+            _this2.material.onBeforeCompile.apply(material, [shader, renderer]);
+          }
+
+          _this2.shaderPatcher.process(shader, renderer);
+        };
+
+        var diffuseMap = materialDesc.textures[TextureType.Diffuse];
+        var normalMap = materialDesc.textures[TextureType.Normal];
+        var metalglossMap = materialDesc.textures[TextureType.Specular];
+
+        if (diffuseMap && diffuseMap.isTexture) {
+          material.map = diffuseMap;
+        }
+
+        if (normalMap && normalMap.isTexture) {
+          material.normalMap = normalMap;
+          material.vertexTangents = true;
+          material.normalMapType = TangentSpaceNormalMap;
+        }
+
+        if (metalglossMap && metalglossMap.isTexture) {
+          material.metalnessMap = metalglossMap;
+          material.metalness = 1.0;
+          material.roughnessMap = metalglossMap;
+          material.roughness = 1.0;
+        }
+        /**
+         * We instatiate new Mesh objects each frame but the constructor is very cheap
+         * and the references should live for a very short time since 'this.children'
+         * gets cleared every frame.
+         */
+
+
+        var mesh = new Mesh(geometry, material);
+        mesh.isUmbraMesh = true;
+        mesh.matrixWorld.copy(_this2.matrixWorld);
+        mesh.castShadow = _this2.castShadow;
+        mesh.receiveShadow = _this2.receiveShadow;
+        mesh.visible = true;
+
+        _this2.children.push(mesh); // TODO(pvaananen): Does this check work with multiple cameras?
+
+
+        if ((visible[_i2].mask & 0x01) === 0) {
+          shadowCasters.push(mesh);
+          mesh.frustumCulled = true;
+        } else {
+          _this2.children.push(mesh);
+
+          mesh.frustumCulled = false;
+        }
+      };
+
+      for (var _i2 = 0; _i2 < visible.length; _i2++) {
+        var _ret = _loop(_i2);
+
+        if (_ret === "continue") continue;
+      } // Emit a warning if normals are required but missing
 
 
       if (!this.diagnostics.missingNormals.checked && this.isPBREnabled()) {
@@ -4350,6 +4332,7 @@ class UmbraScene extends Object3D {
     };
 
     this.renderer = _renderer;
+    this.sharedState = sharedState;
     this.shaderPatcher = new ShaderPatcher(features.formats);
     this.onDispose = onDispose; // We need to flip the Z-axis since scenes are stored in "left-handed Y is up" coordinate system
 
@@ -4357,7 +4340,7 @@ class UmbraScene extends Object3D {
 
     this.umbra = {
       runtime: runtime,
-      nativeScene: _scene
+      nativeScene: scene
     };
   }
 
@@ -4403,36 +4386,6 @@ class UmbraScene extends Object3D {
     var center = new Vector3();
     bounds.getCenter(center);
     return center;
-  }
-
-  pruneOldViews(frame) {
-    /**
-     * We get no notification when cameras are removed from the scene graph
-     * so we'll go and remove old views.
-     */
-    for (var _ref2 of this.viewLastUsed) {
-      var _ref3 = _slicedToArray(_ref2, 2);
-
-      var view = _ref3[0];
-      var lastUsed = _ref3[1];
-
-      if (frame - lastUsed > 1000) {
-        for (var _ref4 of this.cameraToView) {
-          var _ref5 = _slicedToArray(_ref4, 2);
-
-          var cam = _ref5[0];
-          var view2 = _ref5[1];
-
-          if (view2 === view) {
-            this.cameraToView["delete"](cam);
-            break;
-          }
-        }
-
-        view.destroy();
-        this.viewLastUsed["delete"](view);
-      }
-    }
   }
 
   updateStreamingEvents(visibleIDs) {
@@ -4494,10 +4447,6 @@ class UmbraScene extends Object3D {
   dispose() {
     if (this.onDispose) {
       this.onDispose(this);
-    }
-
-    for (var view of this.cameraToView.values()) {
-      view.destroy();
     } // Remove all Umbra meshes from children
 
 
@@ -4507,7 +4456,8 @@ class UmbraScene extends Object3D {
 
     this.materialPool.freeAll(function (mat) {
       return mat.dispose();
-    }); // We don't dispose mesh geometries here because they are managed by the Runtime
+    }); // We don't dispose mesh geometries here because they are managed by the Runtime, and
+    // Views are managed by UmbrajsThreeInternal.
 
     this.umbra.nativeScene.destroy(); // Runtime must be manually freed by the user with .dispose() of the API object
   }
@@ -4558,16 +4508,19 @@ function makeBoundingSphere(aabb) {
 class UmbrajsThreeInternal {
   // Upper VRAM memory use limit in bytes
   // Upper total download size limit in bytes. Turned off by default.
+  // This gets lowered automatically if memory limit is hit
   // An instance of the umbrajs library for debugging
   get memoryUsed() {
     return this.textureMemoryUsed + this.meshMemoryUsed;
   }
 
+  // This class should be instantiated via initUmbra()
   constructor(umbrajs, renderer) {
     var _this = this;
 
     this.memoryLimit = 500 * 1024 * 1024;
     this.downloadLimit = 0;
+    this.qualityFactor = 1.0;
     this.onStreamingUpdate = void 0;
     this.onStreamingComplete = void 0;
     this.umbrajs = void 0;
@@ -4582,9 +4535,19 @@ class UmbrajsThreeInternal {
     this.umbraScenes = new Set();
     this.oldState = {
       progress: 0,
-      downloadLimitReached: false // This class should be instantiated via initUmbra()
+      downloadLimitReached: false
+    };
+    this.sharedState = {
+      cameraToView: new Map(),
+      viewRenderables: new Map(),
+      viewLastUseFrame: new Map() // Temporary values we don't want to reallocate every frame
 
     };
+    this.tempVector = new Vector3();
+    this.dirVector = new Vector3();
+    this.matrixWorldInverse = new Matrix4();
+    this.projScreenMatrix = new Matrix4();
+    this.cameraWorldPosition = new Vector3();
     this.handlers = {
       LoadMaterial: function (_LoadMaterial) {
         function LoadMaterial(_x) {
@@ -4654,7 +4617,17 @@ class UmbrajsThreeInternal {
          */
 
 
-        if (info.type === TextureType.Diffuse && !_this.renderer.gammaOutput) {
+        var gammaOutput = false;
+
+        if ('outputEncoding' in _this.renderer) {
+          // three.js version 112 and after
+          gammaOutput = _this.renderer['outputEncoding'] === sRGBEncoding;
+        } else if ('gammaOutput' in _this.renderer) {
+          // three.js prior to version 112
+          gammaOutput = _this.renderer['gammaOutput'];
+        }
+
+        if (info.type === TextureType.Diffuse && !gammaOutput) {
           tex.encoding = LinearEncoding;
         } else {
           tex.encoding = info.colorSpace === ColorSpace.Linear ? LinearEncoding : sRGBEncoding;
@@ -4744,7 +4717,14 @@ class UmbrajsThreeInternal {
             var view = buffer.data;
             var array = view.getArray();
             var attrib = new Float32BufferAttribute(array.slice(), attribs[name].components);
-            geometry.addAttribute(name, attrib);
+
+            if ('setAttribute' in geometry) {
+              // three.js v112
+              geometry['setAttribute'](name, attrib);
+            } else {
+              // three.js prior to v112
+              geometry['addAttribute'](name, attrib);
+            }
           }
         });
         var meshDescriptor = {
@@ -4813,6 +4793,126 @@ class UmbrajsThreeInternal {
     }
   }
 
+  findLights(umbraScene) {
+    var parentScene;
+    umbraScene.traverseAncestors(function (obj) {
+      if (obj['isScene']) {
+        parentScene = obj;
+      }
+    });
+
+    if (!parentScene || parentScene && !parentScene.isScene) {
+      return new Set();
+    }
+
+    var lights = new Set();
+    parentScene.traverseVisible(function (obj) {
+      if (obj['isDirectionalLight'] && obj['castShadow']) {
+        lights.add(obj);
+      }
+    });
+    return lights;
+  }
+
+  pruneOldViews(frame) {
+    /**
+     * We get no notification when cameras are removed from the scene graph
+     * so we'll go and remove views based on their age.
+     */
+    for (var _ref of this.sharedState.viewLastUseFrame) {
+      var _ref2 = _slicedToArray(_ref, 2);
+
+      var view = _ref2[0];
+      var lastUsed = _ref2[1];
+
+      if (frame - lastUsed < 600) {
+        continue;
+      }
+
+      for (var _ref3 of this.sharedState.cameraToView) {
+        var _ref4 = _slicedToArray(_ref3, 2);
+
+        var cam = _ref4[0];
+        var view2 = _ref4[1];
+
+        if (view2 === view) {
+          this.sharedState.cameraToView["delete"](cam);
+          break;
+        }
+      }
+
+      view.destroy();
+      this.sharedState.viewLastUseFrame["delete"](view);
+    }
+  }
+
+  updateViews() {
+    var shared = this.sharedState;
+    var lights = new Set();
+
+    if (this.renderer.shadowMap.enabled) {
+      for (var umbraScene of this.umbraScenes) {
+        for (var light of this.findLights(umbraScene)) {
+          lights.add(light);
+        }
+      }
+    }
+
+    var dir = this.dirVector;
+    var vector3 = this.tempVector;
+    var lightDirections = Array.from(lights).map(function (light) {
+      dir.setFromMatrixPosition(light.target.matrixWorld);
+      vector3.setFromMatrixPosition(light.matrixWorld);
+      dir.sub(vector3);
+      return [dir.x, dir.y, dir.z];
+    }, lights);
+    this.pruneOldViews(this.renderer.info.render.frame);
+
+    for (var _ref5 of shared.cameraToView) {
+      var _ref6 = _slicedToArray(_ref5, 2);
+
+      var threeCamera = _ref6[0];
+      var view = _ref6[1];
+      var camera = threeCamera;
+      this.matrixWorldInverse.getInverse(camera.matrixWorld);
+      this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse); // By default we stream in meshes around the camera, but user can override it.
+
+      if ('umbraStreamingPosition' in camera) {
+        this.cameraWorldPosition.copy(camera.umbraStreamingPosition);
+      } else {
+        camera.getWorldPosition(this.cameraWorldPosition);
+      }
+
+      var quality = 0.5;
+
+      if ('umbraQuality' in camera) {
+        quality = camera.umbraQuality;
+      }
+
+      var pos = this.cameraWorldPosition;
+      view.setCamera(this.projScreenMatrix.elements, [pos.x, pos.y, pos.z], quality * this.qualityFactor, lightDirections);
+      var list = [];
+
+      if (shared.viewRenderables.has(view)) {
+        list = shared.viewRenderables.get(view);
+        list.length = 0;
+      } else {
+        shared.viewRenderables.set(view, list);
+      }
+
+      var batchSize = 500;
+      var visible = [];
+
+      do {
+        var _list;
+
+        visible = view.getVisible(batchSize);
+
+        (_list = list).push.apply(_list, _toConsumableArray(visible));
+      } while (visible.length === batchSize);
+    }
+  }
+
   update() {
     var timeBudget = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 7;
     var downloadLimitReached = this.downloadLimit !== 0 && this.getStats().maxBytesDownloaded >= this.downloadLimit; // If the limit is reached we freeze all updates. View frustum culling
@@ -4827,6 +4927,7 @@ class UmbrajsThreeInternal {
       this.runtime.update();
       var updateTook = performance.now() - start;
       this.runtime.loadAssets(this.handlers, timeBudget - updateTook);
+      this.updateViews();
     }
 
     this.oldState.downloadLimitReached = downloadLimitReached;
@@ -4860,22 +4961,22 @@ class UmbrajsThreeInternal {
       throw new TypeError('expected either string or an object argument');
     }
 
-    var model = new UmbraScene(this.runtime, this.runtime.createScenePublic(url), this.renderer, this.features, function (m) {
-      return _this3.umbraScenes["delete"](m);
+    var umbraScene = new UmbraScene(this.runtime, this.runtime.createScenePublic(url), this.sharedState, this.renderer, this.features, function (s) {
+      return _this3.umbraScenes["delete"](s);
     });
-    this.umbraScenes.add(model);
-    return model;
+    this.umbraScenes.add(umbraScene);
+    return umbraScene;
   }
 
   createSceneWithURL(url) {
     var _this4 = this;
 
     var scene = this.runtime.createSceneLocal(url);
-    var model = new UmbraScene(this.runtime, scene, this.renderer, this.features, function (m) {
-      return _this4.umbraScenes["delete"](m);
+    var umbraScene = new UmbraScene(this.runtime, scene, this.sharedState, this.renderer, this.features, function (s) {
+      return _this4.umbraScenes["delete"](s);
     });
-    this.umbraScenes.add(model);
-    return model;
+    this.umbraScenes.add(umbraScene);
+    return umbraScene;
   }
   /**
    * Returns streaming information. We can't tell which files came from the browser cache
@@ -4907,9 +5008,7 @@ class UmbrajsThreeInternal {
       return;
     }
 
-    this.umbraScenes.forEach(function (m) {
-      m.qualityFactor = Math.min(1, m.qualityFactor * factor);
-    });
+    this.qualityFactor = Math.max(0, Math.min(1, this.qualityFactor * factor));
     this.lastQualityLowerFrame = this.renderer.info.render.frame;
   } // Converts a texture descriptor and a pixel buffer to a three.js compatible texture
 
@@ -4960,9 +5059,16 @@ class UmbrajsThreeInternal {
 
   dispose() {
     this.stopEventUpdate();
+
+    for (var view of this.sharedState.cameraToView.values()) {
+      view.destroy();
+    }
+
     this.umbraScenes.forEach(function (m) {
       return m.dispose();
     });
+    this.sharedState.cameraToView.clear();
+    this.umbraScenes.clear();
     this.runtime.assets.forEach(function (asset, userPtr) {
       if ('geometry' in asset) {
         asset.geometry.dispose();
@@ -4992,5 +5098,5 @@ function initWithThreeJS(renderer, userConfig) {
   });
 } // Hide the library object constructor by wrapping it in an interface
 
-export { Loader, UmbraScene as Model, initWithThreeJS };
+export { Loader, UmbraScene as Scene, initWithThreeJS };
 //# sourceMappingURL=umbrajs-three.esm.js.map

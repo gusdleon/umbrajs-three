@@ -1,13 +1,11 @@
 import * as THREE from './ThreeWrapper';
 import { PlatformFeatures, Runtime, NativeScene, ConnectionStatus } from '@umbra3d/umbrajs';
+import { SharedFrameState } from './SharedFrameState';
 import { PublicLink } from './PublicLink';
 export interface SceneFactory {
     createScene(link: string | PublicLink): UmbraScene;
     createSceneWithURL(url: string): UmbraScene;
 }
-declare type UmbraCamera = THREE.Camera & {
-    umbraStreamingPosition?: THREE.Vector3;
-};
 interface SceneStatus {
     connected: boolean;
     sceneInfo?: any;
@@ -27,12 +25,9 @@ export interface MeshDescriptor {
 }
 declare type DisposeCallback = (m: UmbraScene) => void;
 export declare class UmbraScene extends THREE.Object3D {
-    quality: number;
     material: THREE.Material;
     wireframe: boolean;
     freeze: boolean;
-    qualityFactor: number;
-    readonly adjustedQuality: number;
     onConnected: () => void;
     onConnectionError: (error: string) => void;
     onDisconnected: () => void;
@@ -41,30 +36,24 @@ export declare class UmbraScene extends THREE.Object3D {
     readonly isLOD = true;
     readonly autoUpdate = true;
     readonly name = "UmbraScene";
+    quality: number;
     private renderer;
     private materialPool;
-    private cameraToView;
-    private viewLastUsed;
     private shaderPatcher;
+    private sharedState;
     private stats;
     private diagnostics;
     private umbra;
     private onDispose;
     private oldState;
-    private matrixWorldInverse;
-    private projScreenMatrix;
-    private cameraWorldPosition;
-    private tempVector;
-    private dirVector;
-    constructor(runtime: Runtime, scene: NativeScene, renderer: THREE.WebGLRenderer, features: PlatformFeatures, onDispose?: DisposeCallback);
+    constructor(runtime: Runtime, scene: NativeScene, sharedState: SharedFrameState, renderer: THREE.WebGLRenderer, features: PlatformFeatures, onDispose?: DisposeCallback);
     opaqueMaterial: THREE.Material;
     getInfo(): SceneStatus;
     getBounds(): THREE.Box3;
     getCenter(): THREE.Vector3;
-    private pruneOldViews;
     private updateStreamingEvents;
     private updateNetworkEvents;
-    update: (camera: UmbraCamera) => void;
+    update: (camera: THREE.Camera) => void;
     dispose(): void;
     private isPBREnabled;
 }
