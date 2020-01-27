@@ -1,0 +1,68 @@
+<html>
+    <head>
+      <title>Download Limit example</title>
+        <link rel="stylesheet" type="text/css" href="samples.css">
+    </head>
+    <body>
+        <span class="message">
+          A download limit <a href="https://github.com/UmbraSoftware/umbrajs-three/blob/master/examples/streaming_limit.html">example</a> for <a href="https://github.com/UmbraSoftware/umbrajs-three">umbrajs-three</a>.<br>
+          <span id="status"></span>
+        </span>
+
+        <canvas id="c"></canvas>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+'use strict';
+
+(async function () {
+  // First create a three.js renderer
+  const canvas = document.querySelector('#c')
+  let renderer = new THREE.WebGLRenderer({ canvas })
+
+  // Initialize Umbra library with the given renderer
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+  let umbraScene = Umbra.createScene('key=pubk-831ba3c2-7937-4ecf-8d35-8ccc6b3ce101&project=1005906&model=325618543')
+
+  // Set up a basic three.js scene
+  let scene = new THREE.Scene()
+  scene.background = new THREE.Color(0x222222)
+  let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000)
+  camera.umbraQuality = 0.4
+  let controls = new THREE.OrbitControls(camera, canvas)
+
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+  scene.add(umbraScene)
+
+  // Position the object so it's visible
+  camera.position.set(0, 10, -20)
+
+  controls.update()
+
+  // Set the download limit to 50 MiB.
+  // The runtime won't send any new requests once the set limit has been reached.
+  // Note that this is a global setting for the current session and not per scene.
+  Umbra.downloadLimit = 50 * 1024 * 1024
+
+  let animate = function () {
+    const stats = Umbra.getStats()
+    document.querySelector('#status').innerHTML = `${(stats.maxBytesDownloaded/(1024*1024)).toFixed(2)} MiB downloaded`
+    Umbra.update()
+
+    controls.update()
+    renderer.render(scene, camera)
+    requestAnimationFrame(animate)
+  }
+
+  // Start the animation loop
+  animate()
+})()
+        </script>
+    </body>
+</html>
+
+
