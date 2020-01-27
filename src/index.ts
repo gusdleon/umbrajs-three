@@ -420,7 +420,16 @@ class UmbrajsThreeInternal implements SceneFactory {
        * This is slightly wrong because texture filtering and shading will be done
        * in gamma space, but this behavior is what people usually expect.
        */
-      if (info.type === TextureType.Diffuse && !this.renderer.gammaOutput) {
+      let gammaOutput = false
+      if ('outputEncoding' in this.renderer) {
+        // three.js version 112 and after
+        gammaOutput = this.renderer['outputEncoding'] === THREE.sRGBEncoding
+      } else if ('gammaOutput' in this.renderer) {
+        // three.js prior to version 112
+        gammaOutput = this.renderer['gammaOutput']
+      }
+
+      if (info.type === TextureType.Diffuse && !gammaOutput) {
         tex.encoding = THREE.LinearEncoding
       } else {
         tex.encoding =
@@ -496,7 +505,14 @@ class UmbrajsThreeInternal implements SceneFactory {
             array.slice(),
             attribs[name].components,
           )
-          geometry.addAttribute(name, attrib)
+
+          if ('setAttribute' in (geometry as any)) {
+            // three.js v112
+            geometry['setAttribute'](name, attrib)
+          } else {
+            // three.js prior to v112
+            geometry['addAttribute'](name, attrib)
+          }
         }
       })
 
