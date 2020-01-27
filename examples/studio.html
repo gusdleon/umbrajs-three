@@ -45,6 +45,7 @@
 
           let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
           camera.position.set(-18, 20, -25)
+          camera.umbraQuality = 0.5
 
           // Set camera state is either "orbit", "transition", or "detail"
           let cameraState = 'orbit'
@@ -62,7 +63,6 @@
           let umbraScene = Umbra.createScene('key=pubk-831ba3c2-7937-4ecf-8d35-8ccc6b3ce101&project=1005906&model=325618543')
 
           umbraScene.position.set(0, 0, 0)
-          umbraScene.quality = 0.5
 
           // Add the object to the scene graph
           scene.add(umbraScene)

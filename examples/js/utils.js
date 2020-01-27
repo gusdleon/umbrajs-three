@@ -3,7 +3,7 @@
  */
 
 // Creates a mesh based on a THREE.Box3 bounding box.
-function makeBoundingBoxMesh (box) {
+function makeBoundingBoxMesh(box) {
   let size = new THREE.Vector3()
   let center = new THREE.Vector3()
   box.getSize(size)
@@ -11,14 +11,14 @@ function makeBoundingBoxMesh (box) {
   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z)
   geometry.translate(center.x, center.y, center.z)
   const material = new THREE.MeshBasicMaterial({
-    color: 0x00FF00,
-    wireframe: true
+    color: 0x00ff00,
+    wireframe: true,
   })
   return new THREE.Mesh(geometry, material)
 }
 
 // Sets up the automatic resize handler
-function setResizeListener (renderer, camera) {
+function setResizeListener(renderer, camera) {
   const listener = () => {
     renderer.setSize(window.innerWidth, window.innerHeight)
     camera.aspect = window.innerWidth / window.innerHeight
@@ -29,14 +29,14 @@ function setResizeListener (renderer, camera) {
   listener()
 }
 
-function makeSphere (radius, color) {
+function makeSphere(radius, color) {
   var geometry = new THREE.SphereGeometry(radius, 32, 32)
   var material = new THREE.MeshBasicMaterial({ color })
   return new THREE.Mesh(geometry, material)
 }
 
 // Points the given OrbitControls instance 'controls' at 'model'
-function placeCamera (controls, model) {
+function placeCamera(controls, model) {
   let box = model.getBounds()
   let center = model.getCenter()
   let size = new THREE.Vector3()
@@ -55,7 +55,7 @@ function placeCamera (controls, model) {
 }
 
 // Sets the given camera to point at 'model'
-function placeCameraPosition (camera, model) {
+function placeCameraPosition(camera, model) {
   let box = model.getBounds()
   let center = model.getCenter()
   let size = new THREE.Vector3()
@@ -74,7 +74,7 @@ function placeCameraPosition (camera, model) {
 }
 
 // Sets the camera near and far clip planes to match model scale
-function setCameraRange (camera, model) {
+function setCameraRange(camera, model) {
   const bounds = model.getBounds()
   const x = bounds.max.x - bounds.min.x
   const y = bounds.max.y - bounds.min.y
@@ -89,7 +89,19 @@ function setCameraRange (camera, model) {
 function makeDebugMaterial(config, glslExpression) {
   let material = new THREE.MeshPhysicalMaterial(config)
   material.onBeforeCompile = (shader, renderer) => {
-    shader.fragmentShader = shader.fragmentShader.replace(/}$/, `gl_FragColor = vec4(${glslExpression}, 1.);\n}`)
+    shader.fragmentShader = shader.fragmentShader.replace(
+      /}$/,
+      `gl_FragColor = vec4(${glslExpression}, 1.);\n}`,
+    )
   }
   return material
+}
+
+function enableGammaCorrection(renderer) {
+  if ('outputEncoding' in renderer) {
+    renderer.outputEncoding = THREE.sRGBEncoding
+  } else {
+    renderer.gammaInput = true
+    renderer.gammaOutput = true
+  }
 }

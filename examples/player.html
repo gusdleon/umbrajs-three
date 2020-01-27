@@ -31,6 +31,7 @@
 
   const canvas = document.querySelector('#c')
   let renderer = new THREE.WebGLRenderer({ canvas })
+  let camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.01, 1000)
 
   // Initialize the library and create a three.js object that contains our scene
 
@@ -43,7 +44,9 @@
   })
 
   if (quality) {
-    umbraScene.quality = parseFloat(quality)
+    camera.umbraQuality = parseFloat(quality)
+  } else {
+    camera.umbraQuality = 0.5
   }
 
   let scene = new THREE.Scene()
@@ -65,13 +68,11 @@
     scene.add(sun)
 
     umbraScene.material = new THREE.MeshPhysicalMaterial({ envMap: cubeTexture, envMapIntensity: 1.5 })
-    renderer.gammaInput = true
-    renderer.gammaOutput = true
+    enableGammaCorrection(renderer)
   } else {
     scene.background = new THREE.Color(0x222222)
   }
 
-  let camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.01, 1000)
   let controls = new THREE.OrbitControls(camera, renderer.domElement)
 
   setResizeListener(renderer, camera)
@@ -109,7 +110,7 @@
 
   let gui = new dat.GUI()
   gui.close()
-  gui.add(umbraScene, 'quality', 0, 1).name('Scene quality')
+  gui.add(camera, 'umbraQuality', 0, 1).name('Streaming quality')
   gui.add(umbraScene, 'wireframe').name('Wireframe')
   gui.add(debug, 'streamingInfo').name('Streaming info')
   gui.add(debug, 'sceneInfo').name('Scene info')

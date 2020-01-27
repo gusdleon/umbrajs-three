@@ -16,7 +16,6 @@
         <script src="js/utils.js"></script>
 
         <script>
-
 (async function () {
   let renderer = new THREE.WebGLRenderer({ antialias: false })
 
@@ -77,9 +76,8 @@
   umbraScene.castShadow = true
   umbraScene.receiveShadow = true
 
-  renderer.gammaInput = true
-  renderer.gammaOutput = true
-  // renderer.toneMapping = THREE.ReinhardToneMapping
+  enableGammaCorrection(renderer)
+
   renderer.shadowMap.enabled = true
 
   light1.castShadow = true

@@ -45,7 +45,6 @@
   scene.add(helper)
 
   umbraScene.position.set(-5, -30, 0)
-  umbraScene.quality = 0.1
   umbraScene.material.wireframe = true
 
   scene.add(umbraScene)
@@ -53,6 +52,7 @@
   let frame = 0
   let target = new THREE.Vector3(-1, 6, 3)
   camera.position.set(10, 10, -15)
+  camera.umbraQuality = 0.1
   controls.target.set(-2, 4, -3)
 
   controls.update()
