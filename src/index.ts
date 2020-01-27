@@ -10,14 +10,21 @@ import {
   TextureType,
   ColorSpace,
   Runtime,
-  NativeScene,
+  View,
+  Renderable,
   VertexBuffer,
 } from '@umbra3d/umbrajs'
 import { ThreeFormats } from './ThreeFormats'
 import { PublicLink } from './PublicLink'
+import { SharedFrameState } from './SharedFrameState'
 import { UmbraScene, SceneFactory, MeshDescriptor } from './Scene'
 import { WebGLRenderer } from 'three'
 import { HeapBufferView } from '@umbra3d/umbrajs/dist/Heap'
+
+export type UmbraCamera = THREE.Camera & {
+  umbraStreamingPosition?: THREE.Vector3
+  umbraQuality?: number
+}
 
 function makeBoundingSphere(aabb: UmbraMath.BoundingBox) {
   const min = aabb[0]
@@ -40,6 +47,8 @@ class UmbrajsThreeInternal implements SceneFactory {
   memoryLimit = 500 * 1024 * 1024
   // Upper total download size limit in bytes. Turned off by default.
   downloadLimit = 0
+  // This gets lowered automatically if memory limit is hit
+  qualityFactor = 1.0
 
   onStreamingUpdate: (progress: number) => void
   onStreamingComplete: () => void
@@ -67,6 +76,19 @@ class UmbrajsThreeInternal implements SceneFactory {
     progress: 0,
     downloadLimitReached: false,
   }
+
+  private sharedState: SharedFrameState = {
+    cameraToView: new Map<THREE.Camera, View>(),
+    viewRenderables: new Map<View, Renderable[]>(),
+    viewLastUseFrame: new Map<View, number>(),
+  }
+
+  // Temporary values we don't want to reallocate every frame
+  private tempVector = new THREE.Vector3()
+  private dirVector = new THREE.Vector3()
+  private matrixWorldInverse = new THREE.Matrix4()
+  private projScreenMatrix = new THREE.Matrix4()
+  private cameraWorldPosition = new THREE.Vector3()
 
   // This class should be instantiated via initUmbra()
   constructor(umbrajs: UmbraInstance, renderer: WebGLRenderer) {
@@ -105,6 +127,120 @@ class UmbrajsThreeInternal implements SceneFactory {
     }
   }
 
+  private findLights(umbraScene: UmbraScene): Set<THREE.DirectionalLight> {
+    let parentScene
+    umbraScene.traverseAncestors(obj => {
+      if (obj['isScene']) {
+        parentScene = obj
+      }
+    })
+
+    if (!parentScene || (parentScene && !parentScene.isScene)) {
+      return new Set()
+    }
+
+    const lights: Set<THREE.DirectionalLight> = new Set()
+    parentScene.traverseVisible((obj: THREE.Object3D) => {
+      if (obj['isDirectionalLight'] && obj['castShadow']) {
+        lights.add(obj as THREE.DirectionalLight)
+      }
+    })
+
+    return lights
+  }
+
+  private pruneOldViews(frame: number): void {
+    /**
+     * We get no notification when cameras are removed from the scene graph
+     * so we'll go and remove views based on their age.
+     */
+    for (const [view, lastUsed] of this.sharedState.viewLastUseFrame) {
+      if (frame - lastUsed < 600) {
+        continue
+      }
+
+      for (const [cam, view2] of this.sharedState.cameraToView) {
+        if (view2 === view) {
+          this.sharedState.cameraToView.delete(cam)
+          break
+        }
+      }
+      view.destroy()
+      this.sharedState.viewLastUseFrame.delete(view)
+    }
+  }
+
+  private updateViews(): void {
+    const shared = this.sharedState
+
+    const lights: Set<THREE.DirectionalLight> = new Set()
+
+    if (this.renderer.shadowMap.enabled) {
+      for (const umbraScene of this.umbraScenes) {
+        for (const light of this.findLights(umbraScene)) {
+          lights.add(light)
+        }
+      }
+    }
+
+    const dir = this.dirVector
+    const vector3 = this.tempVector
+
+    const lightDirections = Array.from(lights).map(light => {
+      dir.setFromMatrixPosition(light.target.matrixWorld)
+      vector3.setFromMatrixPosition(light.matrixWorld)
+      dir.sub(vector3)
+      return [dir.x, dir.y, dir.z]
+    }, lights)
+
+    this.pruneOldViews(this.renderer.info.render.frame)
+
+    for (const [threeCamera, view] of shared.cameraToView) {
+      const camera: UmbraCamera = threeCamera
+
+      this.matrixWorldInverse.getInverse(camera.matrixWorld)
+      this.projScreenMatrix.multiplyMatrices(
+        camera.projectionMatrix,
+        this.matrixWorldInverse,
+      )
+
+      // By default we stream in meshes around the camera, but user can override it.
+      if ('umbraStreamingPosition' in camera) {
+        this.cameraWorldPosition.copy(camera.umbraStreamingPosition)
+      } else {
+        camera.getWorldPosition(this.cameraWorldPosition)
+      }
+
+      let quality = 0.5
+      if ('umbraQuality' in camera) {
+        quality = camera.umbraQuality
+      }
+
+      const pos = this.cameraWorldPosition
+      view.setCamera(
+        this.projScreenMatrix.elements,
+        [pos.x, pos.y, pos.z],
+        quality * this.qualityFactor,
+        lightDirections,
+      )
+
+      let list: Renderable[] = []
+      if (shared.viewRenderables.has(view)) {
+        list = shared.viewRenderables.get(view)
+        list.length = 0
+      } else {
+        shared.viewRenderables.set(view, list)
+      }
+
+      const batchSize = 500
+      let visible: Renderable[] = []
+      do {
+        visible = view.getVisible(batchSize)
+        list.push(...visible)
+      } while (visible.length === batchSize)
+    }
+  }
+
   update(timeBudget = 7) {
     const downloadLimitReached =
       this.downloadLimit !== 0 &&
@@ -121,6 +257,7 @@ class UmbrajsThreeInternal implements SceneFactory {
       this.runtime.update()
       const updateTook = performance.now() - start
       this.runtime.loadAssets(this.handlers, timeBudget - updateTook)
+      this.updateViews()
     }
 
     this.oldState.downloadLimitReached = downloadLimitReached
@@ -154,28 +291,30 @@ class UmbrajsThreeInternal implements SceneFactory {
       throw new TypeError('expected either string or an object argument')
     }
 
-    const model = new UmbraScene(
+    const umbraScene = new UmbraScene(
       this.runtime,
       this.runtime.createScenePublic(url),
+      this.sharedState,
       this.renderer,
       this.features,
-      m => this.umbraScenes.delete(m),
+      s => this.umbraScenes.delete(s),
     )
-    this.umbraScenes.add(model)
-    return model
+    this.umbraScenes.add(umbraScene)
+    return umbraScene
   }
 
   createSceneWithURL(url: string): UmbraScene {
     const scene = this.runtime.createSceneLocal(url)
-    const model = new UmbraScene(
+    const umbraScene = new UmbraScene(
       this.runtime,
       scene,
+      this.sharedState,
       this.renderer,
       this.features,
-      m => this.umbraScenes.delete(m),
+      s => this.umbraScenes.delete(s),
     )
-    this.umbraScenes.add(model)
-    return model
+    this.umbraScenes.add(umbraScene)
+    return umbraScene
   }
 
   /**
@@ -205,9 +344,7 @@ class UmbrajsThreeInternal implements SceneFactory {
     if (this.renderer.info.render.frame == this.lastQualityLowerFrame) {
       return
     }
-    this.umbraScenes.forEach((m: UmbraScene) => {
-      m.qualityFactor = Math.min(1, m.qualityFactor * factor)
-    })
+    this.qualityFactor = Math.max(0, Math.min(1, this.qualityFactor * factor))
     this.lastQualityLowerFrame = this.renderer.info.render.frame
   }
 
@@ -407,7 +544,15 @@ class UmbrajsThreeInternal implements SceneFactory {
 
   dispose() {
     this.stopEventUpdate()
+
+    for (const view of this.sharedState.cameraToView.values()) {
+      view.destroy()
+    }
+
     this.umbraScenes.forEach((m: UmbraScene) => m.dispose())
+
+    this.sharedState.cameraToView.clear()
+    this.umbraScenes.clear()
 
     this.runtime.assets.forEach((asset, userPtr) => {
       if ('geometry' in asset) {

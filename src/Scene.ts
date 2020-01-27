@@ -9,6 +9,7 @@ import {
   Renderable,
   ConnectionStatus,
 } from '@umbra3d/umbrajs'
+import { SharedFrameState } from './SharedFrameState'
 import { PublicLink } from './PublicLink'
 import { ShaderPatcher } from './ShaderPatcher'
 import { ObjectPool } from './ObjectPool'
@@ -19,7 +20,6 @@ export interface SceneFactory {
 }
 
 type UmbraMesh = THREE.Mesh & { isUmbraMesh: true }
-type UmbraCamera = THREE.Camera & { umbraStreamingPosition?: THREE.Vector3 }
 
 interface SceneStatus {
   connected: boolean
@@ -44,17 +44,9 @@ type DisposeCallback = (m: UmbraScene) => void
 
 export class UmbraScene extends THREE.Object3D {
   // User editable config
-  quality = 0.5 // Streaming scene quality. Ranges from 0 to 1.
   material: THREE.Material = new THREE.MeshBasicMaterial()
   wireframe = false
   freeze = false
-
-  // This gets lowered automatically if memory limit is hit
-  qualityFactor = 1.0
-
-  get adjustedQuality() {
-    return this.quality * this.qualityFactor
-  }
 
   // Event callbacks
   onConnected: () => void
@@ -68,12 +60,17 @@ export class UmbraScene extends THREE.Object3D {
   readonly autoUpdate = true
   readonly name = 'UmbraScene'
 
+  set quality(value: number) {
+    console.error(
+      `Setting UmbraScene.quality is not supported any more. Set camera.umbraQuality = ${value} instead.`,
+    )
+  }
+
   private renderer: THREE.WebGLRenderer
 
   private materialPool = new ObjectPool<THREE.Material>()
-  private cameraToView = new Map<THREE.Camera, View>()
-  private viewLastUsed = new Map<View, number>()
   private shaderPatcher: ShaderPatcher
+  private sharedState: SharedFrameState
 
   private stats = {
     numVisible: 0,
@@ -113,17 +110,11 @@ export class UmbraScene extends THREE.Object3D {
     visibleIDs: new Set<number>(),
   }
 
-  // Temporary values we don't want to reallocate every frame
-  private matrixWorldInverse = new THREE.Matrix4()
-  private projScreenMatrix = new THREE.Matrix4()
-  private cameraWorldPosition = new THREE.Vector3()
-  private tempVector = new THREE.Vector3()
-  private dirVector = new THREE.Vector3()
-
   // UmbraScene should be instantiated using Umbra.createScene()
   constructor(
     runtime: Runtime,
     scene: NativeScene,
+    sharedState: SharedFrameState,
     renderer: THREE.WebGLRenderer,
     features: PlatformFeatures,
     onDispose: DisposeCallback = undefined,
@@ -131,6 +122,7 @@ export class UmbraScene extends THREE.Object3D {
     super()
 
     this.renderer = renderer
+    this.sharedState = sharedState
     this.shaderPatcher = new ShaderPatcher(features.formats)
     this.onDispose = onDispose
 
@@ -187,25 +179,6 @@ export class UmbraScene extends THREE.Object3D {
     return center
   }
 
-  private pruneOldViews(frame: number): void {
-    /**
-     * We get no notification when cameras are removed from the scene graph
-     * so we'll go and remove old views.
-     */
-    for (const [view, lastUsed] of this.viewLastUsed) {
-      if (frame - lastUsed > 1000) {
-        for (const [cam, view2] of this.cameraToView) {
-          if (view2 === view) {
-            this.cameraToView.delete(cam)
-            break
-          }
-        }
-        view.destroy()
-        this.viewLastUsed.delete(view)
-      }
-    }
-  }
-
   private updateStreamingEvents(visibleIDs: Set<number>) {
     const then = this.oldState.visibleIDs
     const now = visibleIDs
@@ -257,52 +230,19 @@ export class UmbraScene extends THREE.Object3D {
     this.oldState.status = status
   }
 
-  update = function(camera: UmbraCamera) {
-    let parentScene
-
+  update = function(camera: THREE.Camera) {
     if (this.freeze) {
       return
     }
 
-    this.traverseAncestors(obj => {
-      if (obj.isScene) {
-        parentScene = obj
-      }
-    })
-
-    if (!parentScene || (parentScene && !parentScene.isScene)) {
-      console.log('No parent scene found')
-      return
-    }
-
-    function findLights(scene: THREE.Scene) {
-      const lights = []
-      scene.traverseVisible((obj: any) => {
-        if (obj.isDirectionalLight && obj.castShadow) {
-          lights.push(obj)
-        }
-      })
-
-      return lights
-    }
-
-    let lights: THREE.DirectionalLight[] = []
-
-    if (this.renderer.shadowMap.enabled) {
-      lights = findLights(parentScene)
-    }
-
-    let view = this.cameraToView.get(camera) as View
+    let view: View = this.sharedState.cameraToView.get(camera)
 
     if (!view) {
       view = this.umbra.runtime.createView()
-      this.cameraToView.set(camera, view)
+      this.sharedState.cameraToView.set(camera, view)
     }
 
-    const frame: number = this.renderer.info.render.frame
-
-    this.viewLastUsed.set(view, frame)
-    this.pruneOldViews(frame)
+    this.sharedState.viewLastUseFrame.set(view, this.renderer.info.render.frame)
 
     this.umbra.nativeScene.setTransform(this.matrixWorld.elements)
 
@@ -316,37 +256,6 @@ export class UmbraScene extends THREE.Object3D {
         this.materialPool.clear()
       }
     }
-
-    this.matrixWorldInverse.getInverse(camera.matrixWorld)
-    this.projScreenMatrix.multiplyMatrices(
-      camera.projectionMatrix,
-      this.matrixWorldInverse,
-    )
-
-    const dir = this.dirVector
-    const vector3 = this.tempVector
-
-    const lightDirections = lights.map(light => {
-      dir.setFromMatrixPosition(light.target.matrixWorld)
-      vector3.setFromMatrixPosition(light.matrixWorld)
-      dir.sub(vector3)
-      return [dir.x, dir.y, dir.z]
-    }, lights)
-
-    // By default we stream in meshes around the camera, but the user can override it too.
-    if (camera.umbraStreamingPosition) {
-      this.cameraWorldPosition.copy(camera.umbraStreamingPosition)
-    } else {
-      camera.getWorldPosition(this.cameraWorldPosition)
-    }
-
-    const pos = this.cameraWorldPosition
-    view.setCamera(
-      this.projScreenMatrix.elements,
-      [pos.x, pos.y, pos.z],
-      this.adjustedQuality,
-      lightDirections,
-    )
 
     this.stats.numVisible = 0
     this.stats.numAssets = this.umbra.runtime.assets.size
@@ -423,94 +332,97 @@ export class UmbraScene extends THREE.Object3D {
       delete mat.roughnessMap
     })
 
-    const batchSize = 200
     let visible: Renderable[] = []
     const visibleIDs: Set<number> = new Set()
 
-    do {
-      visible = view.getVisible(batchSize)
+    // On the first frame the view didn't yet exist when UmbrajsThreeInternal collected a list of renderables,
+    // so the list in "viewRenderables" may be missing.
+    if (this.sharedState.viewRenderables.has(view)) {
+      visible = this.sharedState.viewRenderables.get(view)
+    }
 
-      for (let i = 0; i < visible.length; i++) {
-        const { materialDesc, geometry } = visible[i].mesh as MeshDescriptor
-        visibleIDs.add(visible[i].id)
-        if (visible[i].scenePtr !== this.umbra.nativeScene.ptr) {
-          continue
-        }
-
-        const isTransparent =
-          materialDesc.transparent || this.material.transparent
-
-        // Fetch a new material from the pool if we already have free ones. This avoids
-        // extra allocations and more importantly 'onBeforeCompile' calls.
-        const material = this.materialPool.allocate(
-          () => this.material.clone(),
-          (mat: THREE.Material) => {
-            return mat.transparent === isTransparent
-          },
-        )
-
-        material.wireframe = this.wireframe
-        material.opacity = this.material.opacity
-        material.transparent = isTransparent
-
-        material.onBeforeCompile = (shader, renderer) => {
-          /**
-           * If the original material already had a custom preprocessor callback we need to call
-           * that first. We need to use 'apply' in case the callback uses 'this' reference to
-           * access some material properties.
-           */
-          if (this.material.onBeforeCompile) {
-            this.material.onBeforeCompile.apply(material, [shader, renderer])
-          }
-
-          this.shaderPatcher.process(shader, renderer)
-        }
-
-        const diffuseMap = materialDesc.textures[TextureType.Diffuse]
-        const normalMap = materialDesc.textures[TextureType.Normal]
-        const metalglossMap = materialDesc.textures[TextureType.Specular]
-
-        if (diffuseMap && diffuseMap.isTexture) {
-          material.map = diffuseMap
-        }
-
-        if (normalMap && normalMap.isTexture) {
-          material.normalMap = normalMap
-          material.vertexTangents = true
-          material.normalMapType = THREE.TangentSpaceNormalMap
-        }
-
-        if (metalglossMap && metalglossMap.isTexture) {
-          material.metalnessMap = metalglossMap
-          material.metalness = 1.0
-          material.roughnessMap = metalglossMap
-          material.roughness = 1.0
-        }
-
-        /**
-         * We instatiate new Mesh objects each frame but the constructor is very cheap
-         * and the references should live for a very short time since 'this.children'
-         * gets cleared every frame.
-         */
-        const mesh = new THREE.Mesh(geometry, material) as UmbraMesh
-        mesh.isUmbraMesh = true
-        mesh.matrixWorld.copy(this.matrixWorld)
-        mesh.castShadow = this.castShadow
-        mesh.receiveShadow = this.receiveShadow
-        mesh.visible = true
-        this.children.push(mesh)
-
-        if ((visible[i].mask & 0x01) === 0) {
-          shadowCasters.push(mesh)
-          mesh.frustumCulled = true
-        } else {
-          this.children.push(mesh)
-          mesh.frustumCulled = false
-        }
+    for (let i = 0; i < visible.length; i++) {
+      // Each view's list includes renderables of all UmbraScenes, so we need to pick only the relevant ones here.
+      if (visible[i].scenePtr !== this.umbra.nativeScene.ptr) {
+        continue
       }
 
-      this.stats.numVisible += visible.length
-    } while (visible.length === batchSize)
+      const { materialDesc, geometry } = visible[i].mesh as MeshDescriptor
+      visibleIDs.add(visible[i].id)
+      this.stats.numVisible += 1
+
+      const isTransparent =
+        materialDesc.transparent || this.material.transparent
+
+      // Fetch a new material from the pool if we already have free ones. This avoids
+      // extra allocations and more importantly 'onBeforeCompile' calls.
+      const material = this.materialPool.allocate(
+        () => this.material.clone(),
+        (mat: THREE.Material) => {
+          return mat.transparent === isTransparent
+        },
+      )
+
+      material.wireframe = this.wireframe
+      material.opacity = this.material.opacity
+      material.transparent = isTransparent
+
+      material.onBeforeCompile = (shader, renderer) => {
+        /**
+         * If the original material already had a custom preprocessor callback we need to call
+         * that first. We need to use 'apply' in case the callback uses 'this' reference to
+         * access some material properties.
+         */
+        if (this.material.onBeforeCompile) {
+          this.material.onBeforeCompile.apply(material, [shader, renderer])
+        }
+
+        this.shaderPatcher.process(shader, renderer)
+      }
+
+      const diffuseMap = materialDesc.textures[TextureType.Diffuse]
+      const normalMap = materialDesc.textures[TextureType.Normal]
+      const metalglossMap = materialDesc.textures[TextureType.Specular]
+
+      if (diffuseMap && diffuseMap.isTexture) {
+        material.map = diffuseMap
+      }
+
+      if (normalMap && normalMap.isTexture) {
+        material.normalMap = normalMap
+        material.vertexTangents = true
+        material.normalMapType = THREE.TangentSpaceNormalMap
+      }
+
+      if (metalglossMap && metalglossMap.isTexture) {
+        material.metalnessMap = metalglossMap
+        material.metalness = 1.0
+        material.roughnessMap = metalglossMap
+        material.roughness = 1.0
+      }
+
+      /**
+       * We instatiate new Mesh objects each frame but the constructor is very cheap
+       * and the references should live for a very short time since 'this.children'
+       * gets cleared every frame.
+       */
+      const mesh = new THREE.Mesh(geometry, material) as UmbraMesh
+      mesh.isUmbraMesh = true
+      mesh.matrixWorld.copy(this.matrixWorld)
+      mesh.castShadow = this.castShadow
+      mesh.receiveShadow = this.receiveShadow
+      mesh.visible = true
+      this.children.push(mesh)
+
+      // TODO(pvaananen): Does this check work with multiple cameras?
+      if ((visible[i].mask & 0x01) === 0) {
+        shadowCasters.push(mesh)
+        mesh.frustumCulled = true
+      } else {
+        this.children.push(mesh)
+        mesh.frustumCulled = false
+      }
+    }
 
     // Emit a warning if normals are required but missing
     if (!this.diagnostics.missingNormals.checked && this.isPBREnabled()) {
@@ -541,17 +453,14 @@ export class UmbraScene extends THREE.Object3D {
       this.onDispose(this)
     }
 
-    for (const view of this.cameraToView.values()) {
-      view.destroy()
-    }
-
     // Remove all Umbra meshes from children
     this.children = this.children.filter((x: UmbraMesh) => !x.isUmbraMesh)
 
     // Dispose all cached materials
     this.materialPool.freeAll(mat => mat.dispose())
 
-    // We don't dispose mesh geometries here because they are managed by the Runtime
+    // We don't dispose mesh geometries here because they are managed by the Runtime, and
+    // Views are managed by UmbrajsThreeInternal.
 
     this.umbra.nativeScene.destroy()
     // Runtime must be manually freed by the user with .dispose() of the API object
