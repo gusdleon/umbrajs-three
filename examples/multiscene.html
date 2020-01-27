@@ -1,0 +1,67 @@
+<html>
+    <head>
+      <title>Multi scene Example</title>
+        <link rel="stylesheet" type="text/css" href="samples.css">
+    </head>
+    <body>
+        <span class="message">
+          This is an example of multi scene support in <a href="https://github.com/UmbraSoftware/umbrajs-three">umbrajs-three</a>.<br>
+        </span>
+
+        <canvas id="c"></canvas>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+'use strict';
+
+(async function () {
+  // First create a three.js renderer
+  const canvas = document.querySelector('#c')
+  let renderer = new THREE.WebGLRenderer({ canvas })
+
+  // Initialize Umbra library with the given renderer
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+  let shoe = Umbra.createScene('key=pubk-6f592e67-5aec-479a-ad9e-46ad4e4fe699&project=745415655&model=745415871')
+  let car = Umbra.createScene('key=pubk-4dea0ed1-f861-46b4-a8b9-650c1b955263&project=687234379&model=687234382')
+
+  // Set up a basic three.js scene
+  let scene = new THREE.Scene()
+  scene.background = new THREE.Color(0x222222)
+  let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000)
+  let controls = new THREE.OrbitControls(camera, canvas)
+
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+  scene.add(shoe)
+  scene.add(car)
+
+  // Put the shoe on top of the car
+  shoe.position.set(0.3, 1.2, 0.2)
+  shoe.scale.set(1.0, 1.0, -1.0)
+  shoe.updateMatrix()
+
+  car.position.set(0, 0, 0)
+  car.scale.set(1.0, 1.0, -1.0)
+  car.updateMatrix()
+
+  camera.position.set(-3.0878, 2.00, -2.033)
+  controls.update()
+
+  let animate = function () {
+    Umbra.update()
+    controls.update()
+    renderer.render(scene, camera)
+    requestAnimationFrame(animate)
+  }
+
+  // Start the animation loop
+  animate()
+})()
+        </script>
+    </body>
+</html>
+
+
