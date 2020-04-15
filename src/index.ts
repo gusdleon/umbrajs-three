@@ -402,7 +402,8 @@ class UmbrajsThreeInternal implements SceneFactory {
       if (!glformat) {
         // Add a dummy object for unknown formats. They will appear as a solid black color.
         console.log('Unknown texture format', info.format)
-        this.runtime.addAsset({ isTexture: false })
+        load.prepare(this.runtime.addAsset({ isTexture: false }))
+        load.finish(Assets.AssetLoadResult.Success)
         return
       }
 
