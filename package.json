@@ -22,20 +22,20 @@
     "url": "git+https://github.com/UmbraSoftware/umbrajs-three"
   },
   "dependencies": {
-    "@umbra3d/umbrajs": "1.7.9-rc1"
+    "@umbra3d/umbrajs": "1.7.20-rc1"
   },
   "peerDependencies": {
     "three": "0.106.2 || 0.107.0 || 0.108.0 || 0.109.0"
   },
   "devDependencies": {
-    "@babel/core": "7.5.5",
+    "@babel/core": "7.9.0",
     "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/preset-env": "7.5.5",
     "@babel/preset-typescript": "7.3.3",
     "@typescript-eslint/eslint-plugin": "2.0.0",
     "@typescript-eslint/parser": "2.0.0",
     "add": "2.0.6",
-    "eslint": "6.2.2",
+    "eslint": "6.8.0",
     "eslint-config-prettier": "6.1.0",
     "eslint-config-standard": "12.0.0",
     "eslint-plugin-html": "6.0.0",
@@ -45,7 +45,7 @@
     "eslint-plugin-promise": "4.1.1",
     "eslint-plugin-standard": "4.0.0",
     "prettier": "1.18.2",
-    "rollup": "1.15.0",
+    "rollup": "2.6.1",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-eslint": "7.0.0",
     "rollup-plugin-node-resolve": "5.2.0",
