@@ -1,6 +1,8 @@
 define(['exports', 'three'], function (exports, THREE) { 'use strict';
 
   function _typeof(obj) {
+    "@babel/helpers - typeof";
+
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function (obj) {
         return typeof obj;
@@ -30,19 +32,15 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
   }
 
   function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
 
   function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
   }
 
   function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-      return arr2;
-    }
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
   }
 
   function _arrayWithHoles(arr) {
@@ -50,10 +48,11 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
   }
 
   function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
   }
 
   function _iterableToArrayLimit(arr, i) {
+    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
     var _arr = [];
     var _n = true;
     var _d = false;
@@ -79,18 +78,30 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     return _arr;
   }
 
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
   function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance");
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
-
-  /**
-   * The purpose of this file is to re-export only the necessary Three.js modules
-   * so that WebPack three-shaking has a better chance of working on the final bundle.
-   */
 
   function _typeof$1(obj) {
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -377,7 +388,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
         c.HEAPF64 = ya = new Float64Array(G);
       }
 
-      var ea = 17008,
+      var ea = 17120,
           Aa = c.TOTAL_MEMORY || 134217728;
       5242880 > Aa && v("TOTAL_MEMORY should be larger than TOTAL_STACK, was " + Aa + "! (TOTAL_STACK=5242880)");
       c.wasmMemory ? z = c.wasmMemory : z = new WebAssembly.Memory({
@@ -386,14 +397,14 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       z && (G = z.buffer);
       Aa = G.byteLength;
       za();
-      w[ea >> 2] = 5259920;
+      w[ea >> 2] = 5260032;
 
       function Ba(a) {
         for (; 0 < a.length;) {
           var b = a.shift();
           if ("function" == typeof b) b();else {
-            var d = b.Qb;
-            "number" === typeof d ? void 0 === b.Nb ? c.dynCall_v(d) : c.dynCall_vi(d, b.Nb) : d(void 0 === b.Nb ? null : b.Nb);
+            var d = b.Vb;
+            "number" === typeof d ? void 0 === b.Sb ? c.dynCall_v(d) : c.dynCall_vi(d, b.Sb) : d(void 0 === b.Sb ? null : b.Sb);
           }
         }
       }
@@ -411,7 +422,6 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       }
 
       var I = 0,
-          Ka = null,
           La = null;
       c.preloadedImages = {};
       c.preloadedAudios = {};
@@ -455,7 +465,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           c.asm = a.exports;
           I--;
           c.monitorRunDependencies && c.monitorRunDependencies(I);
-          0 == I && (null !== Ka && (clearInterval(Ka), Ka = null), La && (a = La, La = null, a()));
+          0 == I && (La && (a = La, La = null, a()));
         }
 
         function d(a) {
@@ -507,8 +517,8 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       c.asm = function (a, b) {
         b.memory = z;
         b.table = new WebAssembly.Table({
-          initial: 358,
-          maximum: 358,
+          initial: 357,
+          maximum: 357,
           element: "anyfunc"
         });
         b.__memory_base = 1024;
@@ -524,17 +534,17 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
         alert("Uploads are not supported.");
       }];
       Ea.push({
-        Qb: function Qb() {
+        Vb: function Vb() {
           Ta();
         }
       });
       var K = {};
 
       function Ua(a) {
-        if (Ua.Wb) {
+        if (Ua.ac) {
           var b = w[a >> 2];
           var d = w[b >> 2];
-        } else Ua.Wb = !0, K.USER = K.LOGNAME = "web_user", K.PATH = "/", K.PWD = "/", K.HOME = "/home/web_user", K.LANG = "C.UTF-8", K.LANG = ("object" === (typeof navigator === "undefined" ? "undefined" : _typeof$1(navigator)) && navigator.languages && navigator.languages[0] || "C").replace("-", "_") + ".UTF-8", K._ = c.thisProgram, d = Ia ? F(1024) : da(1024), b = Ia ? F(256) : da(256), w[b >> 2] = d, w[a >> 2] = b;
+        } else Ua.ac = !0, K.USER = K.LOGNAME = "web_user", K.PATH = "/", K.PWD = "/", K.HOME = "/home/web_user", K.LANG = "C.UTF-8", K.LANG = ("object" === (typeof navigator === "undefined" ? "undefined" : _typeof$1(navigator)) && navigator.languages && navigator.languages[0] || "C").replace("-", "_") + ".UTF-8", K._ = c.thisProgram, d = Ia ? F(1024) : da(1024), b = Ia ? F(256) : da(256), w[b >> 2] = d, w[a >> 2] = b;
 
         a = [];
         var e = 0,
@@ -567,8 +577,8 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
 
       function Va(a, b) {
         Ga.unshift({
-          Qb: a,
-          Nb: b
+          Vb: a,
+          Sb: b
         });
       }
 
@@ -704,7 +714,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
         a || R('type "' + e + '" must have a positive integer typeid pointer');
 
         if (O.hasOwnProperty(a)) {
-          if (d.bc) return;
+          if (d.gc) return;
           R("Cannot register type '" + e + "' twice");
         }
 
@@ -727,7 +737,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       }];
 
       function lb(a) {
-        4 < a && 0 === --S[a].Rb && (S[a] = void 0, kb.push(a));
+        4 < a && 0 === --S[a].Wb && (S[a] = void 0, kb.push(a));
       }
 
       function U(a) {
@@ -747,7 +757,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           default:
             var b = kb.length ? kb.pop() : S.length;
             S[b] = {
-              Rb: 1,
+              Wb: 1,
               value: a
             };
             return b;
@@ -792,21 +802,21 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       function pb(a, b) {
         var d = c;
 
-        if (void 0 === d[a].Lb) {
+        if (void 0 === d[a].Qb) {
           var e = d[a];
 
           d[a] = function () {
-            d[a].Lb.hasOwnProperty(arguments.length) || R("Function '" + b + "' called with an invalid number of arguments (" + arguments.length + ") - expects one of (" + d[a].Lb + ")!");
-            return d[a].Lb[arguments.length].apply(this, arguments);
+            d[a].Qb.hasOwnProperty(arguments.length) || R("Function '" + b + "' called with an invalid number of arguments (" + arguments.length + ") - expects one of (" + d[a].Qb + ")!");
+            return d[a].Qb[arguments.length].apply(this, arguments);
           };
 
-          d[a].Lb = [];
-          d[a].Lb[e.Vb] = e;
+          d[a].Qb = [];
+          d[a].Qb[e.$b] = e;
         }
       }
 
       function qb(a, b, d) {
-        c.hasOwnProperty(a) ? ((void 0 === d || void 0 !== c[a].Lb && void 0 !== c[a].Lb[d]) && R("Cannot register public name '" + a + "' twice"), pb(a, a), c.hasOwnProperty(d) && R("Cannot register multiple overloads of a function with the same number of arguments (" + d + ")!"), c[a].Lb[d] = b) : (c[a] = b, void 0 !== d && (c[a].uc = d));
+        c.hasOwnProperty(a) ? ((void 0 === d || void 0 !== c[a].Qb && void 0 !== c[a].Qb[d]) && R("Cannot register public name '" + a + "' twice"), pb(a, a), c.hasOwnProperty(d) && R("Cannot register multiple overloads of a function with the same number of arguments (" + d + ")!"), c[a].Qb[d] = b) : (c[a] = b, void 0 !== d && (c[a].zc = d));
       }
 
       function rb(a, b) {
@@ -967,20 +977,18 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           if (!A) if (0 < Ob.length) {
             var a = Date.now(),
                 b = Ob.shift();
-            b.Qb(b.Nb);
+            b.Vb(b.Sb);
 
-            if (Pb) {
-              var k = Pb,
-                  h = 0 == k % 1 ? k - 1 : Math.floor(k);
-              Pb = b.lc ? h : (8 * k + (h + .5)) / 9;
+            if (false) {
+              var k;
             }
 
             console.log('main loop blocker "' + b.name + '" took ' + (Date.now() - a) + " ms");
-            c.setStatus && (a = c.statusMessage || "Please wait...", b = Pb, k = Qb.pc, b ? b < k ? c.setStatus(a + " (" + (k - b) + "/" + k + ")") : c.setStatus(a) : c.setStatus(""));
+            c.setStatus && (a = c.statusMessage || "Please wait...", b = Pb, k = Qb.uc, b ? b < k ? c.setStatus(a + " (" + (k - b) + "/" + k + ")") : c.setStatus(a) : c.setStatus(""));
             e < Z || setTimeout(_Jb, 0);
           } else if (!(e < Z)) if (Rb = Rb + 1 | 0, 1 == Fb && 1 < Gb && 0 != Rb % Gb) X();else {
             0 == Fb && (Ib = Y());
-            "timeout" === Kb && c.Pb && (v("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!"), Kb = "");
+            "timeout" === Kb && c.Ub && (v("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!"), Kb = "");
 
             a: if (!(A || c.preMainLoop && !1 === c.preMainLoop())) {
               try {
@@ -994,7 +1002,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
               c.postMainLoop && c.postMainLoop();
             }
 
-            e < Z || ("object" === (typeof SDL === "undefined" ? "undefined" : _typeof$1(SDL)) && SDL.audio && SDL.audio.dc && SDL.audio.dc(), X());
+            e < Z || ("object" === (typeof SDL === "undefined" ? "undefined" : _typeof$1(SDL)) && SDL.audio && SDL.audio.ic && SDL.audio.ic(), X());
           }
         };
       }
@@ -1034,10 +1042,10 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
 
           $b = "undefined" != typeof MozBlobBuilder ? MozBlobBuilder : "undefined" != typeof WebKitBlobBuilder ? WebKitBlobBuilder : Zb ? null : console.log("warning: no BlobBuilder");
           ac = "undefined" != typeof window ? window.URL ? window.URL : window.webkitURL : void 0;
-          c.Ub || "undefined" !== typeof ac || (console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available."), c.Ub = !0);
+          c.Zb || "undefined" !== typeof ac || (console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available."), c.Zb = !0);
           c.preloadPlugins.push({
             canHandle: function canHandle(a) {
-              return !c.Ub && /\.(jpg|jpeg|png|bmp)$/i.test(a);
+              return !c.Zb && /\.(jpg|jpeg|png|bmp)$/i.test(a);
             },
             handle: function handle(a, b, f, g) {
               var d = null;
@@ -1075,7 +1083,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           });
           c.preloadPlugins.push({
             canHandle: function canHandle(a) {
-              return !c.tc && a.substr(-4) in {
+              return !c.yc && a.substr(-4) in {
                 ".ogg": 1,
                 ".wav": 1,
                 ".mp3": 1
@@ -1140,23 +1148,23 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       }
 
       function dc(a, b, d, e) {
-        if (b && c.Pb && a == c.canvas) return c.Pb;
+        if (b && c.Ub && a == c.canvas) return c.Ub;
         var f;
 
         if (b) {
           var g = {
             antialias: !1,
             alpha: !1,
-            rc: 1
+            wc: 1
           };
           if (e) for (var k in e) {
             g[k] = e[k];
           }
-          if ("undefined" !== typeof GL && (f = GL.mc(a, g))) var h = GL.getContext(f).kc;
+          if ("undefined" !== typeof GL && (f = GL.rc(a, g))) var h = GL.getContext(f).pc;
         } else h = a.getContext("2d");
 
         if (!h) return null;
-        d && (b || B("undefined" === typeof GLctx, "cannot set in module if GLctx is used, but we are a non-GL context that would replace it"), c.Pb = h, b && GL.sc(f), c.vc = b, Vb.forEach(function (a) {
+        d && (b || B("undefined" === typeof GLctx, "cannot set in module if GLctx is used, but we are a non-GL context that would replace it"), c.Ub = h, b && GL.xc(f), c.Ac = b, Vb.forEach(function (a) {
           a();
         }), Xb());
         return h;
@@ -1190,7 +1198,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           g.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         } : null);
         d ? g.requestFullscreen({
-          wc: d
+          Bc: d
         }) : g.requestFullscreen();
       }
 
@@ -1251,7 +1259,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       }
 
       function jc(a, b, d) {
-        b && d ? (a.jc = b, a.ac = d) : (b = a.jc, d = a.ac);
+        b && d ? (a.oc = b, a.fc = d) : (b = a.oc, d = a.fc);
         var e = b,
             f = d;
         c.forcedAspectRatio && 0 < c.forcedAspectRatio && (e / f < c.forcedAspectRatio ? e = Math.round(f * c.forcedAspectRatio) : f = Math.round(e / c.forcedAspectRatio));
@@ -1370,7 +1378,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       }
 
       c._exit = yc;
-      na("GMT", C, 16912, 4);
+      na("GMT", C, 17024, 4);
 
       function zc() {
         function a(a) {
@@ -1492,7 +1500,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       }
 
       var Kc = c.asm({}, {
-        j: x,
+        k: x,
         y: function y() {},
         fa: function fa() {
           v("missing function: _ZN5Umbra13MiniSceneCopy7connectERK20UmbraSceneCopySource");
@@ -1519,22 +1527,22 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           _L = b;
 
           try {
-            return Ya.Tb(), _M(), _M(), _M(), _M(), 0;
+            return Ya.Yb(), _M(), _M(), _M(), _M(), 0;
           } catch (d) {
-            return x(d), -d.Ob;
+            return x(d), -d.Tb;
           }
         },
         L: function L(a, b) {
           _L = b;
 
           try {
-            var d = Ya.Tb(),
+            var d = Ya.Yb(),
                 e = _M(),
                 f = _M();
 
-            return Ya.nc(d, e, f);
+            return Ya.sc(d, e, f);
           } catch (g) {
-            return x(g), -g.Ob;
+            return x(g), -g.Tb;
           }
         },
         K: function K(a, b) {
@@ -1555,7 +1563,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
 
             return a;
           } catch (l) {
-            return x(l), -l.Ob;
+            return x(l), -l.Tb;
           }
         },
         ea: function ea(a, b) {
@@ -1565,9 +1573,9 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             var d = _E(_M()),
                 e = _M();
 
-            return Ya.oc((void 0).stat, d, e);
+            return Ya.tc((void 0).stat, d, e);
           } catch (f) {
-            return x(f), -f.Ob;
+            return x(f), -f.Tb;
           }
         },
         J: function J(a, b) {
@@ -1582,9 +1590,9 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
                 e = _M(),
                 f = _M();
 
-            return (void 0).open(d, e, f).qc;
+            return (void 0).open(d, e, f).vc;
           } catch (g) {
-            return x(g), -g.Ob;
+            return x(g), -g.Tb;
           }
         },
         I: function I(a, b) {
@@ -1595,33 +1603,33 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           _L = b;
 
           try {
-            return Ya.Tb(), 0;
+            return Ya.Yb(), 0;
           } catch (d) {
-            return x(d), -d.Ob;
+            return x(d), -d.Tb;
           }
         },
         w: function w() {},
         G: function G(a) {
           var b = Za[a];
           delete Za[a];
-          var d = b.ec,
-              e = b.fc,
-              f = b.Sb,
+          var d = b.jc,
+              e = b.kc,
+              f = b.Xb,
               g = f.map(function (a) {
-            return a.$b;
+            return a.ec;
           }).concat(f.map(function (a) {
-            return a.hc;
+            return a.mc;
           }));
           gb([a], g, function (a) {
             var g = {};
             f.forEach(function (b, d) {
               var e = a[d],
-                  h = b.Yb,
-                  k = b.Zb,
+                  h = b.cc,
+                  k = b.dc,
                   l = a[d + f.length],
-                  n = b.gc,
-                  Da = b.ic;
-              g[b.Xb] = {
+                  n = b.lc,
+                  Da = b.nc;
+              g[b.bc] = {
                 read: function read(a) {
                   return e.fromWireType(h(k, a));
                 },
@@ -1661,7 +1669,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
               },
               argPackAdvance: 8,
               readValueFromPointer: ab,
-              Mb: e
+              Rb: e
             }];
           });
         },
@@ -1681,7 +1689,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
               if (1 === d) var e = D;else if (2 === d) e = va;else if (4 === d) e = w;else throw new TypeError("Unknown boolean type size: " + b);
               return this.fromWireType(e[a >> g]);
             },
-            Mb: null
+            Rb: null
           });
         },
         p: function p(a, b, d) {
@@ -1706,7 +1714,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             },
             argPackAdvance: 8,
             readValueFromPointer: ab,
-            Mb: null
+            Rb: null
           });
         },
         F: function F(a, b, d) {
@@ -1723,10 +1731,10 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             },
             argPackAdvance: 8,
             readValueFromPointer: nb(b, d),
-            Mb: null
+            Rb: null
           });
         },
-        k: function k(a, b, d, e, f, g) {
+        j: function j(a, b, d, e, f, g) {
           var k = rb(b, d);
           a = Q(a);
           f = sb(e, f);
@@ -1742,7 +1750,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             2 > q && R("argTypes array size mismatch! Must at least get return value and 'this' types!");
 
             for (var t = null !== d[1] && !1, y = !1, p = 1; p < d.length; ++p) {
-              if (null !== d[p] && void 0 === d[p].Mb) {
+              if (null !== d[p] && void 0 === d[p].Rb) {
                 y = !0;
                 break;
               }
@@ -1770,14 +1778,14 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             t && (ca = "thisWired" + (0 < ca.length ? ", " : "") + ca);
             h += (Da ? "var rv = " : "") + "invoker(fn" + (0 < ca.length ? ", " : "") + ca + ");\n";
             if (y) h += "runDestructors(destructors);\n";else for (p = t ? 1 : 2; p < d.length; ++p) {
-              q = 1 === p ? "thisWired" : "arg" + (p - 2) + "Wired", null !== d[p].Mb && (h += q + "_dtor(" + q + "); // " + d[p].name + "\n", T.push(q + "_dtor"), k.push(d[p].Mb));
+              q = 1 === p ? "thisWired" : "arg" + (p - 2) + "Wired", null !== d[p].Rb && (h += q + "_dtor(" + q + "); // " + d[p].name + "\n", T.push(q + "_dtor"), k.push(d[p].Rb));
             }
             Da && (h += "var ret = retType.fromWireType(rv);\nreturn ret;\n");
             T.push(h + "}\n");
             d = ob(T).apply(null, k);
             p = b - 1;
             if (!c.hasOwnProperty(e)) throw new fb("Replacing nonexistant public symbol");
-            void 0 !== c[e].Lb && void 0 !== p ? c[e].Lb[p] = d : (c[e] = d, c[e].Vb = p);
+            void 0 !== c[e].Qb && void 0 !== p ? c[e].Qb[p] = d : (c[e] = d, c[e].$b = p);
             return [];
           });
         },
@@ -1809,7 +1817,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             },
             argPackAdvance: 8,
             readValueFromPointer: xb(b, k, 0 !== e),
-            Mb: null
+            Rb: null
           });
         },
         o: function o(a, b, d) {
@@ -1827,7 +1835,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             argPackAdvance: 8,
             readValueFromPointer: e
           }, {
-            bc: !0
+            gc: !0
           });
         },
         E: function E(a, b) {
@@ -1891,7 +1899,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             },
             argPackAdvance: 8,
             readValueFromPointer: ab,
-            Mb: function Mb(a) {
+            Rb: function Rb(a) {
               V(a);
             }
           });
@@ -1934,7 +1942,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             },
             argPackAdvance: 8,
             readValueFromPointer: ab,
-            Mb: function Mb(a) {
+            Rb: function Rb(a) {
               V(a);
             }
           });
@@ -1942,26 +1950,26 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
         D: function D(a, b, d, e, f, g) {
           Za[a] = {
             name: Q(b),
-            ec: sb(d, e),
-            fc: sb(f, g),
-            Sb: []
+            jc: sb(d, e),
+            kc: sb(f, g),
+            Xb: []
           };
         },
         t: function t(a, b, d, e, f, g, k, h, l, n) {
-          Za[a].Sb.push({
-            Xb: Q(b),
-            $b: d,
-            Yb: sb(e, f),
-            Zb: g,
-            hc: k,
-            gc: sb(h, l),
-            ic: n
+          Za[a].Xb.push({
+            bc: Q(b),
+            ec: d,
+            cc: sb(e, f),
+            dc: g,
+            mc: k,
+            lc: sb(h, l),
+            nc: n
           });
         },
         _: function _(a, b) {
           b = Q(b);
           P(a, {
-            cc: !0,
+            hc: !0,
             name: b,
             argPackAdvance: 0,
             fromWireType: function fromWireType() {},
@@ -2005,7 +2013,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
             b[h + 1].deleteObject && (e += "    argType" + h + ".deleteObject(arg" + h + ");\n");
           }
 
-          d.cc || (e += "    return retType.toWireType(destructors, rv);\n");
+          d.hc || (e += "    return retType.toWireType(destructors, rv);\n");
           f.push(e + "};\n");
           a = ob(f).apply(null, g);
           return Cb(a);
@@ -2016,7 +2024,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           return U(a[b]);
         },
         u: function u(a) {
-          4 < a && (S[a].Rb += 1);
+          4 < a && (S[a].Wb += 1);
         },
         r: function r() {
           return U([]);
@@ -2087,23 +2095,23 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
         P: function P(a) {
           zc();
           a = new Date(1E3 * w[a >> 2]);
-          w[4216] = a.getSeconds();
-          w[4217] = a.getMinutes();
-          w[4218] = a.getHours();
-          w[4219] = a.getDate();
-          w[4220] = a.getMonth();
-          w[4221] = a.getFullYear() - 1900;
-          w[4222] = a.getDay();
+          w[4244] = a.getSeconds();
+          w[4245] = a.getMinutes();
+          w[4246] = a.getHours();
+          w[4247] = a.getDate();
+          w[4248] = a.getMonth();
+          w[4249] = a.getFullYear() - 1900;
+          w[4250] = a.getDay();
           var b = new Date(a.getFullYear(), 0, 1);
-          w[4223] = (a.getTime() - b.getTime()) / 864E5 | 0;
-          w[4225] = -(60 * a.getTimezoneOffset());
+          w[4251] = (a.getTime() - b.getTime()) / 864E5 | 0;
+          w[4253] = -(60 * a.getTimezoneOffset());
           var d = new Date(2E3, 6, 1).getTimezoneOffset();
           b = b.getTimezoneOffset();
           a = (d != b && a.getTimezoneOffset() == Math.min(b, d)) | 0;
-          w[4224] = a;
+          w[4252] = a;
           a = w[Ec() + (a ? 4 : 0) >> 2];
-          w[4226] = a;
-          return 16864;
+          w[4254] = a;
+          return 16976;
         },
         O: function O(a) {
           var b = Date.now() / 1E3 | 0;
@@ -2114,7 +2122,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           x("OOM");
         },
         a: ea,
-        b: 16848
+        b: 16960
       }, G);
       c.asm = Kc;
 
@@ -2178,275 +2186,295 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
         return c.asm.ua.apply(null, arguments);
       };
 
-      c._UmbraMeshLoadGetData = function () {
+      c._UmbraMeshLoadFinishExternal = function () {
         return c.asm.va.apply(null, arguments);
       };
 
-      c._UmbraMeshLoadGetInfo = function () {
+      c._UmbraMeshLoadGetData = function () {
         return c.asm.wa.apply(null, arguments);
       };
 
-      c._UmbraMeshStreamDone = function () {
+      c._UmbraMeshLoadGetInfo = function () {
         return c.asm.xa.apply(null, arguments);
       };
 
-      c._UmbraMeshStreamNext = function () {
+      c._UmbraMeshLoadGetSerializedSize = function () {
         return c.asm.ya.apply(null, arguments);
       };
 
-      c._UmbraMeshStreamSetBuffers = function () {
+      c._UmbraMeshLoadSerialize = function () {
         return c.asm.za.apply(null, arguments);
       };
 
-      c._UmbraRuntimeCreate = function () {
+      c._UmbraMeshStreamDone = function () {
         return c.asm.Aa.apply(null, arguments);
       };
 
-      c._UmbraRuntimeDestroy = function () {
+      c._UmbraMeshStreamNext = function () {
         return c.asm.Ba.apply(null, arguments);
       };
 
-      c._UmbraRuntimeGetStreamingState = function () {
+      c._UmbraMeshStreamSetBuffers = function () {
         return c.asm.Ca.apply(null, arguments);
       };
 
-      c._UmbraRuntimeNextAssetLoad = function () {
+      c._UmbraRuntimeCreate = function () {
         return c.asm.Da.apply(null, arguments);
       };
 
-      c._UmbraRuntimeNextAssetUnload = function () {
+      c._UmbraRuntimeDestroy = function () {
         return c.asm.Ea.apply(null, arguments);
       };
 
-      c._UmbraRuntimeUpdate = function () {
+      c._UmbraRuntimeGetStreamingState = function () {
         return c.asm.Fa.apply(null, arguments);
       };
 
-      c._UmbraSceneCopyCreate = function () {
+      c._UmbraRuntimeNextAssetLoad = function () {
         return c.asm.Ga.apply(null, arguments);
       };
 
-      c._UmbraSceneCopyDestroy = function () {
+      c._UmbraRuntimeNextAssetUnload = function () {
         return c.asm.Ha.apply(null, arguments);
       };
 
-      c._UmbraSceneCopyGetError = function () {
+      c._UmbraRuntimeUpdate = function () {
         return c.asm.Ia.apply(null, arguments);
       };
 
-      c._UmbraSceneCopyGetStatus = function () {
+      c._UmbraSceneCopyCreate = function () {
         return c.asm.Ja.apply(null, arguments);
       };
 
-      c._UmbraSceneCreate = function () {
+      c._UmbraSceneCopyDestroy = function () {
         return c.asm.Ka.apply(null, arguments);
       };
 
-      c._UmbraSceneCreateLocal = function () {
+      c._UmbraSceneCopyGetError = function () {
         return c.asm.La.apply(null, arguments);
       };
 
-      c._UmbraSceneCreatePublic = function () {
+      c._UmbraSceneCopyGetStatus = function () {
         return c.asm.Ma.apply(null, arguments);
       };
 
-      c._UmbraSceneDestroy = function () {
+      c._UmbraSceneCreate = function () {
         return c.asm.Na.apply(null, arguments);
       };
 
-      c._UmbraSceneGetConnectionStatus = function () {
+      c._UmbraSceneCreateLocal = function () {
         return c.asm.Oa.apply(null, arguments);
       };
 
-      c._UmbraSceneGetInfo = function () {
+      c._UmbraSceneCreatePublic = function () {
         return c.asm.Pa.apply(null, arguments);
       };
 
-      c._UmbraSceneSetTransform = function () {
+      c._UmbraSceneDestroy = function () {
         return c.asm.Qa.apply(null, arguments);
       };
 
-      c._UmbraSetAllocator = function () {
+      c._UmbraSceneGetConnectionStatus = function () {
         return c.asm.Ra.apply(null, arguments);
       };
 
-      c._UmbraSetHttp = function () {
+      c._UmbraSceneGetInfo = function () {
         return c.asm.Sa.apply(null, arguments);
       };
 
-      c._UmbraSetLogger = function () {
+      c._UmbraSceneSetTransform = function () {
         return c.asm.Ta.apply(null, arguments);
       };
 
-      c._UmbraTextureGetMipmapLevelByteSize = function () {
+      c._UmbraSetAllocator = function () {
         return c.asm.Ua.apply(null, arguments);
       };
 
-      c._UmbraTextureGetMipmapLevelOffset = function () {
+      c._UmbraSetHttp = function () {
         return c.asm.Va.apply(null, arguments);
       };
 
-      c._UmbraTextureLoadGetData = function () {
+      c._UmbraSetLogger = function () {
         return c.asm.Wa.apply(null, arguments);
       };
 
-      c._UmbraTextureLoadGetInfo = function () {
+      c._UmbraTextureGetMipmapLevelByteSize = function () {
         return c.asm.Xa.apply(null, arguments);
       };
 
-      c._UmbraTextureMetaDataGetClassification = function () {
+      c._UmbraTextureGetMipmapLevelOffset = function () {
         return c.asm.Ya.apply(null, arguments);
       };
 
-      c._UmbraTextureMetaDataGetClassificationAmount = function () {
+      c._UmbraTextureLoadGetData = function () {
         return c.asm.Za.apply(null, arguments);
       };
 
-      c._UmbraTextureMetaDataGetClassificationCount = function () {
+      c._UmbraTextureLoadGetInfo = function () {
         return c.asm._a.apply(null, arguments);
       };
 
-      c._UmbraTextureMetaDataLoadGetData = function () {
+      c._UmbraTextureLoadGetSerializedSize = function () {
         return c.asm.$a.apply(null, arguments);
       };
 
-      c._UmbraVertexAttributeGetElementByteSize = function () {
+      c._UmbraTextureLoadSerialize = function () {
         return c.asm.ab.apply(null, arguments);
       };
 
-      c._UmbraViewCreate = function () {
+      c._UmbraTextureMetaDataGetClassification = function () {
         return c.asm.bb.apply(null, arguments);
       };
 
-      c._UmbraViewDestroy = function () {
+      c._UmbraTextureMetaDataGetClassificationAmount = function () {
         return c.asm.cb.apply(null, arguments);
       };
 
-      c._UmbraViewGetCompleted = function () {
+      c._UmbraTextureMetaDataGetClassificationCount = function () {
         return c.asm.db.apply(null, arguments);
       };
 
-      c._UmbraViewNextRenderables = function () {
+      c._UmbraTextureMetaDataLoadGetData = function () {
         return c.asm.eb.apply(null, arguments);
       };
 
-      c._UmbraViewResetRenderables = function () {
+      c._UmbraVertexAttributeGetElementByteSize = function () {
         return c.asm.fb.apply(null, arguments);
       };
 
-      c._UmbraViewUpdateFilter = function () {
+      c._UmbraViewCreate = function () {
         return c.asm.gb.apply(null, arguments);
       };
 
-      c._UmbraViewUpdateRendering = function () {
+      c._UmbraViewDestroy = function () {
         return c.asm.hb.apply(null, arguments);
       };
 
-      c.___embind_register_native_and_builtin_types = function () {
+      c._UmbraViewGetCompleted = function () {
         return c.asm.ib.apply(null, arguments);
       };
 
-      var vb = c.___getTypeName = function () {
+      c._UmbraViewNextRenderables = function () {
         return c.asm.jb.apply(null, arguments);
+      };
+
+      c._UmbraViewRayQuery = function () {
+        return c.asm.kb.apply(null, arguments);
+      };
+
+      c._UmbraViewResetRenderables = function () {
+        return c.asm.lb.apply(null, arguments);
+      };
+
+      c._UmbraViewUpdateFilter = function () {
+        return c.asm.mb.apply(null, arguments);
+      };
+
+      c._UmbraViewUpdateRendering = function () {
+        return c.asm.nb.apply(null, arguments);
+      };
+
+      c.___embind_register_native_and_builtin_types = function () {
+        return c.asm.ob.apply(null, arguments);
+      };
+
+      var vb = c.___getTypeName = function () {
+        return c.asm.pb.apply(null, arguments);
       },
           Cc = c.__get_daylight = function () {
-        return c.asm.kb.apply(null, arguments);
+        return c.asm.qb.apply(null, arguments);
       },
           Bc = c.__get_timezone = function () {
-        return c.asm.lb.apply(null, arguments);
+        return c.asm.rb.apply(null, arguments);
       },
           Ec = c.__get_tzname = function () {
-        return c.asm.mb.apply(null, arguments);
+        return c.asm.sb.apply(null, arguments);
       },
           V = c._free = function () {
-        return c.asm.nb.apply(null, arguments);
+        return c.asm.tb.apply(null, arguments);
       },
           F = c._malloc = function () {
-        return c.asm.ob.apply(null, arguments);
+        return c.asm.ub.apply(null, arguments);
       },
           Ta = c.globalCtors = function () {
-        return c.asm.Hb.apply(null, arguments);
+        return c.asm.Mb.apply(null, arguments);
       },
           ma = c.stackAlloc = function () {
-        return c.asm.Ib.apply(null, arguments);
+        return c.asm.Nb.apply(null, arguments);
       },
           pa = c.stackRestore = function () {
-        return c.asm.Jb.apply(null, arguments);
+        return c.asm.Ob.apply(null, arguments);
       },
           oa = c.stackSave = function () {
-        return c.asm.Kb.apply(null, arguments);
+        return c.asm.Pb.apply(null, arguments);
       };
 
       c.dynCall_i = function () {
-        return c.asm.pb.apply(null, arguments);
-      };
-
-      c.dynCall_ii = function () {
-        return c.asm.qb.apply(null, arguments);
-      };
-
-      c.dynCall_iii = function () {
-        return c.asm.rb.apply(null, arguments);
-      };
-
-      c.dynCall_iiii = function () {
-        return c.asm.sb.apply(null, arguments);
-      };
-
-      c.dynCall_iiiii = function () {
-        return c.asm.tb.apply(null, arguments);
-      };
-
-      c.dynCall_iiiiii = function () {
-        return c.asm.ub.apply(null, arguments);
-      };
-
-      c.dynCall_iiiiiii = function () {
         return c.asm.vb.apply(null, arguments);
       };
 
-      c.dynCall_iiiiiiiiii = function () {
+      c.dynCall_ii = function () {
         return c.asm.wb.apply(null, arguments);
       };
 
-      c.dynCall_iiiji = function () {
+      c.dynCall_iii = function () {
         return c.asm.xb.apply(null, arguments);
       };
 
-      c.dynCall_jiji = function () {
+      c.dynCall_iiii = function () {
         return c.asm.yb.apply(null, arguments);
       };
 
-      c.dynCall_v = function () {
+      c.dynCall_iiiii = function () {
         return c.asm.zb.apply(null, arguments);
       };
 
-      var Ic = c.dynCall_vi = function () {
+      c.dynCall_iiiiii = function () {
         return c.asm.Ab.apply(null, arguments);
       };
 
-      c.dynCall_vii = function () {
+      c.dynCall_iiiiiiiiii = function () {
         return c.asm.Bb.apply(null, arguments);
       };
 
-      var Jc = c.dynCall_viii = function () {
+      c.dynCall_iiiji = function () {
         return c.asm.Cb.apply(null, arguments);
       };
 
-      c.dynCall_viiii = function () {
+      c.dynCall_jiji = function () {
         return c.asm.Db.apply(null, arguments);
       };
 
-      c.dynCall_viiiii = function () {
+      c.dynCall_v = function () {
         return c.asm.Eb.apply(null, arguments);
       };
 
-      c.dynCall_viiiiii = function () {
+      var Ic = c.dynCall_vi = function () {
         return c.asm.Fb.apply(null, arguments);
       };
 
-      c.dynCall_viiiiiiiii = function () {
+      c.dynCall_vii = function () {
         return c.asm.Gb.apply(null, arguments);
+      };
+
+      var Jc = c.dynCall_viii = function () {
+        return c.asm.Hb.apply(null, arguments);
+      };
+
+      c.dynCall_viiii = function () {
+        return c.asm.Ib.apply(null, arguments);
+      };
+
+      c.dynCall_viiiii = function () {
+        return c.asm.Jb.apply(null, arguments);
+      };
+
+      c.dynCall_viiiiii = function () {
+        return c.asm.Kb.apply(null, arguments);
+      };
+
+      c.dynCall_viiiiiiiii = function () {
+        return c.asm.Lb.apply(null, arguments);
       };
 
       c.asm = Kc;
@@ -2581,7 +2609,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     };
   }();
 
-  // Generated at 2020-01-24 17:26:12
+  // Generated at 2020-03-06 16:29:11
   var MatrixFormat;
 
   (function (MatrixFormat) {
@@ -2660,6 +2688,22 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     ColorSpace[ColorSpace["Count"] = 2] = "Count";
   })(ColorSpace || (ColorSpace = {}));
 
+  var VertexAttribute;
+
+  (function (VertexAttribute) {
+    VertexAttribute[VertexAttribute["Position"] = 0] = "Position";
+    VertexAttribute[VertexAttribute["TextureCoordinate"] = 1] = "TextureCoordinate";
+    VertexAttribute[VertexAttribute["Normal"] = 2] = "Normal";
+    VertexAttribute[VertexAttribute["Tangent"] = 3] = "Tangent";
+    VertexAttribute[VertexAttribute["Count"] = 4] = "Count";
+  })(VertexAttribute || (VertexAttribute = {}));
+
+  var BufferFlags;
+
+  (function (BufferFlags) {
+    BufferFlags[BufferFlags["UncachedMemory"] = 1] = "UncachedMemory";
+  })(BufferFlags || (BufferFlags = {}));
+
   var LogLevel;
 
   (function (LogLevel) {
@@ -2737,7 +2781,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     TextureSupportFlags[TextureSupportFlags["ATC"] = 16384] = "ATC";
     TextureSupportFlags[TextureSupportFlags["HalfFloat"] = 32768] = "HalfFloat";
     TextureSupportFlags[TextureSupportFlags["Float"] = 65536] = "Float";
-    TextureSupportFlags[TextureSupportFlags["All"] = 4294967295] = "All";
+    TextureSupportFlags[TextureSupportFlags["All"] = 2147483647] = "All";
   })(TextureSupportFlags || (TextureSupportFlags = {}));
 
   var RuntimeFlags;
@@ -2745,6 +2789,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
   (function (RuntimeFlags) {
     RuntimeFlags[RuntimeFlags["NeverUnload"] = 1] = "NeverUnload";
     RuntimeFlags[RuntimeFlags["ExclusiveRendering"] = 2] = "ExclusiveRendering";
+    RuntimeFlags[RuntimeFlags["EnableRayQueries"] = 4] = "EnableRayQueries";
     RuntimeFlags[RuntimeFlags["UmbraDebug"] = -2147483648] = "UmbraDebug";
   })(RuntimeFlags || (RuntimeFlags = {}));
 
@@ -2809,22 +2854,6 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     AssetType[AssetType["Count"] = 3] = "Count";
   })(AssetType || (AssetType = {}));
 
-  var BufferFlags;
-
-  (function (BufferFlags) {
-    BufferFlags[BufferFlags["UncachedMemory"] = 1] = "UncachedMemory";
-  })(BufferFlags || (BufferFlags = {}));
-
-  var VertexAttribute;
-
-  (function (VertexAttribute) {
-    VertexAttribute[VertexAttribute["Position"] = 0] = "Position";
-    VertexAttribute[VertexAttribute["TextureCoordinate"] = 1] = "TextureCoordinate";
-    VertexAttribute[VertexAttribute["Normal"] = 2] = "Normal";
-    VertexAttribute[VertexAttribute["Tangent"] = 3] = "Tangent";
-    VertexAttribute[VertexAttribute["Count"] = 4] = "Count";
-  })(VertexAttribute || (VertexAttribute = {}));
-
   var AssetLoadResult;
 
   (function (AssetLoadResult) {
@@ -2834,6 +2863,12 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     AssetLoadResult[AssetLoadResult["Success"] = 3] = "Success";
     AssetLoadResult[AssetLoadResult["Count"] = 4] = "Count";
   })(AssetLoadResult || (AssetLoadResult = {}));
+
+  var RayQueryFlags;
+
+  (function (RayQueryFlags) {
+    RayQueryFlags[RayQueryFlags["BackfaceCulling"] = 1] = "BackfaceCulling";
+  })(RayQueryFlags || (RayQueryFlags = {}));
 
 
 
@@ -3686,7 +3721,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
     };
   };
 
-  // Generated at 2020-01-24 17:26:12
+  // Generated at 2020-03-06 16:29:11
   function wrapNativeFunctions(Module) {
     Object.assign(Module, {
       configInit: Module.cwrap('UmbraConfigInit', null, ['number']),
@@ -3712,6 +3747,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       viewNextRenderables: Module.cwrap('UmbraViewNextRenderables', 'number', ['number', 'number', 'number']),
       viewResetRenderables: Module.cwrap('UmbraViewResetRenderables', null, ['number']),
       viewDestroy: Module.cwrap('UmbraViewDestroy', null, ['number']),
+      viewRayQuery: Module.cwrap('UmbraViewRayQuery', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
       sceneCopyCreate: Module.cwrap('UmbraSceneCopyCreate', 'number', ['number', 'number', 'number', 'number', 'number']),
       sceneCopyGetStatus: Module.cwrap('UmbraSceneCopyGetStatus', 'number', ['number', 'number']),
       sceneCopyGetError: Module.cwrap('UmbraSceneCopyGetError', 'string', ['number']),
@@ -3722,15 +3758,18 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       assetLoadPrepare: Module.cwrap('UmbraAssetLoadPrepare', null, ['number', 'number']),
       assetLoadAbortRequested: Module.cwrap('UmbraAssetLoadAbortRequested', 'number', ['number']),
       assetLoadFinish: Module.cwrap('UmbraAssetLoadFinish', null, ['number', 'number']),
+      meshLoadFinishExternal: Module.cwrap('UmbraMeshLoadFinishExternal', null, ['number', 'number', 'number', 'number']),
       meshLoadGetInfo: Module.cwrap('UmbraMeshLoadGetInfo', null, ['number', 'number']),
       meshLoadGetData: Module.cwrap('UmbraMeshLoadGetData', 'number', ['number', 'number', 'number']),
       meshStreamSetBuffers: Module.cwrap('UmbraMeshStreamSetBuffers', 'number', ['number', 'number', 'number']),
       meshStreamDone: Module.cwrap('UmbraMeshStreamDone', 'number', ['number']),
       meshStreamNext: Module.cwrap('UmbraMeshStreamNext', 'number', ['number', 'number', 'number']),
+      meshLoadGetSerializedSize: Module.cwrap('UmbraMeshLoadGetSerializedSize', 'number', ['number']),
       textureGetMipmapLevelByteSize: Module.cwrap('UmbraTextureGetMipmapLevelByteSize', 'number', ['number', 'number']),
       textureGetMipmapLevelOffset: Module.cwrap('UmbraTextureGetMipmapLevelOffset', 'number', ['number', 'number']),
       textureLoadGetInfo: Module.cwrap('UmbraTextureLoadGetInfo', null, ['number', 'number']),
       textureLoadGetData: Module.cwrap('UmbraTextureLoadGetData', 'number', ['number', 'number']),
+      textureLoadGetSerializedSize: Module.cwrap('UmbraTextureLoadGetSerializedSize', 'number', ['number']),
       textureMetaDataLoadGetData: Module.cwrap('UmbraTextureMetaDataLoadGetData', 'number', ['number', 'number']),
       textureMetaDataGetClassificationCount: Module.cwrap('UmbraTextureMetaDataGetClassificationCount', 'number', ['number', 'number']),
       textureMetaDataGetClassification: Module.cwrap('UmbraTextureMetaDataGetClassification', 'number', ['number', 'number', 'number']),
@@ -4058,6 +4097,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       console.error("Setting UmbraScene.quality is not supported any more. Set camera.umbraQuality = ".concat(value, " instead."));
     }
 
+    // UmbraScene should be instantiated using Umbra.createScene()
     constructor(runtime, scene, sharedState, _renderer, features) {
       var _this;
 
@@ -4105,8 +4145,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       this.onDispose = void 0;
       this.oldState = {
         status: undefined,
-        visibleIDs: new Set() // UmbraScene should be instantiated using Umbra.createScene()
-
+        visibleIDs: new Set()
       };
 
       this.update = function (camera) {
@@ -4540,8 +4579,7 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
       this.sharedState = {
         cameraToView: new Map(),
         viewRenderables: new Map(),
-        viewLastUseFrame: new Map() // Temporary values we don't want to reallocate every frame
-
+        viewLastUseFrame: new Map()
       };
       this.tempVector = new THREE.Vector3();
       this.dirVector = new THREE.Vector3();
@@ -4592,11 +4630,10 @@ define(['exports', 'three'], function (exports, THREE) { 'use strict';
           if (!glformat) {
             // Add a dummy object for unknown formats. They will appear as a solid black color.
             console.log('Unknown texture format', info.format);
-
-            _this.runtime.addAsset({
+            load.prepare(_this.runtime.addAsset({
               isTexture: false
-            });
-
+            }));
+            load.finish(Assets.AssetLoadResult.Success);
             return;
           }
 
