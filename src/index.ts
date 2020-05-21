@@ -29,16 +29,8 @@ export type UmbraCamera = THREE.Camera & {
 function makeBoundingSphere(aabb: UmbraMath.BoundingBox) {
   const min = aabb[0]
   const max = aabb[1]
-  const size = new THREE.Vector3(
-    max[0] - min[0],
-    max[1] - min[1],
-    max[2] - min[2],
-  )
-  const pos = new THREE.Vector3(
-    min[0] + size.x * 0.5,
-    min[1] + size.y * 0.5,
-    min[2] + size.z * 0.5,
-  )
+  const size = new THREE.Vector3(max[0] - min[0], max[1] - min[1], max[2] - min[2])
+  const pos = new THREE.Vector3(min[0] + size.x * 0.5, min[1] + size.y * 0.5, min[2] + size.z * 0.5)
   return new THREE.Sphere(pos, size.length())
 }
 
@@ -199,10 +191,7 @@ class UmbrajsThreeInternal implements SceneFactory {
       const camera: UmbraCamera = threeCamera
 
       this.matrixWorldInverse.getInverse(camera.matrixWorld)
-      this.projScreenMatrix.multiplyMatrices(
-        camera.projectionMatrix,
-        this.matrixWorldInverse,
-      )
+      this.projScreenMatrix.multiplyMatrices(camera.projectionMatrix, this.matrixWorldInverse)
 
       // By default we stream in meshes around the camera, but user can override it.
       if ('umbraStreamingPosition' in camera) {
@@ -243,8 +232,7 @@ class UmbrajsThreeInternal implements SceneFactory {
 
   update(timeBudget = 7) {
     const downloadLimitReached =
-      this.downloadLimit !== 0 &&
-      this.getStats().maxBytesDownloaded >= this.downloadLimit
+      this.downloadLimit !== 0 && this.getStats().maxBytesDownloaded >= this.downloadLimit
 
     // If the limit is reached we freeze all updates. View frustum culling
     // will still work, but the streaming set is kept static.
@@ -434,9 +422,7 @@ class UmbrajsThreeInternal implements SceneFactory {
         tex.encoding = THREE.LinearEncoding
       } else {
         tex.encoding =
-          info.colorSpace === ColorSpace.Linear
-            ? THREE.LinearEncoding
-            : THREE.sRGBEncoding
+          info.colorSpace === ColorSpace.Linear ? THREE.LinearEncoding : THREE.sRGBEncoding
       }
 
       tex.needsUpdate = true
@@ -502,10 +488,7 @@ class UmbrajsThreeInternal implements SceneFactory {
         if (buffer) {
           const view = buffer.data
           const array = view.getArray()
-          const attrib = new THREE.Float32BufferAttribute(
-            array.slice(),
-            attribs[name].components,
-          )
+          const attrib = new THREE.Float32BufferAttribute(array.slice(), attribs[name].components)
 
           if ('setAttribute' in (geometry as any)) {
             // three.js v112
@@ -591,10 +574,7 @@ class UmbrajsThreeInternal implements SceneFactory {
   }
 }
 
-export function initWithThreeJS(
-  renderer: THREE.WebGLRenderer,
-  userConfig: { wasmURL?: string },
-) {
+export function initWithThreeJS(renderer: THREE.WebGLRenderer, userConfig: { wasmURL?: string }) {
   if (!renderer) {
     throw new TypeError('"renderer" should be of type THREE.WebGLRenderer')
   }

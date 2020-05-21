@@ -349,8 +349,7 @@ export class UmbraScene extends THREE.Object3D {
       visibleIDs.add(visible[i].id)
       this.stats.numVisible += 1
 
-      const isTransparent =
-        materialDesc.transparent || this.material.transparent
+      const isTransparent = materialDesc.transparent || this.material.transparent
 
       // Fetch a new material from the pool if we already have free ones. This avoids
       // extra allocations and more importantly 'onBeforeCompile' calls.
