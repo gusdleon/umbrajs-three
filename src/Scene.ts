@@ -61,9 +61,7 @@ export class UmbraScene extends THREE.Object3D {
   readonly name = 'UmbraScene'
 
   set quality(value: number) {
-    console.error(
-      `Setting UmbraScene.quality is not supported any more. Set camera.umbraQuality = ${value} instead.`,
-    )
+    console.error(`UmbraScene.quality is not supported any more. Use camera.umbraQuality instead.`)
   }
 
   private renderer: THREE.WebGLRenderer
