@@ -234,8 +234,7 @@ class UmbrajsThreeInternal implements SceneFactory {
     const downloadLimitReached =
       this.downloadLimit !== 0 && this.getStats().maxBytesDownloaded >= this.downloadLimit
 
-    // If the limit is reached we freeze all updates. View frustum culling
-    // will still work, but the streaming set is kept static.
+    // If the limit is reached we freeze all updates. Streaming will stop completely.
     if (downloadLimitReached) {
       if (!this.oldState.downloadLimitReached) {
         this.umbrajs.abortDownloads()
