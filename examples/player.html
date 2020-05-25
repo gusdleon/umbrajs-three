@@ -37,11 +37,7 @@
 
   let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
 
-  let umbraScene = Umbra.createScene({
-    key: params.get('key'),
-    project: params.get('project'),
-    model: params.get('model')
-  })
+  let umbraScene = Umbra.createScene(document.location.href)
 
   if (quality) {
     camera.umbraQuality = parseFloat(quality)
