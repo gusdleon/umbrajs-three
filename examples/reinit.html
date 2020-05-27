@@ -1,0 +1,211 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Reinitialization Example</title>
+        <link rel="stylesheet" type="text/css" href="samples.css">
+    </head>
+    <body>
+        <div class="debug">
+        <pre id="info"></pre>
+        <pre id="sceneInfo"></pre>
+        </div>
+        <canvas id="c"></canvas>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.js"></script>
+        <script src="js/stats.min.js"></script>
+        <script src="js/dat.gui.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="../dist/umbrajs-three.js"></script>
+
+        <script>
+'use strict';
+
+(async function () {
+  const startTime = performance.now()
+
+  let params = new URL(window.location.href).searchParams
+  let quality = params.get('quality')
+  let handednessFlip = params.get('handednessFlip')
+  let pbr = params.get('pbr')
+
+  const canvas = document.querySelector('#c')
+  let renderer = new THREE.WebGLRenderer({ canvas })
+  let camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.01, 1000)
+
+  // Initialize the library
+
+  let Umbra = await UmbraRuntime.initWithThreeJS(renderer)
+
+
+  if (quality) {
+    camera.umbraQuality = parseFloat(quality)
+  } else {
+    camera.umbraQuality = 0.5
+  }
+
+  let scene = new THREE.Scene()
+  scene.background = new THREE.Color(0x141118)
+
+  // A factory function that we can call anytime to create a new scene object
+  let createNewScene = function () {
+    let umbraScene = Umbra.createScene('key=pubk-db4e385e-d139-42dd-97e9-cd265aabaa2b&project=1005906&model=1406526948')
+    if (handednessFlip === '1') {
+      umbraScene.scale.set(1.0, 1.0, 1.0)
+    }
+    scene.add(umbraScene)
+    return umbraScene
+  }
+
+  // Called when the "Toggle visibility" button is pressed
+  let hideOrShowScene = function() {
+    if (typeof umbraScene === 'undefined') {
+      console.log('Creating a new umbraScene')
+      umbraScene = createNewScene()
+    } else {
+      console.log('Disposing the old umbraScene')
+      scene.remove(umbraScene)
+      umbraScene.dispose()
+      umbraScene = undefined
+    }
+  }
+
+  // Actually create the instance
+  let umbraScene = createNewScene()
+
+
+  let controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+  setResizeListener(renderer, camera)
+
+  let stats = new Stats()
+  stats.showPanel(2) // Show memory use by default
+  document.body.appendChild(stats.dom)
+
+  let debug = {
+    streamingInfo: true,
+    sceneInfo: true,
+    rendererInfo: true,
+    internalInfo: false,
+    toggleSceneVisibility: hideOrShowScene,
+    webAsmInfo: true
+  }
+
+  let gridHelper = new THREE.GridHelper(10, 10)
+  gridHelper.visible = false
+  scene.add(gridHelper)
+
+  let gui = new dat.GUI()
+  //gui.close()
+  gui.add(camera, 'umbraQuality', 0, 1).name('Streaming quality')
+  gui.add(debug, 'webAsmInfo').name('WebAsm info')
+  gui.add(debug, 'toggleSceneVisibility').name('Toggle visibility')
+  gui.add(debug, 'streamingInfo').name('Streaming info')
+  gui.add(debug, 'sceneInfo').name('Scene info')
+  gui.add(debug, 'rendererInfo').name('Three.js info')
+  gui.add(debug, 'internalInfo').name('Extra info')
+  gui.add(gridHelper, 'visible').name('Show grid')
+
+  let light1 = new THREE.DirectionalLight(0xffffff, 1.0)
+  let light2 = new THREE.DirectionalLight(0x8888ff, 0.5)
+  light1.position.set(1, 1, 1).normalize()
+  light2.position.set(-1, -1, -1).normalize()
+  scene.add(light1)
+  scene.add(light2)
+
+  let timeToTriangle = 0
+
+  let boundingBox
+  camera.position.y = 1
+
+  controls.update()
+
+  umbraScene.onConnected = () => {
+    // Once connected create a bounding box visualization and a getter view for the camera
+    setCameraRange(camera, umbraScene)
+    placeCamera (controls, umbraScene)
+    boundingBox = makeBoundingBoxMesh(umbraScene.getBounds())
+    boundingBox.visible = false
+    umbraScene.add(boundingBox)
+  }
+
+  let animate = function () {
+    stats.begin()
+
+    // Find visible blocks and update streaming
+    Umbra.update()
+
+    if (timeToTriangle === 0.0 && renderer.info.render.triangles > 0) {
+      timeToTriangle = performance.now() - startTime
+    }
+
+    let message = ""
+
+    if (debug.webAsmInfo) {
+      message += `Emscripten heap size: ${(Umbra.umbrajs.nativeModule.HEAP8.length/1024/1024).toFixed(2)} MiB\n`
+    }
+
+    // 'umbraScene" may not exist if we've deleted the instance so we need to check it before use
+    if (typeof umbraScene !== 'undefined') {
+      const info = umbraScene.getInfo()
+
+
+      // Visible:          the number of visible meshes
+      // Assets:           the total number of resident assets (includes materials, textures, meshes)
+      // Time-to-triangle: how long it took until a first triangle was shown
+      if (debug.streamingInfo) {
+        const state = Umbra.runtime.getStreamingState()
+        let debugString = `Connected: ${info.connected}\nVisible meshes: ${info.numVisible}\nTime-to-triangle: ${Math.floor(timeToTriangle)} ms\n`
+        let minMegs = Umbra.getStats().minBytesDownloaded / (1024*1024)
+        let maxMegs = Umbra.getStats().maxBytesDownloaded / (1024*1024)
+        debugString += `Downloaded: ${minMegs.toFixed(1)}-${maxMegs.toFixed(1)} MiB\n`
+        debugString += `Streaming progress: ${(Umbra.getStreamingProgress() * 100).toFixed(2)} %\n`
+        message += debugString
+      }
+
+      if (debug.internalInfo && info.connected) {
+        let data = Object.assign({}, info)
+        delete data.sceneInfo.ecefToLocal
+        delete data.sceneInfo.localToEcef
+        message += JSON.stringify(data, null, 2)
+      }
+    }
+
+    if (debug.sceneInfo && info.connected) {
+      let used = Array.from(Umbra.runtime.debug.textureFormatsInUse)
+      let supported = JSON.stringify(Umbra.runtime.debug.platformFeatures)
+
+      message += `\nTexture formats used: ${used}\n`
+      message += `Texture formats supported: ${supported}\n`
+
+      let textureMegs = Umbra.getStats().textureMemoryUsed / (1024*1024)
+      let meshMegs = Umbra.getStats().meshMemoryUsed / (1024*1024)
+      message += `Texture memory use: ${textureMegs.toFixed(1)} MiB\n`
+      message += `Mesh memory use: ${meshMegs.toFixed(1)} MiB\n`
+    }
+
+
+    if (debug.rendererInfo) {
+      let rinfo = renderer.info
+      message += '\nThree.js renderer info\n----------------------\n'
+      message += `Geometries: ${rinfo.memory.geometries}\nTextures: ${rinfo.memory.textures}\n`
+      message += `Num programs: ${renderer.info.programs.length}\n`
+      message += `Draw calls: ${rinfo.render.calls}, Triangles: ${rinfo.render.triangles}\n`
+
+    }
+
+    document.getElementById('sceneInfo').textContent = message
+
+    controls.update()
+    renderer.render(scene, camera)
+
+    stats.end()
+    requestAnimationFrame(animate)
+  }
+
+  animate()
+})()
+        </script>
+    </body>
+</html>
+
