@@ -357,7 +357,7 @@
       w && (D = w.buffer);
       va = D.byteLength;
       ua();
-      E[4348] = 5260304;
+      E[4356] = 5260336;
 
       function wa(a) {
         for (; 0 < a.length;) {
@@ -1301,7 +1301,7 @@
       }
 
       c._exit = qc;
-      ka("GMT", 17296, 4);
+      ka("GMT", 17328, 4);
 
       function rc(a) {
         a = pa(a);
@@ -1397,11 +1397,11 @@
       var xc = c.asm({}, {
         k: z,
         z: function z() {},
-        fa: function fa() {
+        ea: function ea() {
           v("missing function: _ZN5Umbra13MiniSceneCopy7connectERK20UmbraSceneCopySource");
           z(-1);
         },
-        ba: function ba() {
+        $: function $() {
           v("missing function: _ZN5Umbra13MiniSceneCopy9getStatusEPf");
           z(-1);
         },
@@ -1409,11 +1409,7 @@
           v("missing function: _ZN5Umbra13MiniSceneCopyC1ERNS_11MiniRuntimeERK25UmbraSceneCopyDestinationPK20UmbraEnvironmentInfoRKN5Eigen6MatrixIfLi3ELi1ELi0ELi3ELi1EEEfi");
           z(-1);
         },
-        w: function w() {
-          v("missing function: _ZN5Umbra8umbraLogEPNS_6LoggerENS0_5LevelEPKcz");
-          z(-1);
-        },
-        V: function V() {
+        Y: function Y() {
           return Oa.apply(null, arguments);
         },
         v: function v() {},
@@ -1421,7 +1417,7 @@
           c.___errno_location && (E[c.___errno_location() >> 2] = a);
           return a;
         },
-        N: function N(a, b) {
+        M: function M(a, b) {
           _I = b;
 
           try {
@@ -1430,7 +1426,7 @@
             return z(d), -d.Qb;
           }
         },
-        M: function M(a, b) {
+        L: function L(a, b) {
           _I = b;
 
           try {
@@ -1442,7 +1438,7 @@
             return z(g), -g.Qb;
           }
         },
-        L: function L(a, b) {
+        x: function x(a, b) {
           _I = b;
 
           try {
@@ -1463,7 +1459,7 @@
             return z(l), -l.Qb;
           }
         },
-        ea: function ea(a, b) {
+        da: function da(a, b) {
           _I = b;
 
           try {
@@ -1478,7 +1474,7 @@
           _I = b;
           return 0;
         },
-        da: function da(a, b) {
+        ca: function ca(a, b) {
           _I = b;
 
           try {
@@ -1503,7 +1499,7 @@
             return z(d), -d.Qb;
           }
         },
-        x: function x() {},
+        w: function w() {},
         H: function H(a) {
           var b = Sa[a];
           delete Sa[a];
@@ -1568,7 +1564,7 @@
             }];
           });
         },
-        ca: function ca(a, b, d, e, f) {
+        ba: function ba(a, b, d, e, f) {
           var g = ab(d);
           b = N(b);
           M(a, {
@@ -1805,7 +1801,7 @@
             }
           });
         },
-        $: function $(a, b, d) {
+        _: function _(a, b, d) {
           d = N(d);
 
           if (2 === b) {
@@ -1867,7 +1863,7 @@
             jc: m
           });
         },
-        _: function _(a, b) {
+        Z: function Z(a, b) {
           b = N(b);
           M(a, {
             dc: !0,
@@ -1951,34 +1947,34 @@
           a = a.readValueFromPointer(b);
           return R(a);
         },
-        Z: function Z() {
+        X: function X() {
           c.abort();
         },
         C: function C(a) {
           return Ma[a]();
         },
-        Y: function Y(a, b, d, e, f, g, k, h, l, m, t, q) {
+        W: function W(a, b, d, e, f, g, k, h, l, m, t, q) {
           return Ma[a](b, d, e, f, g, k, h, l, m, t, q);
         },
         B: function B(a) {
           (a = Y[a]) && a.abort();
         },
-        X: jc,
+        V: jc,
         n: V,
         A: function A(a, b, d, e, f) {
           oc(B(a), B(b), function (a, b) {
             a ? f && vc(f, d) : (a = uc(b.length), C.set(b, a), wc(e, d, a, b.length), S(a));
           });
         },
-        W: function W(a, b, d, e, f, g, k) {
+        U: function U(a, b, d, e, f, g, k) {
           pc(B(a), B(b), new Uint8Array(C.subarray(d, d + e)), function (a) {
             a ? k && vc(k, f) : g && vc(g, f);
           });
         },
-        U: function U(a, b, d) {
+        T: function T(a, b, d) {
           C.set(C.subarray(b, b + d), a);
         },
-        T: function T(a) {
+        S: function S(a) {
           if (2147418112 < a) return !1;
 
           for (var b = Math.max(jc(), 16777216); b < a;) {
@@ -1989,195 +1985,199 @@
           ua();
           return !0;
         },
-        S: qc,
-        R: function R(a) {
+        R: qc,
+        Q: function Q(a) {
           a = new Date(1E3 * E[a >> 2]);
-          E[4312] = a.getUTCSeconds();
-          E[4313] = a.getUTCMinutes();
-          E[4314] = a.getUTCHours();
-          E[4315] = a.getUTCDate();
-          E[4316] = a.getUTCMonth();
-          E[4317] = a.getUTCFullYear() - 1900;
-          E[4318] = a.getUTCDay();
-          E[4321] = 0;
-          E[4320] = 0;
-          E[4319] = (a.getTime() - Date.UTC(a.getUTCFullYear(), 0, 1, 0, 0, 0, 0)) / 864E5 | 0;
-          E[4322] = 17296;
-          return 17248;
+          E[4320] = a.getUTCSeconds();
+          E[4321] = a.getUTCMinutes();
+          E[4322] = a.getUTCHours();
+          E[4323] = a.getUTCDate();
+          E[4324] = a.getUTCMonth();
+          E[4325] = a.getUTCFullYear() - 1900;
+          E[4326] = a.getUTCDay();
+          E[4329] = 0;
+          E[4328] = 0;
+          E[4327] = (a.getTime() - Date.UTC(a.getUTCFullYear(), 0, 1, 0, 0, 0, 0)) / 864E5 | 0;
+          E[4330] = 17328;
+          return 17280;
         },
-        Q: function Q() {
+        P: function P() {
           z("trap!");
         },
-        P: function P(a) {
+        O: function O(a) {
           var b = Date.now() / 1E3 | 0;
           a && (E[a >> 2] = b);
           return b;
         },
-        O: function O() {
+        N: function N() {
           z("OOM");
         },
-        a: 17392,
-        b: 17232
+        a: 17424,
+        b: 17264
       }, D);
       c.asm = xc;
 
       c._UmbraAssetLoadAbortRequested = function () {
-        return c.asm.ga.apply(null, arguments);
+        return c.asm.fa.apply(null, arguments);
       };
 
       c._UmbraAssetLoadFinish = function () {
-        return c.asm.ha.apply(null, arguments);
+        return c.asm.ga.apply(null, arguments);
       };
 
       c._UmbraAssetLoadGetType = function () {
-        return c.asm.ia.apply(null, arguments);
+        return c.asm.ha.apply(null, arguments);
       };
 
       c._UmbraAssetLoadPrepare = function () {
-        return c.asm.ja.apply(null, arguments);
+        return c.asm.ia.apply(null, arguments);
       };
 
       c._UmbraAssetUnloadFinish = function () {
-        return c.asm.ka.apply(null, arguments);
+        return c.asm.ja.apply(null, arguments);
       };
 
       c._UmbraAssetUnloadGetType = function () {
-        return c.asm.la.apply(null, arguments);
+        return c.asm.ka.apply(null, arguments);
       };
 
       c._UmbraAssetUnloadGetUserPointer = function () {
-        return c.asm.ma.apply(null, arguments);
+        return c.asm.la.apply(null, arguments);
       };
 
       c._UmbraClientCreate = function () {
-        return c.asm.na.apply(null, arguments);
+        return c.asm.ma.apply(null, arguments);
       };
 
       c._UmbraClientDestroy = function () {
-        return c.asm.oa.apply(null, arguments);
+        return c.asm.na.apply(null, arguments);
       };
 
       c._UmbraConfigInit = function () {
-        return c.asm.pa.apply(null, arguments);
+        return c.asm.oa.apply(null, arguments);
       };
 
       c._UmbraEcefToGeodetic = function () {
-        return c.asm.qa.apply(null, arguments);
+        return c.asm.pa.apply(null, arguments);
       };
 
       c._UmbraEnvironmentInfoDefaults = function () {
-        return c.asm.ra.apply(null, arguments);
+        return c.asm.qa.apply(null, arguments);
       };
 
       c._UmbraGeodeticToEcef = function () {
-        return c.asm.sa.apply(null, arguments);
+        return c.asm.ra.apply(null, arguments);
       };
 
       c._UmbraGetLibraryInfo = function () {
-        return c.asm.ta.apply(null, arguments);
+        return c.asm.sa.apply(null, arguments);
       };
 
       c._UmbraMaterialLoadGetInfo = function () {
-        return c.asm.ua.apply(null, arguments);
+        return c.asm.ta.apply(null, arguments);
       };
 
       c._UmbraMeshLoadFinishExternal = function () {
-        return c.asm.va.apply(null, arguments);
+        return c.asm.ua.apply(null, arguments);
       };
 
       c._UmbraMeshLoadGetData = function () {
-        return c.asm.wa.apply(null, arguments);
+        return c.asm.va.apply(null, arguments);
       };
 
       c._UmbraMeshLoadGetInfo = function () {
-        return c.asm.xa.apply(null, arguments);
+        return c.asm.wa.apply(null, arguments);
       };
 
       c._UmbraMeshLoadGetSerializedSize = function () {
-        return c.asm.ya.apply(null, arguments);
+        return c.asm.xa.apply(null, arguments);
       };
 
       c._UmbraMeshLoadSerialize = function () {
-        return c.asm.za.apply(null, arguments);
+        return c.asm.ya.apply(null, arguments);
       };
 
       c._UmbraMeshStreamDone = function () {
-        return c.asm.Aa.apply(null, arguments);
+        return c.asm.za.apply(null, arguments);
       };
 
       c._UmbraMeshStreamNext = function () {
-        return c.asm.Ba.apply(null, arguments);
+        return c.asm.Aa.apply(null, arguments);
       };
 
       c._UmbraMeshStreamSetBuffers = function () {
-        return c.asm.Ca.apply(null, arguments);
+        return c.asm.Ba.apply(null, arguments);
       };
 
       c._UmbraRuntimeCreate = function () {
-        return c.asm.Da.apply(null, arguments);
+        return c.asm.Ca.apply(null, arguments);
       };
 
       c._UmbraRuntimeDestroy = function () {
-        return c.asm.Ea.apply(null, arguments);
+        return c.asm.Da.apply(null, arguments);
       };
 
       c._UmbraRuntimeGetStreamingState = function () {
-        return c.asm.Fa.apply(null, arguments);
+        return c.asm.Ea.apply(null, arguments);
       };
 
       c._UmbraRuntimeNextAssetLoad = function () {
-        return c.asm.Ga.apply(null, arguments);
+        return c.asm.Fa.apply(null, arguments);
       };
 
       c._UmbraRuntimeNextAssetUnload = function () {
-        return c.asm.Ha.apply(null, arguments);
+        return c.asm.Ga.apply(null, arguments);
       };
 
       c._UmbraRuntimeUpdate = function () {
-        return c.asm.Ia.apply(null, arguments);
+        return c.asm.Ha.apply(null, arguments);
       };
 
       c._UmbraSceneCopyCreate = function () {
-        return c.asm.Ja.apply(null, arguments);
+        return c.asm.Ia.apply(null, arguments);
       };
 
       c._UmbraSceneCopyDestroy = function () {
-        return c.asm.Ka.apply(null, arguments);
+        return c.asm.Ja.apply(null, arguments);
       };
 
       c._UmbraSceneCopyGetError = function () {
-        return c.asm.La.apply(null, arguments);
+        return c.asm.Ka.apply(null, arguments);
       };
 
       c._UmbraSceneCopyGetStatus = function () {
-        return c.asm.Ma.apply(null, arguments);
+        return c.asm.La.apply(null, arguments);
       };
 
       c._UmbraSceneCreate = function () {
-        return c.asm.Na.apply(null, arguments);
+        return c.asm.Ma.apply(null, arguments);
       };
 
       c._UmbraSceneCreateLocal = function () {
-        return c.asm.Oa.apply(null, arguments);
+        return c.asm.Na.apply(null, arguments);
       };
 
       c._UmbraSceneCreatePublic = function () {
-        return c.asm.Pa.apply(null, arguments);
+        return c.asm.Oa.apply(null, arguments);
       };
 
       c._UmbraSceneDestroy = function () {
-        return c.asm.Qa.apply(null, arguments);
+        return c.asm.Pa.apply(null, arguments);
       };
 
       c._UmbraSceneGetConnectionStatus = function () {
-        return c.asm.Ra.apply(null, arguments);
+        return c.asm.Qa.apply(null, arguments);
       };
 
       c._UmbraSceneGetInfo = function () {
-        return c.asm.Sa.apply(null, arguments);
+        return c.asm.Ra.apply(null, arguments);
       };
 
       c._UmbraSceneSetTransform = function () {
+        return c.asm.Sa.apply(null, arguments);
+      };
+
+      c._UmbraSendInternalMessage = function () {
         return c.asm.Ta.apply(null, arguments);
       };
 
@@ -2493,7 +2493,7 @@
     };
   }();
 
-  // Generated at 2020-03-06 16:29:11
+  // Generated at 2020-07-06 15:28:19
   var MatrixFormat;
 
   (function (MatrixFormat) {
@@ -2674,7 +2674,6 @@
     RuntimeFlags[RuntimeFlags["NeverUnload"] = 1] = "NeverUnload";
     RuntimeFlags[RuntimeFlags["ExclusiveRendering"] = 2] = "ExclusiveRendering";
     RuntimeFlags[RuntimeFlags["EnableRayQueries"] = 4] = "EnableRayQueries";
-    RuntimeFlags[RuntimeFlags["UmbraDebug"] = -2147483648] = "UmbraDebug";
   })(RuntimeFlags || (RuntimeFlags = {}));
 
   var ConnectionStatus;
@@ -3603,7 +3602,7 @@
     };
   };
 
-  // Generated at 2020-03-06 16:29:11
+  // Generated at 2020-07-06 15:28:19
   function wrapNativeFunctions(Module) {
     Object.assign(Module, {
       configInit: Module.cwrap('UmbraConfigInit', null, ['number']),
@@ -3644,8 +3643,8 @@
       meshLoadGetInfo: Module.cwrap('UmbraMeshLoadGetInfo', null, ['number', 'number']),
       meshLoadGetData: Module.cwrap('UmbraMeshLoadGetData', 'number', ['number', 'number', 'number']),
       meshStreamSetBuffers: Module.cwrap('UmbraMeshStreamSetBuffers', 'number', ['number', 'number', 'number']),
-      meshStreamDone: Module.cwrap('UmbraMeshStreamDone', 'number', ['number']),
       meshStreamNext: Module.cwrap('UmbraMeshStreamNext', 'number', ['number', 'number', 'number']),
+      meshStreamDone: Module.cwrap('UmbraMeshStreamDone', 'number', ['number']),
       meshLoadGetSerializedSize: Module.cwrap('UmbraMeshLoadGetSerializedSize', 'number', ['number']),
       textureGetMipmapLevelByteSize: Module.cwrap('UmbraTextureGetMipmapLevelByteSize', 'number', ['number', 'number']),
       textureGetMipmapLevelOffset: Module.cwrap('UmbraTextureGetMipmapLevelOffset', 'number', ['number', 'number']),
@@ -3660,7 +3659,8 @@
       runtimeNextAssetUnload: Module.cwrap('UmbraRuntimeNextAssetUnload', 'number', ['number']),
       assetUnloadGetType: Module.cwrap('UmbraAssetUnloadGetType', 'number', ['number']),
       assetUnloadGetUserPointer: Module.cwrap('UmbraAssetUnloadGetUserPointer', 'number', ['number']),
-      assetUnloadFinish: Module.cwrap('UmbraAssetUnloadFinish', null, ['number'])
+      assetUnloadFinish: Module.cwrap('UmbraAssetUnloadFinish', null, ['number']),
+      sendInternalMessage: Module.cwrap('UmbraSendInternalMessage', 'number', ['number', 'number'])
     });
   }
 
