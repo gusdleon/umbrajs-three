@@ -233,6 +233,11 @@ export class UmbraScene extends THREE.Object3D {
       return
     }
 
+    if (this.umbra.nativeScene.ptr === 0) {
+      console.warn('Renderer tried to update a disposed UmbraScene')
+      return
+    }
+
     let view: View = this.sharedState.cameraToView.get(camera)
 
     if (!view) {
