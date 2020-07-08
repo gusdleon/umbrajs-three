@@ -2863,9 +2863,7 @@ var create = function create(Module) {
   } // Struct field offsets are required for zero-copy interop
 
 
-  var renderableStructOffsets = Module.getRenderableMemberOffsets(); // Used by MeshLoader to copy over mesh AABB without extra allocs
-
-  var boundsBuffer = new Buffer(2 * 3 * 4);
+  var renderableStructOffsets = Module.getRenderableMemberOffsets();
 
   function copyMat4(buf, elements) {
     for (var i = 0; i < 16; i++) {
@@ -2908,7 +2906,9 @@ var create = function create(Module) {
 
     destroy() {
       this.matrixBuffer.destroy();
+      this.infoBuffer.destroy();
       Module.sceneDestroy(this.ptr);
+      this.ptr = 0;
     }
 
     connectionStatus() {
@@ -2965,6 +2965,7 @@ var create = function create(Module) {
       }
 
       Module.viewDestroy(this.ptr);
+      this.ptr = 0;
     }
 
     setCamera(worldToClip, positionVector, quality) {
@@ -4030,6 +4031,11 @@ class UmbraScene extends Object3D {
       var _this2 = this;
 
       if (this.freeze) {
+        return;
+      }
+
+      if (this.umbra.nativeScene.ptr === 0) {
+        console.warn('Renderer tried to update a disposed UmbraScene');
         return;
       }
 
