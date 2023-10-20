@@ -22,7 +22,7 @@
     "url": "git+https://github.com/UmbraSoftware/umbrajs-three"
   },
   "dependencies": {
-    "@umbra3d/umbrajs": "1.7.31-hotfix1"
+    "@umbra3d/umbrajs": "1.7.51"
   },
   "peerDependencies": {
     "three": "0.106.2 || 0.107.0 || 0.108.0 || 0.109.0"
