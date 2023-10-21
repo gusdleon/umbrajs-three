@@ -31,7 +31,7 @@
     "@babel/core": "7.23.2",
     "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/preset-env": "7.5.5",
-    "@babel/preset-typescript": "7.3.3",
+    "@babel/preset-typescript": "7.23.2",
     "@typescript-eslint/eslint-plugin": "2.0.0",
     "@typescript-eslint/parser": "2.34.0",
     "add": "2.0.6",
