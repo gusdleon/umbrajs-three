@@ -50,7 +50,7 @@
     "rollup-plugin-eslint": "7.0.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-terser": "^5.3.1",
-    "terser": "4.0.0",
+    "terser": "5.22.0",
     "typescript": "5.2.2"
   }
 }
